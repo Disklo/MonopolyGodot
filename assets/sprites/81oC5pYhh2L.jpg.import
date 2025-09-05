@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dcbqouf0d14sl"
-path="res://.godot/imported/building_iso.svg-30ce038ba0c277a05656671bd0349da0.ctex"
+uid="uid://d25o1yevvws8s"
+path="res://.godot/imported/81oC5pYhh2L.jpg-ce6113b43bc14640ba29df5e59910e95.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/building_iso.svg"
-dest_files=["res://.godot/imported/building_iso.svg-30ce038ba0c277a05656671bd0349da0.ctex"]
+source_file="res://assets/sprites/81oC5pYhh2L.jpg"
+dest_files=["res://.godot/imported/81oC5pYhh2L.jpg-ce6113b43bc14640ba29df5e59910e95.ctex"]
 
 [params]
 
@@ -32,6 +32,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

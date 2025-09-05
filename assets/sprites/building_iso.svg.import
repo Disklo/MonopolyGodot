@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8rlrtsk8c78p"
-path="res://.godot/imported/front&side-4.png-e0f18b3f903b93e2ff732411517b3fb7.ctex"
+uid="uid://dcbqouf0d14sl"
+path="res://.godot/imported/building_iso.svg-781b445f150314a8ee82e07e92f9a09c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/dados/front&side-4.png"
-dest_files=["res://.godot/imported/front&side-4.png-e0f18b3f903b93e2ff732411517b3fb7.ctex"]
+source_file="res://assets/sprites/building_iso.svg"
+dest_files=["res://.godot/imported/building_iso.svg-781b445f150314a8ee82e07e92f9a09c.ctex"]
 
 [params]
 
@@ -32,3 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

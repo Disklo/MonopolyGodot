@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c0qipf3i0ndeo"
-path="res://.godot/imported/BuildingsSpriteSheet.png-69c089dab3f089d5370aa512694c74cf.ctex"
+uid="uid://c1gq7jn8q4qd2"
+path="res://.godot/imported/side-2.png-2507bacd5fd18c350ffba74eb420ddcb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/BuildingsSpriteSheet.png"
-dest_files=["res://.godot/imported/BuildingsSpriteSheet.png-69c089dab3f089d5370aa512694c74cf.ctex"]
+source_file="res://assets/sprites/dados/side-2.png"
+dest_files=["res://.godot/imported/side-2.png-2507bacd5fd18c350ffba74eb420ddcb.ctex"]
 
 [params]
 

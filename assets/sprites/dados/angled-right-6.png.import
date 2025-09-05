@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bjxegixklhovd"
-path="res://.godot/imported/angled-left&right-5.png-4e721dbb49f9bc47f11b7b6464bac45f.ctex"
+uid="uid://mrsn6n2u6enh"
+path="res://.godot/imported/angled-right-6.png-b23b63128415a72c6c9005c362afa2e3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/dados/angled-left&right-5.png"
-dest_files=["res://.godot/imported/angled-left&right-5.png-4e721dbb49f9bc47f11b7b6464bac45f.ctex"]
+source_file="res://assets/sprites/dados/angled-right-6.png"
+dest_files=["res://.godot/imported/angled-right-6.png-b23b63128415a72c6c9005c362afa2e3.ctex"]
 
 [params]
 
