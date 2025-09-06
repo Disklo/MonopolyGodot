@@ -1,3 +1,55 @@
-[gd_scene format=3 uid="uid://doimqufk657mn"]
+[gd_scene load_steps=4 format=3 uid="uid://doimqufk657mn"]
+
+[ext_resource type="Script" uid="uid://dyxcite0382jn" path="res://scripts/propriedade.gd" id="1_7fl57"]
+[ext_resource type="Texture2D" uid="uid://dq73saf04814p" path="res://assets/sprites/building_iso_2.svg" id="2_6iv0k"]
+[ext_resource type="FontFile" uid="uid://pm7o6r5cedaf" path="res://assets/fonts/monogram-extended.ttf" id="3_hu7pq"]
 
 [node name="Propriedade" type="Node2D"]
+script = ExtResource("1_7fl57")
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+offset_right = 352.0
+offset_bottom = 352.0
+color = Color(0, 0, 0, 1)
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 347.0
+offset_bottom = 347.0
+color = Color(0.186822, 0.638699, 0.886954, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(181.094, 179.433)
+scale = Vector2(0.752708, 0.752709)
+texture = ExtResource("2_6iv0k")
+
+[node name="Nome" type="RichTextLabel" parent="."]
+offset_left = 6.0
+offset_top = 1.0
+offset_right = 350.0
+offset_bottom = 56.0
+theme_override_fonts/normal_font = ExtResource("3_hu7pq")
+theme_override_font_sizes/normal_font_size = 64
+text = "Edifício Rocha"
+horizontal_alignment = 1
+
+[node name="Preço" type="RichTextLabel" parent="."]
+offset_left = 6.0
+offset_top = 296.0
+offset_right = 350.0
+offset_bottom = 351.0
+theme_override_fonts/normal_font = ExtResource("3_hu7pq")
+theme_override_font_sizes/normal_font_size = 48
+text = "Preço: R$1.500.000"
+horizontal_alignment = 1
+
+[node name="Aluguel" type="RichTextLabel" parent="."]
+offset_left = 6.0
+offset_top = 296.0
+offset_right = 350.0
+offset_bottom = 351.0
+theme_override_fonts/normal_font = ExtResource("3_hu7pq")
+theme_override_font_sizes/normal_font_size = 48
+text = "Preço: R$1.500.000"
+horizontal_alignment = 1

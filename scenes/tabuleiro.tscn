@@ -1,3 +1,14 @@
-[gd_scene format=3 uid="uid://twnltl4j4vkp"]
+[gd_scene load_steps=4 format=3 uid="uid://twnltl4j4vkp"]
+
+[ext_resource type="Script" uid="uid://clef1qn4whmnn" path="res://scripts/tabuleiro.gd" id="1_mbpgq"]
+[ext_resource type="PackedScene" uid="uid://doimqufk657mn" path="res://scenes/Espacos/propriedade.tscn" id="2_tvb07"]
+[ext_resource type="PackedScene" uid="uid://cqv57oqbilpv6" path="res://scenes/Espacos/espaco.tscn" id="3_p2sbe"]
 
 [node name="Tabuleiro" type="Node2D"]
+script = ExtResource("1_mbpgq")
+
+[node name="Propriedade" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(5, 59)
+
+[node name="Espaco" parent="." instance=ExtResource("3_p2sbe")]
+position = Vector2(357, 59)
