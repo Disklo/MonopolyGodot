@@ -1,0 +1,82 @@
+classDiagram
+    class Jogo {
+        -jogadores : Jogador[]
+        -tabuleiro : Tabuleiro
+        -turnoAtual : int
+        +iniciarJogo()
+        +proximoTurno()
+        +rolarDados() : int
+    }
+
+    class Jogador {
+        -nome : String
+        -dinheiro : int
+        -posicao : int
+        -propriedades : Propriedade[]
+        +mover(passos:int)
+        +comprarPropriedade(p:Propriedade)
+        +pagar(valor:int)
+        +receber(valor:int)
+    }
+
+    class Tabuleiro {
+        -espacos : Espaco[]
+        +obterEspaco(indice:int) : Espaco
+    }
+
+    class Espaco {
+        <<abstract>>
+        -indice : int
+        -nome : String
+        +aoParar(jogador:Jogador)
+    }
+
+    class Propriedade {
+        -preco : int
+        -aluguel : int
+        -dono : Jogador
+        +comprar(jogador:Jogador)
+        +cobrarAluguel(jogador:Jogador)
+    }
+
+    class ServicoPublico {
+        -multiplicador : int
+        -dono : Jogador
+        +calcularAluguel(dados:int) : int
+    }
+
+    class Ferrovia {
+        -dono : Jogador
+        +calcularAluguel(qtdFerrovias:int) : int
+    }
+
+    class Sorte {
+        +sortearCarta(jogador:Jogador)
+    }
+
+    class CofreComunitario {
+        +sortearCarta(jogador:Jogador)
+    }
+
+    class Imposto {
+        -valor : int
+        +cobrar(jogador:Jogador)
+    }
+
+    class Prisao {
+        +enviarParaPrisao(jogador:Jogador)
+        +libertar(jogador:Jogador)
+    }
+
+    %% Relações
+    Jogo --> Jogador
+    Jogo --> Tabuleiro
+    Tabuleiro --> Espaco
+    Espaco <|-- Propriedade
+    Espaco <|-- ServicoPublico
+    Espaco <|-- Ferrovia
+    Espaco <|-- Sorte
+    Espaco <|-- CofreComunitario
+    Espaco <|-- Imposto
+    Espaco <|-- Prisao
+    Jogador --> Propriedade
