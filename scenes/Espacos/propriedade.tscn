@@ -6,6 +6,7 @@
 
 [node name="Propriedade" type="Node2D"]
 script = ExtResource("1_7fl57")
+nome = "Edifício Rocha"
 
 [node name="ColorRect2" type="ColorRect" parent="."]
 offset_right = 352.0
@@ -24,7 +25,7 @@ position = Vector2(181.094, 179.433)
 scale = Vector2(0.752708, 0.752709)
 texture = ExtResource("2_6iv0k")
 
-[node name="Nome" type="RichTextLabel" parent="."]
+[node name="NomeLabel" type="RichTextLabel" parent="."]
 offset_left = 6.0
 offset_top = 1.0
 offset_right = 350.0
@@ -34,7 +35,7 @@ theme_override_font_sizes/normal_font_size = 64
 text = "Edifício Rocha"
 horizontal_alignment = 1
 
-[node name="Preço" type="RichTextLabel" parent="."]
+[node name="PrecoLabel" type="RichTextLabel" parent="."]
 offset_left = 6.0
 offset_top = 296.0
 offset_right = 350.0
@@ -44,7 +45,8 @@ theme_override_font_sizes/normal_font_size = 48
 text = "Preço: R$1.500.000"
 horizontal_alignment = 1
 
-[node name="Aluguel" type="RichTextLabel" parent="."]
+[node name="AluguelLabel" type="RichTextLabel" parent="."]
+visible = false
 offset_left = 6.0
 offset_top = 296.0
 offset_right = 350.0

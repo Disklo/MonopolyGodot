@@ -10,6 +10,13 @@ class_name Propriedade
 # O jogador que é o dono dessa propriedade. Fica nulo se não tiver dono.
 var dono: Jogador = null
 
+@onready var preco_label: RichTextLabel = $PrecoLabel
+@onready var aluguel_label: RichTextLabel = $AluguelLabel
+
+func _ready() -> void:
+	super._ready()
+	preco_label.text = "Preço: R$" + str(preco)
+	aluguel_label.text = "Aluguel: R$" + str(aluguel_base)
 
 # Sobrescreve a função da classe Espaco
 func ao_parar(jogador: Jogador) -> void:

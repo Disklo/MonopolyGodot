@@ -5,7 +5,13 @@ class_name Espaco
 
 # Variáveis exportadas para serem configuradas no editor do Godot
 @export var indice: int = 0
+
 @export var nome: String = "Espaço"
+
+@onready var nome_label: RichTextLabel = $NomeLabel
+
+func _ready() -> void:
+	nome_label.text = nome
 
 # Função virtual que será chamada quando um jogador parar neste espaço.
 # Cada tipo de espaço (propriedade, sorte, etc.) terá sua própria implementação.
