@@ -6,19 +6,19 @@
 
 [node name="Propriedade" type="Node2D"]
 script = ExtResource("1_7fl57")
+preco = 0
 nome = "Edifício Rocha"
 
-[node name="ColorRect2" type="ColorRect" parent="."]
+[node name="CorBorda" type="ColorRect" parent="."]
 offset_right = 352.0
 offset_bottom = 352.0
 color = Color(0, 0, 0, 1)
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="CorEspaco" type="ColorRect" parent="."]
 offset_left = 5.0
 offset_top = 5.0
 offset_right = 347.0
 offset_bottom = 347.0
-color = Color(0.186822, 0.638699, 0.886954, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(181.094, 179.433)
@@ -30,6 +30,7 @@ offset_left = 6.0
 offset_top = 1.0
 offset_right = 350.0
 offset_bottom = 56.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
 theme_override_fonts/normal_font = ExtResource("3_hu7pq")
 theme_override_font_sizes/normal_font_size = 64
 text = "Edifício Rocha"
@@ -40,6 +41,7 @@ offset_left = 6.0
 offset_top = 296.0
 offset_right = 350.0
 offset_bottom = 351.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
 theme_override_fonts/normal_font = ExtResource("3_hu7pq")
 theme_override_font_sizes/normal_font_size = 48
 text = "Preço: R$1.500.000"
