@@ -6,7 +6,7 @@
 
 [node name="Propriedade" type="Node2D"]
 script = ExtResource("1_7fl57")
-preco = 0
+preco = 1500000
 nome = "Edifício Rocha"
 
 [node name="CorBorda" type="ColorRect" parent="."]
@@ -53,6 +53,7 @@ offset_left = 6.0
 offset_top = 296.0
 offset_right = 350.0
 offset_bottom = 351.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
 theme_override_fonts/normal_font = ExtResource("3_hu7pq")
 theme_override_font_sizes/normal_font_size = 48
 text = "Preço: R$1.500.000"
