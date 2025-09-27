@@ -1,21 +1,145 @@
-[gd_scene load_steps=5 format=3 uid="uid://twnltl4j4vkp"]
+[gd_scene load_steps=13 format=3 uid="uid://twnltl4j4vkp"]
 
 [ext_resource type="Script" uid="uid://clef1qn4whmnn" path="res://scripts/tabuleiro.gd" id="1_mbpgq"]
 [ext_resource type="PackedScene" uid="uid://doimqufk657mn" path="res://scenes/Espacos/propriedade.tscn" id="2_tvb07"]
 [ext_resource type="PackedScene" uid="uid://chl3dvifohacs" path="res://scenes/Espacos/prisao.tscn" id="3_p2sbe"]
 [ext_resource type="Texture2D" uid="uid://d25o1yevvws8s" path="res://assets/sprites/tabuleiro_referencia.jpg" id="4_p2sbe"]
+[ext_resource type="PackedScene" uid="uid://c52615exk0hmx" path="res://scenes/Espacos/imposto.tscn" id="5_qqvnr"]
+[ext_resource type="PackedScene" uid="uid://ckw14h1omkswi" path="res://scenes/Espacos/servicoPublico.tscn" id="6_4ki4h"]
+[ext_resource type="PackedScene" uid="uid://ds8g4hwgxxe8w" path="res://scenes/Espacos/ferrovia.tscn" id="7_qg4j7"]
+[ext_resource type="PackedScene" uid="uid://c0myr32w6sxl7" path="res://scenes/Espacos/cofreComunitario.tscn" id="8_i6856"]
+[ext_resource type="PackedScene" uid="uid://cxc466ieb7slg" path="res://scenes/Espacos/estacionamento.tscn" id="9_a5pju"]
+[ext_resource type="PackedScene" uid="uid://fdrg2nbh6c7y" path="res://scenes/Espacos/sorte.tscn" id="9_nput3"]
+[ext_resource type="PackedScene" uid="uid://crsqpes1eksv1" path="res://scenes/Espacos/pontoPartida.tscn" id="11_8jx8b"]
+[ext_resource type="PackedScene" uid="uid://4ihxttgiv2e7" path="res://scenes/Espacos/enviaPrisao.tscn" id="12_kkw4d"]
 
 [node name="Tabuleiro" type="Node2D"]
 script = ExtResource("1_mbpgq")
 
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.135, 0.135)
+
 [node name="TabuleiroReferencia" type="Sprite2D" parent="."]
+position = Vector2(-4.99998, 4.99983)
+scale = Vector2(1.559, 1.559)
 texture = ExtResource("4_p2sbe")
 
 [node name="Prisao" parent="." instance=ExtResource("3_p2sbe")]
-position = Vector2(-1352, 1000)
+position = Vector2(-1916, 1564)
 
 [node name="Propriedade" parent="." instance=ExtResource("2_tvb07")]
-position = Vector2(-1352, 653)
+position = Vector2(-1916, 1217)
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.2, 0.2)
+[node name="Propriedade2" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(-1916, 523)
+
+[node name="Propriedade3" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(-1916, 176)
+
+[node name="ServicoPublico" parent="." instance=ExtResource("6_4ki4h")]
+position = Vector2(-1916, 870)
+
+[node name="Ferrovia" parent="." instance=ExtResource("7_qg4j7")]
+position = Vector2(-1916, -171)
+
+[node name="Propriedade4" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(-1916, -518)
+
+[node name="CofreComunitario" parent="." instance=ExtResource("8_i6856")]
+position = Vector2(-1916, -865)
+
+[node name="Propriedade5" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(-1916, -1212)
+
+[node name="Propriedade6" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(-1916, -1559)
+
+[node name="Estacionamento" parent="." instance=ExtResource("9_a5pju")]
+position = Vector2(-1916, -1906)
+
+[node name="Propriedade7" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(-1569, 1564)
+
+[node name="Propriedade8" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(-1222, 1564)
+
+[node name="Sorte" parent="." instance=ExtResource("9_nput3")]
+position = Vector2(-875, 1564)
+
+[node name="Propriedade9" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(-528, 1564)
+
+[node name="Ferrovia2" parent="." instance=ExtResource("7_qg4j7")]
+position = Vector2(-181, 1564)
+
+[node name="Imposto" parent="." instance=ExtResource("5_qqvnr")]
+position = Vector2(166, 1564)
+
+[node name="Propriedade10" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(513, 1564)
+
+[node name="CofreComunitario2" parent="." instance=ExtResource("8_i6856")]
+position = Vector2(860, 1564)
+
+[node name="Propriedade11" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(1207, 1564)
+
+[node name="Partida" parent="." instance=ExtResource("11_8jx8b")]
+position = Vector2(1554, 1564)
+
+[node name="Propriedade12" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(1554, 1217)
+
+[node name="Imposto2" parent="." instance=ExtResource("5_qqvnr")]
+position = Vector2(1554, 870)
+
+[node name="Propriedade13" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(1554, 523)
+
+[node name="Sorte2" parent="." instance=ExtResource("9_nput3")]
+position = Vector2(1554, 176)
+
+[node name="Ferrovia3" parent="." instance=ExtResource("7_qg4j7")]
+position = Vector2(1554, -171)
+
+[node name="Propriedade14" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(1554, -518)
+
+[node name="CofreComunitario3" parent="." instance=ExtResource("8_i6856")]
+position = Vector2(1554, -865)
+
+[node name="Propriedade15" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(1554, -1212)
+
+[node name="Propriedade16" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(1554, -1559)
+
+[node name="EnviaPrisao" parent="." instance=ExtResource("12_kkw4d")]
+position = Vector2(1554, -1906)
+
+[node name="Propriedade17" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(1207, -1906)
+
+[node name="ServicoPublico2" parent="." instance=ExtResource("6_4ki4h")]
+position = Vector2(860, -1906)
+
+[node name="Propriedade18" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(166, -1906)
+
+[node name="Propriedade19" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(513, -1906)
+
+[node name="Ferrovia4" parent="." instance=ExtResource("7_qg4j7")]
+position = Vector2(-181, -1906)
+
+[node name="Propriedade20" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(-875, -1906)
+
+[node name="Propriedade21" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(-528, -1906)
+
+[node name="Sorte3" parent="." instance=ExtResource("9_nput3")]
+position = Vector2(-1222, -1906)
+
+[node name="Propriedade22" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(-1569, -1906)
