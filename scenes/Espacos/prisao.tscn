@@ -1,9 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://chl3dvifohacs"]
+[gd_scene load_steps=4 format=3 uid="uid://chl3dvifohacs"]
 
 [ext_resource type="FontFile" uid="uid://pm7o6r5cedaf" path="res://assets/fonts/monogram-extended.ttf" id="1_h417e"]
+[ext_resource type="Script" uid="uid://iapbdhlaovgq" path="res://scripts/prisao.gd" id="1_x64pc"]
 [ext_resource type="Texture2D" uid="uid://ddc1j6hk7wbyf" path="res://assets/sprites/Vacant_Prison_Cell_clip_art_high.png" id="2_x64pc"]
 
 [node name="Prisao" type="Node2D"]
+script = ExtResource("1_x64pc")
 
 [node name="CorBorda" type="ColorRect" parent="."]
 offset_right = 352.0

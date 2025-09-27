@@ -22,11 +22,6 @@ offset_right = 347.0
 offset_bottom = 347.0
 color = Color(0.803922, 0.901961, 0.815686, 1)
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(181.094, 179.433)
-scale = Vector2(0.752708, 0.752709)
-texture = ExtResource("2_6iv0k")
-
 [node name="NomeLabel" type="RichTextLabel" parent="."]
 offset_left = 6.0
 offset_top = 1.0
@@ -61,7 +56,60 @@ theme_override_font_sizes/normal_font_size = 48
 text = "Preço: R$1.500.000"
 horizontal_alignment = 1
 
-[node name="Sprite2D2" type="Sprite2D" parent="."]
-visible = false
+[node name="1casa" type="Sprite2D" parent="."]
 position = Vector2(179, 178)
 texture = ExtResource("4_axr5y")
+
+[node name="2casas" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(100, 178)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("4_axr5y")
+
+[node name="Sprite2D4" type="Sprite2D" parent="2casas"]
+position = Vector2(187.5, 0)
+scale = Vector2(1, 1)
+texture = ExtResource("4_axr5y")
+
+[node name="3casas" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(110, 135)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("4_axr5y")
+
+[node name="Sprite2D4" type="Sprite2D" parent="3casas"]
+position = Vector2(187.5, 0)
+scale = Vector2(1, 1)
+texture = ExtResource("4_axr5y")
+
+[node name="Sprite2D5" type="Sprite2D" parent="3casas"]
+position = Vector2(95, 107.143)
+scale = Vector2(1, 1)
+texture = ExtResource("4_axr5y")
+
+[node name="4casas" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(110, 135)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("4_axr5y")
+
+[node name="Sprite2D4" type="Sprite2D" parent="4casas"]
+position = Vector2(187.5, 0)
+scale = Vector2(1, 1)
+texture = ExtResource("4_axr5y")
+
+[node name="Sprite2D5" type="Sprite2D" parent="4casas"]
+position = Vector2(0, 107.143)
+scale = Vector2(1, 1)
+texture = ExtResource("4_axr5y")
+
+[node name="Sprite2D6" type="Sprite2D" parent="4casas"]
+position = Vector2(187.5, 107.143)
+scale = Vector2(1, 1)
+texture = ExtResource("4_axr5y")
+
+[node name="1hotel" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(181.094, 179.433)
+scale = Vector2(0.752708, 0.752709)
+texture = ExtResource("2_6iv0k")
