@@ -17,7 +17,7 @@ func _ready() -> void:
 	super._ready()
 	preco_label.text = "Preço: R$" + _format_preco(preco)
 	aluguel_label.text = "Aluguel: R$" + str(aluguel_base)
-	# mostrar_aluguel()
+	mostrar_aluguel()
 
 # Formata um número para ter o ponto como separador de milhar.
 func _format_preco(numero: int) -> String:

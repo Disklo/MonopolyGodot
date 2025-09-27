@@ -5,9 +5,11 @@
 [ext_resource type="PackedScene" uid="uid://cqv57oqbilpv6" path="res://scenes/Espacos/espaco.tscn" id="3_p2sbe"]
 
 [node name="Tabuleiro" type="Node2D"]
+position = Vector2(1, 2)
 script = ExtResource("1_mbpgq")
 
 [node name="Propriedade" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(-1, -2)
 
 [node name="Espaco" parent="." instance=ExtResource("3_p2sbe")]
-position = Vector2(352, 0)
+position = Vector2(351, -2)
