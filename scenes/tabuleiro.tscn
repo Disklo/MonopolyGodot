@@ -1,9 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://twnltl4j4vkp"]
+[gd_scene load_steps=12 format=3 uid="uid://twnltl4j4vkp"]
 
 [ext_resource type="Script" uid="uid://clef1qn4whmnn" path="res://scripts/tabuleiro.gd" id="1_mbpgq"]
 [ext_resource type="PackedScene" uid="uid://doimqufk657mn" path="res://scenes/Espacos/propriedade.tscn" id="2_tvb07"]
 [ext_resource type="PackedScene" uid="uid://chl3dvifohacs" path="res://scenes/Espacos/prisao.tscn" id="3_p2sbe"]
-[ext_resource type="Texture2D" uid="uid://d25o1yevvws8s" path="res://assets/sprites/tabuleiro_referencia.jpg" id="4_p2sbe"]
 [ext_resource type="PackedScene" uid="uid://c52615exk0hmx" path="res://scenes/Espacos/imposto.tscn" id="5_qqvnr"]
 [ext_resource type="PackedScene" uid="uid://ckw14h1omkswi" path="res://scenes/Espacos/servicoPublico.tscn" id="6_4ki4h"]
 [ext_resource type="PackedScene" uid="uid://ds8g4hwgxxe8w" path="res://scenes/Espacos/ferrovia.tscn" id="7_qg4j7"]
@@ -18,11 +17,6 @@ script = ExtResource("1_mbpgq")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(0.135, 0.135)
-
-[node name="TabuleiroReferencia" type="Sprite2D" parent="."]
-position = Vector2(-4.99998, 4.99983)
-scale = Vector2(1.559, 1.559)
-texture = ExtResource("4_p2sbe")
 
 [node name="Prisao" parent="." instance=ExtResource("3_p2sbe")]
 position = Vector2(-1916, 1564)
@@ -143,3 +137,10 @@ position = Vector2(-1222, -1906)
 
 [node name="Propriedade22" parent="." instance=ExtResource("2_tvb07")]
 position = Vector2(-1569, -1906)
+
+[node name="CorEspaco" type="ColorRect" parent="."]
+offset_left = -1564.0
+offset_top = -1554.0
+offset_right = 1554.0
+offset_bottom = 1564.0
+color = Color(0.803922, 0.901961, 0.815686, 1)
