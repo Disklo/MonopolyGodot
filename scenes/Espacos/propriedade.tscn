@@ -20,6 +20,7 @@ offset_left = 5.0
 offset_top = 5.0
 offset_right = 347.0
 offset_bottom = 347.0
+color = Color(0.803922, 0.901961, 0.815686, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(181.094, 179.433)

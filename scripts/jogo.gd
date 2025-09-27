@@ -10,6 +10,7 @@ class_name Jogo
 # Variáveis para controlar o estado do jogo
 var turno_atual: int = 0
 var jogador_atual: Jogador
+var ultimo_resultado_dados: int = 0
 
 # A função _ready é chamada quando o nó entra na árvore da cena.
 func _ready() -> void:
@@ -48,6 +49,7 @@ func _on_rolar_dados_apertado() -> void:
 
 	# 1. Rola os dados
 	var passos = rolar_dados()
+	ultimo_resultado_dados = passos
 
 	# 2. Move o jogador
 	jogador_atual.mover(passos)

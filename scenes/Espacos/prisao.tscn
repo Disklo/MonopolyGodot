@@ -1,3 +1,59 @@
-[gd_scene format=3 uid="uid://chl3dvifohacs"]
+[gd_scene load_steps=3 format=3 uid="uid://chl3dvifohacs"]
+
+[ext_resource type="FontFile" uid="uid://pm7o6r5cedaf" path="res://assets/fonts/monogram-extended.ttf" id="1_h417e"]
+[ext_resource type="Texture2D" uid="uid://ddc1j6hk7wbyf" path="res://assets/sprites/Vacant_Prison_Cell_clip_art_high.png" id="2_x64pc"]
 
 [node name="Prisao" type="Node2D"]
+
+[node name="CorBorda" type="ColorRect" parent="."]
+offset_right = 352.0
+offset_bottom = 352.0
+color = Color(0, 0, 0, 1)
+
+[node name="CorEspaco" type="ColorRect" parent="."]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 347.0
+offset_bottom = 347.0
+color = Color(0.803922, 0.901961, 0.815686, 1)
+
+[node name="texto_visitante" type="RichTextLabel" parent="."]
+offset_left = 5.0
+offset_top = 258.0
+offset_right = 347.0
+offset_bottom = 347.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("1_h417e")
+theme_override_font_sizes/normal_font_size = 48
+text = "Visitante"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CorBordaInterno" type="ColorRect" parent="."]
+offset_left = 94.0
+offset_right = 352.0
+offset_bottom = 258.0
+color = Color(0, 0, 0, 1)
+
+[node name="CorEspacoInterno" type="ColorRect" parent="."]
+offset_left = 99.0
+offset_top = 5.0
+offset_right = 347.0
+offset_bottom = 253.0
+color = Color(1, 0.691391, 0, 1)
+
+[node name="NomeLabel" type="RichTextLabel" parent="."]
+offset_left = 99.0
+offset_top = 5.0
+offset_right = 347.0
+offset_bottom = 60.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("1_h417e")
+theme_override_font_sizes/normal_font_size = 64
+text = "Prisão"
+horizontal_alignment = 1
+
+[node name="VacantPrisonCellClipArtHigh" type="Sprite2D" parent="."]
+position = Vector2(224, 150)
+scale = Vector2(0.318996, 0.318996)
+texture = ExtResource("2_x64pc")

@@ -1,14 +1,21 @@
-[gd_scene load_steps=4 format=3 uid="uid://twnltl4j4vkp"]
+[gd_scene load_steps=5 format=3 uid="uid://twnltl4j4vkp"]
 
 [ext_resource type="Script" uid="uid://clef1qn4whmnn" path="res://scripts/tabuleiro.gd" id="1_mbpgq"]
 [ext_resource type="PackedScene" uid="uid://doimqufk657mn" path="res://scenes/Espacos/propriedade.tscn" id="2_tvb07"]
-[ext_resource type="PackedScene" uid="uid://cqv57oqbilpv6" path="res://scenes/Espacos/espaco.tscn" id="3_p2sbe"]
+[ext_resource type="PackedScene" uid="uid://chl3dvifohacs" path="res://scenes/Espacos/prisao.tscn" id="3_p2sbe"]
+[ext_resource type="Texture2D" uid="uid://d25o1yevvws8s" path="res://assets/sprites/tabuleiro_referencia.jpg" id="4_p2sbe"]
 
 [node name="Tabuleiro" type="Node2D"]
 script = ExtResource("1_mbpgq")
 
-[node name="Propriedade" parent="." instance=ExtResource("2_tvb07")]
-position = Vector2(-1, -2)
+[node name="TabuleiroReferencia" type="Sprite2D" parent="."]
+texture = ExtResource("4_p2sbe")
 
-[node name="Espaco" parent="." instance=ExtResource("3_p2sbe")]
-position = Vector2(351, -2)
+[node name="Prisao" parent="." instance=ExtResource("3_p2sbe")]
+position = Vector2(-1352, 1000)
+
+[node name="Propriedade" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(-1352, 653)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.2, 0.2)
