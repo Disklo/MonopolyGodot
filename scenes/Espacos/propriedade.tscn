@@ -26,11 +26,11 @@ color = Color(0.803922, 0.901961, 0.815686, 1)
 offset_left = 6.0
 offset_top = 1.0
 offset_right = 350.0
-offset_bottom = 56.0
+offset_bottom = 104.0
 theme_override_colors/default_color = Color(0, 0, 0, 1)
 theme_override_fonts/normal_font = ExtResource("3_hu7pq")
 theme_override_font_sizes/normal_font_size = 64
-text = "Edifício Rocha"
+text = "Rua Ator Paulo Gustavo"
 horizontal_alignment = 1
 
 [node name="PrecoLabel" type="RichTextLabel" parent="."]
@@ -57,12 +57,12 @@ text = "Preço: R$1.500.000"
 horizontal_alignment = 1
 
 [node name="1casa" type="Sprite2D" parent="."]
-position = Vector2(179, 178)
+position = Vector2(179, 200)
 texture = ExtResource("4_axr5y")
 
 [node name="2casas" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(100, 178)
+position = Vector2(100, 200)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("4_axr5y")
 
@@ -73,8 +73,8 @@ texture = ExtResource("4_axr5y")
 
 [node name="3casas" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(110, 135)
-scale = Vector2(0.7, 0.7)
+position = Vector2(120, 164)
+scale = Vector2(0.65, 0.65)
 texture = ExtResource("4_axr5y")
 
 [node name="Sprite2D4" type="Sprite2D" parent="3casas"]
@@ -89,8 +89,8 @@ texture = ExtResource("4_axr5y")
 
 [node name="4casas" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(110, 135)
-scale = Vector2(0.7, 0.7)
+position = Vector2(120, 164)
+scale = Vector2(0.65, 0.65)
 texture = ExtResource("4_axr5y")
 
 [node name="Sprite2D4" type="Sprite2D" parent="4casas"]
@@ -110,6 +110,6 @@ texture = ExtResource("4_axr5y")
 
 [node name="1hotel" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(181.094, 179.433)
-scale = Vector2(0.752708, 0.752709)
+position = Vector2(180, 198)
+scale = Vector2(0.69, 0.69)
 texture = ExtResource("2_6iv0k")

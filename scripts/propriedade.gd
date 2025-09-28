@@ -59,7 +59,7 @@ func comprar(jogador: Jogador) -> void:
 		print("%s comprou %s" % [jogador.nome, nome])
 		jogador.pagar(preco)
 		dono = jogador
-		jogador.comprar_propriedade(self)
+		# jogador.comprar_propriedade(self)
 	else:
 		print("%s não tem dinheiro para comprar %s" % [jogador.nome, nome])
 

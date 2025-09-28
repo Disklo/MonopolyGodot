@@ -39,3 +39,15 @@ theme_override_fonts/normal_font = ExtResource("1_qr27x")
 theme_override_font_sizes/normal_font_size = 48
 text = "R$100"
 horizontal_alignment = 1
+
+[node name="AluguelLabel" type="RichTextLabel" parent="."]
+visible = false
+offset_left = 6.0
+offset_top = 296.0
+offset_right = 350.0
+offset_bottom = 351.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("1_qr27x")
+theme_override_font_sizes/normal_font_size = 48
+text = "Preço: R$1.500.000"
+horizontal_alignment = 1

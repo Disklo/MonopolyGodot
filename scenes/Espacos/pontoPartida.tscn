@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://crsqpes1eksv1"]
+[gd_scene load_steps=3 format=3 uid="uid://crsqpes1eksv1"]
 
 [ext_resource type="Script" uid="uid://ky1mewrolj47" path="res://scripts/pontoPartida.gd" id="1_i5mdp"]
+[ext_resource type="FontFile" uid="uid://pm7o6r5cedaf" path="res://assets/fonts/monogram-extended.ttf" id="2_e0o72"]
 
 [node name="Partida" type="Node2D"]
 script = ExtResource("1_i5mdp")
@@ -16,3 +17,14 @@ offset_top = 5.0
 offset_right = 347.0
 offset_bottom = 347.0
 color = Color(0.803922, 0.901961, 0.815686, 1)
+
+[node name="NomeLabel" type="RichTextLabel" parent="."]
+offset_left = 6.0
+offset_top = 1.0
+offset_right = 350.0
+offset_bottom = 103.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("2_e0o72")
+theme_override_font_sizes/normal_font_size = 64
+text = "Partida"
+horizontal_alignment = 1
