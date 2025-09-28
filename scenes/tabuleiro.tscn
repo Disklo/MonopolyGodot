@@ -96,6 +96,7 @@ indice = 5
 [node name="Imposto" parent="." instance=ExtResource("5_qqvnr")]
 position = Vector2(166, 1564)
 indice = 4
+nome = "Imposto de renda"
 
 [node name="Propriedade10" parent="." instance=ExtResource("2_tvb07")]
 position = Vector2(513, 1564)
@@ -122,6 +123,7 @@ nome = "Rua José Bonifácio"
 [node name="Imposto2" parent="." instance=ExtResource("5_qqvnr")]
 position = Vector2(1554, 870)
 indice = 38
+nome = "Imposto sob riqueza"
 
 [node name="Propriedade13" parent="." instance=ExtResource("2_tvb07")]
 position = Vector2(1554, 523)
@@ -167,6 +169,7 @@ nome = "Rua Aurelino Leal"
 [node name="ServicoPublico2" parent="." instance=ExtResource("6_4ki4h")]
 position = Vector2(860, -1906)
 indice = 28
+nome = "Companhia de Água"
 
 [node name="Propriedade18" parent="." instance=ExtResource("2_tvb07")]
 position = Vector2(166, -1906)
