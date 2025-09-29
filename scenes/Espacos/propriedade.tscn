@@ -8,7 +8,7 @@
 [node name="Propriedade" type="Node2D"]
 script = ExtResource("1_7fl57")
 preco = 1500000
-nome = "Edifício Rocha"
+nome = "Rua Ator Paulo Gustavo"
 
 [node name="CorBorda" type="ColorRect" parent="."]
 offset_right = 352.0
@@ -89,7 +89,6 @@ texture = ExtResource("4_axr5y")
 
 [node name="Sprite2D4" type="Sprite2D" parent="2casas"]
 position = Vector2(187.5, 0)
-scale = Vector2(1, 1)
 texture = ExtResource("4_axr5y")
 
 [node name="3casas" type="Sprite2D" parent="."]
@@ -100,12 +99,10 @@ texture = ExtResource("4_axr5y")
 
 [node name="Sprite2D4" type="Sprite2D" parent="3casas"]
 position = Vector2(187.5, 0)
-scale = Vector2(1, 1)
 texture = ExtResource("4_axr5y")
 
 [node name="Sprite2D5" type="Sprite2D" parent="3casas"]
 position = Vector2(95, 107.143)
-scale = Vector2(1, 1)
 texture = ExtResource("4_axr5y")
 
 [node name="4casas" type="Sprite2D" parent="."]
@@ -116,17 +113,14 @@ texture = ExtResource("4_axr5y")
 
 [node name="Sprite2D4" type="Sprite2D" parent="4casas"]
 position = Vector2(187.5, 0)
-scale = Vector2(1, 1)
 texture = ExtResource("4_axr5y")
 
 [node name="Sprite2D5" type="Sprite2D" parent="4casas"]
 position = Vector2(0, 107.143)
-scale = Vector2(1, 1)
 texture = ExtResource("4_axr5y")
 
 [node name="Sprite2D6" type="Sprite2D" parent="4casas"]
 position = Vector2(187.5, 107.143)
-scale = Vector2(1, 1)
 texture = ExtResource("4_axr5y")
 
 [node name="1hotel" type="Sprite2D" parent="."]

@@ -36,6 +36,8 @@ nome = "Rua Lopes Trovão"
 
 [node name="Propriedade3" parent="." instance=ExtResource("2_tvb07")]
 position = Vector2(-1916, 176)
+comprado = true
+tipo_imovel = "hotel"
 indice = 14
 nome = "Rua Mariz e Barros"
 
@@ -72,6 +74,8 @@ indice = 20
 
 [node name="Propriedade7" parent="." instance=ExtResource("2_tvb07")]
 position = Vector2(-1569, 1564)
+comprado = true
+tipo_imovel = "duas_casas"
 indice = 9
 nome = "Rua Presidente Pedreira"
 
@@ -110,7 +114,6 @@ indice = 2
 [node name="Propriedade11" parent="." instance=ExtResource("2_tvb07")]
 position = Vector2(1207, 1564)
 indice = 1
-nome = "Rua Ator Paulo Gustavo"
 
 [node name="Partida" parent="." instance=ExtResource("11_8jx8b")]
 position = Vector2(1554, 1564)
@@ -192,6 +195,8 @@ nome = "Rua São Sebastião"
 
 [node name="Propriedade21" parent="." instance=ExtResource("2_tvb07")]
 position = Vector2(-528, -1906)
+comprado = true
+tipo_imovel = "uma_casa"
 indice = 24
 nome = "Rua Tiradentes"
 

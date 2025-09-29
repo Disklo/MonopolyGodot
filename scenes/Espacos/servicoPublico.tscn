@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://ckw14h1omkswi"]
+[gd_scene load_steps=5 format=3 uid="uid://ckw14h1omkswi"]
 
 [ext_resource type="Script" uid="uid://dcecxklwbd85x" path="res://scripts/servico_publico.gd" id="1_57jfh"]
 [ext_resource type="FontFile" uid="uid://pm7o6r5cedaf" path="res://assets/fonts/monogram-extended.ttf" id="1_qr27x"]
+[ext_resource type="Texture2D" uid="uid://dcbqouf0d14sl" path="res://assets/sprites/building_iso.svg" id="3_pet06"]
+[ext_resource type="Texture2D" uid="uid://dq73saf04814p" path="res://assets/sprites/building_iso_2.svg" id="4_odyk5"]
 
 [node name="ServicoPublico" type="Node2D"]
 script = ExtResource("1_57jfh")
@@ -52,3 +54,77 @@ theme_override_fonts/normal_font = ExtResource("1_qr27x")
 theme_override_font_sizes/normal_font_size = 48
 text = "Preço: R$1.500.000"
 horizontal_alignment = 1
+
+[node name="CorVenda" type="ColorRect" parent="."]
+visible = false
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 347.0
+offset_bottom = 347.0
+color = Color(1, 0.497061, 0.493423, 1)
+
+[node name="NomeLabel2" type="RichTextLabel" parent="."]
+visible = false
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 347.0
+offset_bottom = 347.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("1_qr27x")
+theme_override_font_sizes/normal_font_size = 64
+text = "LOTE À VENDA"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="1casa" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(179, 200)
+texture = ExtResource("3_pet06")
+
+[node name="2casas" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(100, 200)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("3_pet06")
+
+[node name="Sprite2D4" type="Sprite2D" parent="2casas"]
+position = Vector2(187.5, 0)
+texture = ExtResource("3_pet06")
+
+[node name="3casas" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(120, 164)
+scale = Vector2(0.65, 0.65)
+texture = ExtResource("3_pet06")
+
+[node name="Sprite2D4" type="Sprite2D" parent="3casas"]
+position = Vector2(187.5, 0)
+texture = ExtResource("3_pet06")
+
+[node name="Sprite2D5" type="Sprite2D" parent="3casas"]
+position = Vector2(95, 107.143)
+texture = ExtResource("3_pet06")
+
+[node name="4casas" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(120, 164)
+scale = Vector2(0.65, 0.65)
+texture = ExtResource("3_pet06")
+
+[node name="Sprite2D4" type="Sprite2D" parent="4casas"]
+position = Vector2(187.5, 0)
+texture = ExtResource("3_pet06")
+
+[node name="Sprite2D5" type="Sprite2D" parent="4casas"]
+position = Vector2(0, 107.143)
+texture = ExtResource("3_pet06")
+
+[node name="Sprite2D6" type="Sprite2D" parent="4casas"]
+position = Vector2(187.5, 107.143)
+texture = ExtResource("3_pet06")
+
+[node name="1hotel" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(180, 198)
+scale = Vector2(0.69, 0.69)
+texture = ExtResource("4_odyk5")
