@@ -18,6 +18,10 @@ func _ready() -> void:
 
 # Prepara o estado inicial do jogo.
 func iniciar_jogo() -> void:
+	#Adicionando referências dos nós.
+	tabuleiro = get_node("Tabuleiro")
+	jogadores = [get_node("Jogador")]
+	
 	if jogadores.is_empty() or tabuleiro == null:
 			print("ERRO: Jogadores ou tabuleiro não configurados na cena Jogo.")
 			return
