@@ -1,0 +1,118 @@
+[gd_scene load_steps=7 format=3 uid="uid://cwh3rnhcqw0jd"]
+
+[ext_resource type="Texture2D" uid="uid://e7fksxjn0lyj" path="res://assets/images/monopoly_logo.png" id="1_i85hu"]
+[ext_resource type="Script" uid="uid://bokn24q40hnlg" path="res://scripts/menu_principal.gd" id="1_iep14"]
+[ext_resource type="FontFile" uid="uid://c3kgpi1ijacaa" path="res://assets/fonts/VCR_OSD_MONO_1.001.ttf" id="1_mk4g1"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_i85hu"]
+font = ExtResource("1_mk4g1")
+font_size = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mk4g1"]
+bg_color = Color(0.314316, 0.314316, 0.314316, 1)
+corner_detail = 1
+expand_margin_left = 8.0
+expand_margin_top = 10.0
+expand_margin_right = 8.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iep14"]
+bg_color = Color(0.278431, 0.278431, 0.278431, 1)
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
+
+[node name="MenuPrincipal" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = 6.0
+offset_right = 2.0
+offset_bottom = 6.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_iep14")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0768358, 0.0768358, 0.0768358, 1)
+
+[node name="TituloJogo" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.498
+anchor_top = 0.406
+anchor_right = 0.498
+anchor_bottom = 0.406
+offset_left = -165.696
+offset_top = -0.0880127
+offset_right = 166.304
+offset_bottom = 41.912
+grow_horizontal = 2
+grow_vertical = 2
+text = "THE MONOPOLY GAME"
+label_settings = SubResource("LabelSettings_i85hu")
+horizontal_alignment = 1
+
+[node name="MonopolyLogo" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -327.5
+offset_right = 327.5
+offset_bottom = 254.0
+grow_horizontal = 2
+texture = ExtResource("1_i85hu")
+expand_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -81.0
+offset_top = -161.0
+offset_right = 76.0
+offset_bottom = -63.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 43
+alignment = 1
+
+[node name="BotaoIniciarJogo" type="Button" parent="VBoxContainer"]
+modulate = Color(0.986752, 0.986752, 0.986752, 1)
+light_mask = 7
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_mk4g1")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_mk4g1")
+text = "INICIAR JOGO"
+
+[node name="BotaoOpcoes" type="Button" parent="VBoxContainer"]
+modulate = Color(0.986752, 0.986752, 0.986752, 1)
+light_mask = 7
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_mk4g1")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_mk4g1")
+text = "OPÇÕES"
+
+[node name="BotaoSair" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_mk4g1")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_iep14")
+text = "SAIR"
+
+[connection signal="pressed" from="VBoxContainer/BotaoIniciarJogo" to="." method="_on_botao_iniciar_jogo_pressed"]
+[connection signal="pressed" from="VBoxContainer/BotaoOpcoes" to="." method="_on_botao_opcoes_pressed"]
+[connection signal="pressed" from="VBoxContainer/BotaoSair" to="." method="_on_botao_sair_pressed"]

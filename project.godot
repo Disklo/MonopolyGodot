@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Monopoly"
-run/main_scene="uid://clqoiownwfhq0"
+run/main_scene="uid://cwh3rnhcqw0jd"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
