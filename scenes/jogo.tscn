@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://clqoiownwfhq0"]
+[gd_scene load_steps=5 format=3 uid="uid://clqoiownwfhq0"]
 
 [ext_resource type="Script" uid="uid://ckbjfm7pwjqfs" path="res://scripts/jogo.gd" id="1_1b3iq"]
 [ext_resource type="PackedScene" uid="uid://twnltl4j4vkp" path="res://scenes/tabuleiro.tscn" id="2_k05ng"]
 [ext_resource type="PackedScene" uid="uid://c14hriq12d1bf" path="res://scenes/jogador.tscn" id="3_k05ng"]
+[ext_resource type="PackedScene" uid="uid://bue0kwfwahiqo" path="res://scenes/UI/jogadorHUD.tscn" id="4_k05ng"]
 
 [node name="Jogo" type="Node"]
 script = ExtResource("1_1b3iq")
@@ -10,3 +11,9 @@ script = ExtResource("1_1b3iq")
 [node name="Jogador" parent="." instance=ExtResource("3_k05ng")]
 
 [node name="Tabuleiro" parent="." instance=ExtResource("2_k05ng")]
+
+[node name="JogadorHud" parent="." instance=ExtResource("4_k05ng")]
+offset_left = -1478.0
+offset_top = -1488.0
+offset_right = -2190.0
+offset_bottom = -1947.0
