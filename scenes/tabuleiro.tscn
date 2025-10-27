@@ -20,6 +20,52 @@ script = ExtResource("1_mbpgq")
 zoom = Vector2(0.135, 0.135)
 script = ExtResource("2_kkw4d")
 
+[node name="Partida" parent="." instance=ExtResource("11_8jx8b")]
+position = Vector2(1554, 1564)
+
+[node name="Propriedade11" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(1207, 1564)
+indice = 1
+
+[node name="CofreComunitario2" parent="." instance=ExtResource("8_i6856")]
+position = Vector2(860, 1564)
+indice = 2
+
+[node name="Propriedade10" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(513, 1564)
+indice = 3
+nome = "Rua Moreira César"
+
+[node name="Imposto" parent="." instance=ExtResource("5_qqvnr")]
+position = Vector2(166, 1564)
+indice = 4
+nome = "Imposto de renda"
+
+[node name="Ferrovia2" parent="." instance=ExtResource("7_qg4j7")]
+position = Vector2(-181, 1564)
+indice = 5
+
+[node name="Propriedade9" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(-528, 1564)
+indice = 6
+nome = "Av. Roberto Silveira"
+
+[node name="Sorte" parent="." instance=ExtResource("9_nput3")]
+position = Vector2(-875, 1564)
+indice = 7
+
+[node name="Propriedade8" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(-1222, 1564)
+indice = 8
+nome = "Av. Amaral Peixoto"
+
+[node name="Propriedade7" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(-1569, 1564)
+comprado = true
+tipo_imovel = "duas_casas"
+indice = 9
+nome = "Rua Presidente Pedreira"
+
 [node name="Prisao" parent="." instance=ExtResource("3_p2sbe")]
 position = Vector2(-1916, 1564)
 indice = 10
@@ -28,6 +74,10 @@ indice = 10
 position = Vector2(-1916, 1217)
 indice = 11
 nome = "Rua Gavião Peixoto"
+
+[node name="ServicoPublico" parent="." instance=ExtResource("6_4ki4h")]
+position = Vector2(-1916, 870)
+indice = 12
 
 [node name="Propriedade2" parent="." instance=ExtResource("2_tvb07")]
 position = Vector2(-1916, 523)
@@ -40,10 +90,6 @@ comprado = true
 tipo_imovel = "hotel"
 indice = 14
 nome = "Rua Mariz e Barros"
-
-[node name="ServicoPublico" parent="." instance=ExtResource("6_4ki4h")]
-position = Vector2(-1916, 870)
-indice = 12
 
 [node name="Ferrovia" parent="." instance=ExtResource("7_qg4j7")]
 position = Vector2(-1916, -171)
@@ -72,121 +118,14 @@ nome = "Rua Miguel de Frias"
 position = Vector2(-1916, -1906)
 indice = 20
 
-[node name="Propriedade7" parent="." instance=ExtResource("2_tvb07")]
-position = Vector2(-1569, 1564)
-comprado = true
-tipo_imovel = "duas_casas"
-indice = 9
-nome = "Rua Presidente Pedreira"
+[node name="Propriedade22" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(-1569, -1906)
+indice = 21
+nome = "Rua José Clemente"
 
-[node name="Propriedade8" parent="." instance=ExtResource("2_tvb07")]
-position = Vector2(-1222, 1564)
-indice = 8
-nome = "Av. Amaral Peixoto"
-
-[node name="Sorte" parent="." instance=ExtResource("9_nput3")]
-position = Vector2(-875, 1564)
-indice = 7
-
-[node name="Propriedade9" parent="." instance=ExtResource("2_tvb07")]
-position = Vector2(-528, 1564)
-indice = 6
-nome = "Av. Roberto Silveira"
-
-[node name="Ferrovia2" parent="." instance=ExtResource("7_qg4j7")]
-position = Vector2(-181, 1564)
-indice = 5
-
-[node name="Imposto" parent="." instance=ExtResource("5_qqvnr")]
-position = Vector2(166, 1564)
-indice = 4
-nome = "Imposto de renda"
-
-[node name="Propriedade10" parent="." instance=ExtResource("2_tvb07")]
-position = Vector2(513, 1564)
-indice = 3
-nome = "Rua Moreira César"
-
-[node name="CofreComunitario2" parent="." instance=ExtResource("8_i6856")]
-position = Vector2(860, 1564)
-indice = 2
-
-[node name="Propriedade11" parent="." instance=ExtResource("2_tvb07")]
-position = Vector2(1207, 1564)
-indice = 1
-
-[node name="Partida" parent="." instance=ExtResource("11_8jx8b")]
-position = Vector2(1554, 1564)
-
-[node name="Propriedade12" parent="." instance=ExtResource("2_tvb07")]
-position = Vector2(1554, 1217)
-indice = 39
-nome = "Rua José Bonifácio"
-
-[node name="Imposto2" parent="." instance=ExtResource("5_qqvnr")]
-position = Vector2(1554, 870)
-indice = 38
-nome = "Imposto sob riqueza"
-
-[node name="Propriedade13" parent="." instance=ExtResource("2_tvb07")]
-position = Vector2(1554, 523)
-indice = 37
-nome = "Rua Visc. de Morais"
-
-[node name="Sorte2" parent="." instance=ExtResource("9_nput3")]
-position = Vector2(1554, 176)
-indice = 36
-
-[node name="Ferrovia3" parent="." instance=ExtResource("7_qg4j7")]
-position = Vector2(1554, -171)
-indice = 35
-
-[node name="Propriedade14" parent="." instance=ExtResource("2_tvb07")]
-position = Vector2(1554, -518)
-indice = 34
-nome = "Rua Dr. Nilo Peçanha"
-
-[node name="CofreComunitario3" parent="." instance=ExtResource("8_i6856")]
-position = Vector2(1554, -865)
-indice = 33
-
-[node name="Propriedade15" parent="." instance=ExtResource("2_tvb07")]
-position = Vector2(1554, -1212)
-indice = 32
-nome = "Rua Dr. Araújo Pimenta"
-
-[node name="Propriedade16" parent="." instance=ExtResource("2_tvb07")]
-position = Vector2(1554, -1559)
-indice = 31
-nome = "Av. Marquês do Paraná"
-
-[node name="EnviaPrisao" parent="." instance=ExtResource("12_kkw4d")]
-position = Vector2(1554, -1906)
-indice = 30
-
-[node name="Propriedade17" parent="." instance=ExtResource("2_tvb07")]
-position = Vector2(1207, -1906)
-indice = 29
-nome = "Rua Aurelino Leal"
-
-[node name="ServicoPublico2" parent="." instance=ExtResource("6_4ki4h")]
-position = Vector2(860, -1906)
-indice = 28
-nome = "Companhia de Água"
-
-[node name="Propriedade18" parent="." instance=ExtResource("2_tvb07")]
-position = Vector2(166, -1906)
-indice = 26
-nome = "Rua Padre Anchieta"
-
-[node name="Propriedade19" parent="." instance=ExtResource("2_tvb07")]
-position = Vector2(513, -1906)
-indice = 27
-nome = "Rua Gen. Andrade Neves"
-
-[node name="Ferrovia4" parent="." instance=ExtResource("7_qg4j7")]
-position = Vector2(-181, -1906)
-indice = 25
+[node name="Sorte3" parent="." instance=ExtResource("9_nput3")]
+position = Vector2(-1222, -1906)
+indice = 22
 
 [node name="Propriedade20" parent="." instance=ExtResource("2_tvb07")]
 position = Vector2(-875, -1906)
@@ -200,14 +139,75 @@ tipo_imovel = "uma_casa"
 indice = 24
 nome = "Rua Tiradentes"
 
-[node name="Sorte3" parent="." instance=ExtResource("9_nput3")]
-position = Vector2(-1222, -1906)
-indice = 22
+[node name="Ferrovia4" parent="." instance=ExtResource("7_qg4j7")]
+position = Vector2(-181, -1906)
+indice = 25
 
-[node name="Propriedade22" parent="." instance=ExtResource("2_tvb07")]
-position = Vector2(-1569, -1906)
-indice = 21
-nome = "Rua José Clemente"
+[node name="Propriedade18" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(166, -1906)
+indice = 26
+nome = "Rua Padre Anchieta"
+
+[node name="Propriedade19" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(513, -1906)
+indice = 27
+nome = "Rua Gen. Andrade Neves"
+
+[node name="ServicoPublico2" parent="." instance=ExtResource("6_4ki4h")]
+position = Vector2(860, -1906)
+indice = 28
+nome = "Companhia de Água"
+
+[node name="Propriedade17" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(1207, -1906)
+indice = 29
+nome = "Rua Aurelino Leal"
+
+[node name="EnviaPrisao" parent="." instance=ExtResource("12_kkw4d")]
+position = Vector2(1554, -1906)
+indice = 30
+
+[node name="Propriedade16" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(1554, -1559)
+indice = 31
+nome = "Av. Marquês do Paraná"
+
+[node name="Propriedade15" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(1554, -1212)
+indice = 32
+nome = "Rua Dr. Araújo Pimenta"
+
+[node name="CofreComunitario3" parent="." instance=ExtResource("8_i6856")]
+position = Vector2(1554, -865)
+indice = 33
+
+[node name="Propriedade14" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(1554, -518)
+indice = 34
+nome = "Rua Dr. Nilo Peçanha"
+
+[node name="Ferrovia3" parent="." instance=ExtResource("7_qg4j7")]
+position = Vector2(1554, -171)
+indice = 35
+
+[node name="Sorte2" parent="." instance=ExtResource("9_nput3")]
+position = Vector2(1554, 176)
+indice = 36
+
+[node name="Propriedade13" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(1554, 523)
+indice = 37
+nome = "Rua Visc. de Morais"
+
+[node name="Imposto2" parent="." instance=ExtResource("5_qqvnr")]
+position = Vector2(1554, 870)
+indice = 38
+nome = "Imposto sob riqueza"
+
+[node name="Propriedade12" parent="." instance=ExtResource("2_tvb07")]
+position = Vector2(1554, 1217)
+indice = 39
+nome = "Rua José Bonifácio"
 
 [node name="CorEspaco" type="ColorRect" parent="."]
 offset_left = -1564.0
