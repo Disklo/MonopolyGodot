@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://ckbjfm7pwjqfs" path="res://scripts/jogo.gd" id="1_1b3iq"]
 [ext_resource type="PackedScene" uid="uid://twnltl4j4vkp" path="res://scenes/tabuleiro.tscn" id="2_k05ng"]
 [ext_resource type="PackedScene" uid="uid://c14hriq12d1bf" path="res://scenes/jogador.tscn" id="3_k05ng"]
-[ext_resource type="PackedScene" uid="uid://40tn0tcfdv2s" path="res://scenes/UI/dado.tscn" id="4_k05ng"]
+[ext_resource type="PackedScene" uid="uid://bue0kwfwahiqo" path="res://scenes/UI/jogadorHUD.tscn" id="4_k05ng"]
 
 [node name="Jogo" type="Node"]
 script = ExtResource("1_1b3iq")
@@ -13,26 +13,26 @@ peao = NodePath(".")
 
 [node name="Tabuleiro" parent="." instance=ExtResource("2_k05ng")]
 
-[node name="botaoRolarDados" type="Button" parent="."]
-anchors_preset = -1
-anchor_left = 0.616
-anchor_right = 0.616
-offset_left = -1245.63
-offset_top = -1498.0
-offset_right = -717.632
-offset_bottom = -1404.0
-grow_horizontal = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_font_sizes/font_size = 62
-text = "ROLAR DADOS"
+[node name="JogadorHud" parent="." instance=ExtResource("4_k05ng")]
+offset_left = -1435.0
+offset_top = -1456.0
+offset_right = -2147.0
+offset_bottom = -1915.0
 
-[node name="Dado1" parent="." instance=ExtResource("4_k05ng")]
-visible = false
-position = Vector2(-8, 525)
+[node name="JogadorHud2" parent="." instance=ExtResource("4_k05ng")]
+offset_left = 977.0
+offset_top = -1474.0
+offset_right = 265.0
+offset_bottom = -1933.0
 
-[node name="Dado2" parent="." instance=ExtResource("4_k05ng")]
-visible = false
-position = Vector2(-837, 547)
+[node name="JogadorHud3" parent="." instance=ExtResource("4_k05ng")]
+offset_left = -1438.0
+offset_top = 1300.0
+offset_right = -2150.0
+offset_bottom = 841.0
 
-[connection signal="pressed" from="botaoRolarDados" to="." method="_on_rolar_dados_apertado"]
+[node name="JogadorHud4" parent="." instance=ExtResource("4_k05ng")]
+offset_left = 993.0
+offset_top = 1300.0
+offset_right = 281.0
+offset_bottom = 841.0
