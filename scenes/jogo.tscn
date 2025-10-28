@@ -8,7 +8,8 @@
 [node name="Jogo" type="Node"]
 script = ExtResource("1_1b3iq")
 
-[node name="Jogador" parent="." instance=ExtResource("3_k05ng")]
+[node name="Jogador" parent="." node_paths=PackedStringArray("peao") instance=ExtResource("3_k05ng")]
+peao = NodePath(".")
 
 [node name="Tabuleiro" parent="." instance=ExtResource("2_k05ng")]
 

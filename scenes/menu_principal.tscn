@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cwh3rnhcqw0jd"]
+[gd_scene load_steps=10 format=3 uid="uid://cwh3rnhcqw0jd"]
 
 [ext_resource type="Texture2D" uid="uid://e7fksxjn0lyj" path="res://assets/images/monopoly_logo.png" id="1_i85hu"]
 [ext_resource type="Script" uid="uid://bokn24q40hnlg" path="res://scripts/menu_principal.gd" id="1_iep14"]
@@ -8,6 +8,14 @@
 font = ExtResource("1_mk4g1")
 font_size = 40
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_486ty"]
+expand_margin_left = 8.0
+expand_margin_top = 10.0
+expand_margin_right = 8.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qcl6i"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mk4g1"]
 bg_color = Color(0.314316, 0.314316, 0.314316, 1)
 corner_detail = 1
@@ -16,9 +24,17 @@ expand_margin_top = 10.0
 expand_margin_right = 8.0
 expand_margin_bottom = 10.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w5ui5"]
+expand_margin_left = 8.0
+expand_margin_top = 10.0
+expand_margin_right = 8.0
+expand_margin_bottom = 10.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iep14"]
 bg_color = Color(0.278431, 0.278431, 0.278431, 1)
+expand_margin_left = 8.0
 expand_margin_top = 10.0
+expand_margin_right = 8.0
 expand_margin_bottom = 10.0
 
 [node name="MenuPrincipal" type="Control"]
@@ -92,8 +108,11 @@ alignment = 1
 modulate = Color(0.986752, 0.986752, 0.986752, 1)
 light_mask = 7
 layout_mode = 2
+mouse_default_cursor_shape = 2
 theme_override_fonts/font = ExtResource("1_mk4g1")
 theme_override_font_sizes/font_size = 32
+theme_override_styles/hover = SubResource("StyleBoxFlat_486ty")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_qcl6i")
 theme_override_styles/normal = SubResource("StyleBoxFlat_mk4g1")
 text = "INICIAR JOGO"
 
@@ -101,15 +120,21 @@ text = "INICIAR JOGO"
 modulate = Color(0.986752, 0.986752, 0.986752, 1)
 light_mask = 7
 layout_mode = 2
+mouse_default_cursor_shape = 2
 theme_override_fonts/font = ExtResource("1_mk4g1")
 theme_override_font_sizes/font_size = 32
+theme_override_styles/hover = SubResource("StyleBoxFlat_w5ui5")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_qcl6i")
 theme_override_styles/normal = SubResource("StyleBoxFlat_mk4g1")
 text = "OPÇÕES"
 
 [node name="BotaoSair" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+mouse_default_cursor_shape = 2
 theme_override_fonts/font = ExtResource("1_mk4g1")
 theme_override_font_sizes/font_size = 32
+theme_override_styles/hover = SubResource("StyleBoxFlat_w5ui5")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_qcl6i")
 theme_override_styles/normal = SubResource("StyleBoxFlat_iep14")
 text = "SAIR"
 

@@ -3,6 +3,9 @@ extends Node
 
 class_name Jogo
 
+@onready var dado1: Node2D = $Dado1
+@onready var dado2: Node2D = $Dado2
+
 # Referências aos nós da cena, configuráveis no editor
 @export var tabuleiro: Tabuleiro
 @export var jogadores: Array[Jogador]
@@ -22,12 +25,20 @@ func iniciar_jogo() -> void:
 	tabuleiro = get_node("Tabuleiro")
 	jogadores = [get_node("Jogador")]
 	
+	
 	if jogadores.is_empty() or tabuleiro == null:
 			print("ERRO: Jogadores ou tabuleiro não configurados na cena Jogo.")
 			return
 
 	turno_atual = 0
 	jogador_atual = jogadores[turno_atual]
+	
+	# Posicionar jogador no ponto de partida
+	var ponto_partida = tabuleiro.obter_espaco(0)
+	if ponto_partida != null and jogador_atual.peao != null:
+		jogador_atual.peao.position = ponto_partida.position + Vector2(200, randi_range(100, 300))
+		print("Jogador posicionado no ponto de parida")
+		
 	print("O jogo começou! É a vez de %s." % jogador_atual.nome)
 
 # Passa para o próximo turno.
@@ -36,27 +47,53 @@ func proximo_turno() -> void:
 	jogador_atual = jogadores[turno_atual]
 	print("\n--- Próximo turno! É a vez de %s. ---" % jogador_atual.nome)
 
-# Simula a rolagem de dois dados de 6 lados.
-func rolar_dados() -> int:
-	var dado1 = randi_range(1, 6)
-	var dado2 = randi_range(1, 6)
-	var total = dado1 + dado2
-	print("%s rolou os dados: %d + %d = %d" % [jogador_atual.nome, dado1, dado2,
-total])
-	return total
-
 # Essa função deve ser conectada a um botão de "Rolar Dados" na UI
 func _on_rolar_dados_apertado() -> void:
+	print('rolando dados...')
+	
+	# tornando os dados visíveis no tabuleiro
+	$Dado1.visible = true
+	$Dado2.visible = true
+	
+	# Desabilitando o botão para não haver mais cliques enquanto um turno acontece
+	$botaoRolarDados.disabled = true
+	
 	if jogador_atual == null:
 			print("Jogo não iniciado corretamente.")
 			return
+	
+	# 1. Rola os valores individuais dos dados para mostrar visualmente
+	var dado1_valor = randi_range(1, 6)
+	var dado2_valor = randi_range(1, 6)
+	
+	# Calcula a posição de destino dos dados obs: soma-se 200 para que eles não caem na mesma posição
+	#var centro_x = Vector2(-840.0, 155.0) #get_viewport().get_visible_rect().size.x / 2
+	#var centro_y = Vector2(400.0, 145.0) #get_viewport().get_visible_rect().size.y / 2
+	var destino_dado1 = Vector2(randi_range(-500.0, 500.0) + 200, randi_range(1200.0, -500.0) + 200)
+	var destino_dado2 = Vector2(randi_range(-500.0, 500.0) + 200, randi_range(1200.0, -500.0) + 200)
+	
+	#var destino_dado1 = Vector2(centro_x + randi_range(-100,100), centro_y + randi_range(-100,100)) # Esquerda
+	#var destino_dado2 = Vector2(centro_x + randi_range(-100,100), centro_y + randi_range(-100,100)) # Direita
+	
+	# Animação dos dados
+	if dado1 and dado2:
+		dado1.animar_para(dado1_valor, destino_dado1)
+		dado2.animar_para(dado2_valor, destino_dado2)
+		await get_tree().create_timer(2.8).timeout
+	
+	# A parte abaixo ficará comentada por enquanto	
+	#else:
+	#	if dado1:
+	#		await dado1.animar_para(dado1_valor)
+	#	if dado2:	
+	#		await dado2.animar_para(dado2_valor)
 
-	# 1. Rola os dados
-	var passos = rolar_dados()
+	var passos = dado1_valor + dado2_valor
+	print("%s rolou os dados: %d + %d = %d" % [jogador_atual.nome, dado1_valor, dado2_valor, passos])
 	ultimo_resultado_dados = passos
 
 	# 2. Move o jogador
-	jogador_atual.mover(passos)
+	jogador_atual.mover(passos, tabuleiro)
 
 	# 3. Obtém o espaço em que o jogador parou
 	var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)

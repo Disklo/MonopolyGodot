@@ -18,10 +18,30 @@ var propriedades: Array[Propriedade] = []
 @export var peao: Node2D
 
 # Move o jogador no tabuleiro
-func mover(passos: int) -> void:
+func mover(passos: int, tabuleiro: Tabuleiro) -> void:
+	var posicao_inicial = posicao
 	posicao = (posicao + passos) % 40 # 40 é o número padrão de espaços no Monopoly
 	print("%s moveu para a posição %d" % [nome, posicao])
-	# Aqui virá a lógica para mover o peão (o nó 2D) na tela.
+	
+	if peao == null:
+		return
+	
+	# Criando a animação com Tween
+	var tween = create_tween()
+	tween.set_parallel(false)
+	
+	for i in range(1, passos + 1):
+		var casa_atual = (posicao_inicial + i) % 40
+		var espaco_atual = tabuleiro.obter_espaco(casa_atual)
+	
+		if espaco_atual != null:
+			var destino = espaco_atual.position + Vector2(200,200)
+			# Animando o movimento do peão
+			tween.tween_property(peao, "position", destino, 0.3).set_delay(0.2)
+	
+	await tween.finished
+	$"../botaoRolarDados".disabled = false
+
 
 # Adiciona uma propriedade à lista do jogador
 func comprar_propriedade(propriedade: Propriedade) -> void:
