@@ -25,6 +25,7 @@ position = Vector2(1554, 1564)
 
 [node name="Propriedade11" parent="." instance=ExtResource("2_tvb07")]
 position = Vector2(1207, 1564)
+cor_grupo = "marrom"
 indice = 1
 
 [node name="CofreComunitario2" parent="." instance=ExtResource("8_i6856")]
@@ -33,6 +34,7 @@ indice = 2
 
 [node name="Propriedade10" parent="." instance=ExtResource("2_tvb07")]
 position = Vector2(513, 1564)
+cor_grupo = "marrom"
 indice = 3
 nome = "Rua Moreira César"
 

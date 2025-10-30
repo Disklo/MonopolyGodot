@@ -15,6 +15,7 @@ var turno_atual: int = 0
 var rodada_atual: int = 1
 var jogador_atual: Jogador
 var ultimo_resultado_dados: int = 0
+@onready var botao_construir_casa: Button = $botaoConstruirCasa
 
 # A função _ready é chamada quando o nó entra na árvore da cena.
 func _ready() -> void:
@@ -45,12 +46,14 @@ func iniciar_jogo() -> void:
 				jogador.peao.position = ponto_partida.position + Vector2(200, randi_range(100, 300))
 	
 	print("O jogo começou! É a vez de %s." % jogador_atual.nome)
+	atualizar_ui_construcao()
 
 # Passa para o próximo jogador.
 func proximo_jogador() -> void:
 	turno_atual = (turno_atual + 1) % jogadores.size()
 	jogador_atual = jogadores[turno_atual]
 	print("\n--- Próximo turno! É a vez de %s. ---" % jogador_atual.nome)
+	atualizar_ui_construcao()
 	verificar_rodada()
 
 # Verifica se uma rodada terminou.
@@ -65,6 +68,7 @@ func _on_rolar_dados_apertado() -> void:
 
 func rolar_dados() -> void:
 	print('rolando dados...')
+	botao_construir_casa.visible = false
 	
 	# tornando os dados visíveis no tabuleiro
 	$Dado1.visible = true
@@ -119,4 +123,32 @@ func rolar_dados() -> void:
 
 	# 5. Passa para o próximo turno
 	# (Espera as animações terminarem antes do turno ser passado)
-	proximo_jogador()
+	proximo_turno()
+
+func _on_construir_casa_apertado() -> void:
+	var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)
+	if espaco_atual is Propriedade and espaco_atual.dono == jogador_atual:
+		espaco_atual.construir_casa()
+		atualizar_ui_construcao()
+
+func atualizar_ui_construcao() -> void:
+	var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)
+	if espaco_atual is Propriedade and espaco_atual.dono == jogador_atual and jogador_atual.tem_monopolio(espaco_atual.cor_grupo, tabuleiro):
+		botao_construir_casa.visible = true
+	else:
+		botao_construir_casa.visible = false
+
+func _on_debug_construir_apertado() -> void:
+	var propriedade = tabuleiro.obter_espaco(1) # Propriedade11
+	if propriedade is Propriedade:
+		if propriedade.dono == null:
+			propriedade.dono = jogador_atual
+			jogador_atual.propriedades.append(propriedade)
+			# Forçar monopólio para teste
+			var outra_prop = tabuleiro.obter_espaco(3) # Propriedade10
+			if outra_prop is Propriedade and outra_prop.dono == null:
+				outra_prop.dono = jogador_atual
+				jogador_atual.propriedades.append(outra_prop)
+		
+		propriedade.construir_casa()
+		atualizar_ui_construcao()

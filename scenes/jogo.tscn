@@ -48,6 +48,24 @@ theme_override_fonts/font = ExtResource("5_0c0ry")
 theme_override_font_sizes/font_size = 70
 text = "ROLAR DADOS"
 
+[node name="botaoConstruirCasa" type="Button" parent="."]
+offset_left = -311.0
+offset_top = -1150.0
+offset_right = 228.0
+offset_bottom = -1032.0
+theme_override_fonts/font = ExtResource("5_0c0ry")
+theme_override_font_sizes/font_size = 70
+text = "CONSTRUIR CASA"
+
+[node name="botaoDebugConstruir" type="Button" parent="."]
+offset_left = -311.0
+offset_top = -1000.0
+offset_right = 228.0
+offset_bottom = -882.0
+theme_override_fonts/font = ExtResource("5_0c0ry")
+theme_override_font_sizes/font_size = 70
+text = "DEBUG CONSTRUIR"
+
 [node name="Dado1" parent="." instance=ExtResource("6_4sjka")]
 visible = false
 
@@ -55,3 +73,5 @@ visible = false
 visible = false
 
 [connection signal="pressed" from="botaoRolarDados" to="." method="_on_rolar_dados_apertado"]
+[connection signal="pressed" from="botaoConstruirCasa" to="." method="_on_construir_casa_apertado"]
+[connection signal="pressed" from="botaoDebugConstruir" to="." method="_on_debug_construir_apertado"]
