@@ -6,7 +6,6 @@ class_name Ferrovia
 # O aluguel base é para quando o dono possui apenas uma ferrovia.
 # O aluguel aumenta com o número de ferrovias possuídas.
 # Aluguel: 1 = 25, 2 = 50, 3 = 100, 4 = 200
-@export var alugueis: Array[int] = [25, 50, 100, 200]
 
 # Sobrescreve a função de cobrar aluguel da classe Propriedade.
 func cobrar_aluguel(jogador: Jogador) -> void:

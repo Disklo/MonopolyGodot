@@ -47,6 +47,17 @@ func mover(passos: int, tabuleiro: Tabuleiro) -> void:
 func comprar_propriedade(propriedade: Propriedade) -> void:
 	propriedades.append(propriedade)
 
+# Verifica se o jogador possui todas as propriedades de um grupo de cor
+func tem_monopolio(cor_grupo: String, tabuleiro: Tabuleiro) -> bool:
+	var contagem_jogador = 0
+	for p in propriedades:
+		if p.cor_grupo == cor_grupo:
+			contagem_jogador += 1
+	
+	var contagem_tabuleiro = tabuleiro.contar_propriedades_cor(cor_grupo)
+	
+	return contagem_jogador == contagem_tabuleiro
+
 # Subtrai dinheiro do jogador
 func pagar(valor: int) -> void:
 	dinheiro -= valor

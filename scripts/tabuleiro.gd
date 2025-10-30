@@ -27,3 +27,11 @@ func obter_espaco(indice: int) -> Espaco:
 	else:
 		print("Erro: Índice de espaço inválido: %d" % indice)
 		return null
+
+# Conta quantas propriedades de uma determinada cor existem no tabuleiro
+func contar_propriedades_cor(cor_grupo: String) -> int:
+	var contagem = 0
+	for espaco in espacos:
+		if espaco is Propriedade and espaco.cor_grupo == cor_grupo:
+			contagem += 1
+	return contagem

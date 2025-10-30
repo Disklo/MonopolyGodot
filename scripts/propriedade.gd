@@ -8,6 +8,10 @@ class_name Propriedade
 @export var aluguel_base: int = 10
 @export var comprado: bool = false
 @export var tipo_imovel: String = ""
+@export var cor_grupo: String = ""
+@export var custo_casa: int = 50
+@export var alugueis: Array[int] = [10, 50, 150, 450, 625, 750] # 0-4 casas, hotel
+@export var num_casas: int = 0 # 5 para hotel
 
 # O jogador que é o dono dessa propriedade. Fica nulo se não tiver dono.
 var dono: Jogador = null
@@ -72,15 +76,21 @@ func comprar(jogador: Jogador) -> void:
 		print("%s comprou %s" % [jogador.nome, nome])
 		jogador.pagar(preco)
 		dono = jogador
-		# jogador.comprar_propriedade(self)
+		jogador.comprar_propriedade(self)
 	else:
 		print("%s não tem dinheiro para comprar %s" % [jogador.nome, nome])
 
 
 # Lógica para cobrar aluguel do jogador que parou aqui
 func cobrar_aluguel(jogador: Jogador) -> void:
-	jogador.pagar(aluguel_base)
-	dono.receber(aluguel_base)
+	var tabuleiro = get_tree().get_root().get_node("Jogo/Tabuleiro")
+	var aluguel_a_cobrar = alugueis[num_casas]
+	# Dobra o aluguel em terrenos sem construção se o jogador tiver o monopólio
+	if num_casas == 0 and dono.tem_monopolio(cor_grupo, tabuleiro):
+		aluguel_a_cobrar = aluguel_base * 2
+		
+	jogador.pagar(aluguel_a_cobrar)
+	dono.receber(aluguel_a_cobrar)
 
 # Retira a visibilidade do preço e coloca a visibilidade no aluguel.
 func lote_comprado() -> void:
@@ -112,3 +122,33 @@ func mostrar_propriedade(propriedade_a_mostrar: String) -> void:
 			quatro_casas.visible = true
 		"hotel":
 			hotel.visible = true
+
+func construir_casa() -> void:
+	var tabuleiro = get_tree().get_root().get_node("Jogo/Tabuleiro")
+	if not dono.tem_monopolio(cor_grupo, tabuleiro):
+		print("Você precisa ter o monopólio para construir aqui.")
+		return
+		
+	if not comprado:
+		lote_comprado()
+		comprado = true
+		
+	if dono.dinheiro < custo_casa:
+		print("Dinheiro insuficiente para construir.")
+		return
+
+	if num_casas < 5:
+		dono.pagar(custo_casa)
+		num_casas += 1
+		print("Casa construída em %s. Total: %d" % [nome, num_casas])
+		# Atualiza a exibição visual
+		match num_casas:
+			1: tipo_imovel = "uma_casa"
+			2: tipo_imovel = "duas_casas"
+			3: tipo_imovel = "tres_casas"
+			4: tipo_imovel = "quatro_casas"
+			5: tipo_imovel = "hotel"
+		mostrar_propriedade(tipo_imovel)
+		aluguel_label.text = "Aluguel: R$" + str(alugueis[num_casas])
+	else:
+		print("Máximo de construções atingido.")
