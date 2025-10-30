@@ -12,6 +12,7 @@ class_name Jogo
 
 # Variáveis para controlar o estado do jogo
 var turno_atual: int = 0
+var rodada_atual: int = 1
 var jogador_atual: Jogador
 var ultimo_resultado_dados: int = 0
 @onready var botao_construir_casa: Button = $botaoConstruirCasa
@@ -22,36 +23,50 @@ func _ready() -> void:
 
 # Prepara o estado inicial do jogo.
 func iniciar_jogo() -> void:
-	#Adicionando referências dos nós.
+	# Adicionando referências dos nós.
 	tabuleiro = get_node("Tabuleiro")
-	jogadores = [get_node("Jogador")]
 	
+	# Adiciona todos os jogadores da cena
+	for child in get_children():
+		if child is Jogador:
+			jogadores.append(child)
 	
 	if jogadores.is_empty() or tabuleiro == null:
-			print("ERRO: Jogadores ou tabuleiro não configurados na cena Jogo.")
-			return
+		print("ERRO: Jogadores ou tabuleiro não configurados na cena Jogo.")
+		return
 
 	turno_atual = 0
 	jogador_atual = jogadores[turno_atual]
 	
-	# Posicionar jogador no ponto de partida
+	# Posicionar jogadores no ponto de partida
 	var ponto_partida = tabuleiro.obter_espaco(0)
-	if ponto_partida != null and jogador_atual.peao != null:
-		jogador_atual.peao.position = ponto_partida.position + Vector2(200, randi_range(100, 300))
-		print("Jogador posicionado no ponto de parida")
-		
+	if ponto_partida != null:
+		for jogador in jogadores:
+			if jogador.peao != null:
+				jogador.peao.position = ponto_partida.position + Vector2(200, randi_range(100, 300))
+	
 	print("O jogo começou! É a vez de %s." % jogador_atual.nome)
 	atualizar_ui_construcao()
 
-# Passa para o próximo turno.
-func proximo_turno() -> void:
+# Passa para o próximo jogador.
+func proximo_jogador() -> void:
 	turno_atual = (turno_atual + 1) % jogadores.size()
 	jogador_atual = jogadores[turno_atual]
 	print("\n--- Próximo turno! É a vez de %s. ---" % jogador_atual.nome)
 	atualizar_ui_construcao()
+	verificar_rodada()
+
+# Verifica se uma rodada terminou.
+func verificar_rodada() -> void:
+	if turno_atual == 0:
+		rodada_atual += 1
+		print("\n--- Rodada %d ---" % rodada_atual)
 
 # Essa função deve ser conectada a um botão de "Rolar Dados" na UI
 func _on_rolar_dados_apertado() -> void:
+	rolar_dados()
+
+func rolar_dados() -> void:
 	print('rolando dados...')
 	botao_construir_casa.visible = false
 	
