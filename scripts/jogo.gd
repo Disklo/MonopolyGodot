@@ -123,7 +123,7 @@ func rolar_dados() -> void:
 
 	# 5. Passa para o próximo turno
 	# (Espera as animações terminarem antes do turno ser passado)
-	proximo_turno()
+	proximo_jogador()
 
 func _on_construir_casa_apertado() -> void:
 	var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)
