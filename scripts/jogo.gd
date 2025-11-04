@@ -113,8 +113,8 @@ func rolar_dados() -> void:
 	if espaco_atual != null:
 			espaco_atual.ao_parar(jogador_atual)
 
-	# 5. Passa para o próximo turno
-	# (Espera as animações terminarem antes do turno ser passado)
+	# 5. Passa para o próximo turno e habilita UI
+	$botaoRolarDados.disabled = false
 	proximo_jogador()
 
 func _on_construir_casa_apertado() -> void:
