@@ -31,6 +31,10 @@ func iniciar_jogo() -> void:
 		if child is Jogador:
 			jogadores.append(child)
 	
+	if jogadores.size() >= 2:
+		jogadores[0].set_cor(Color.BLUE)
+		jogadores[1].set_cor(Color.DARK_RED)
+	
 	if jogadores.is_empty() or tabuleiro == null:
 		print("ERRO: Jogadores ou tabuleiro não configurados na cena Jogo.")
 		return
@@ -112,7 +116,7 @@ func rolar_dados() -> void:
 	ultimo_resultado_dados = passos
 
 	# 2. Move o jogador
-	jogador_atual.mover(passos, tabuleiro)
+	await jogador_atual.mover(passos, tabuleiro)
 
 	# 3. Obtém o espaço em que o jogador parou
 	var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)
@@ -121,8 +125,8 @@ func rolar_dados() -> void:
 	if espaco_atual != null:
 			espaco_atual.ao_parar(jogador_atual)
 
-	# 5. Passa para o próximo turno
-	# (Espera as animações terminarem antes do turno ser passado)
+	# 5. Passa para o próximo turno e habilita UI
+	$botaoRolarDados.disabled = false
 	proximo_jogador()
 
 func _on_construir_casa_apertado() -> void:

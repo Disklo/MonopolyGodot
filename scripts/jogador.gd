@@ -1,21 +1,21 @@
 # Define a classe para um jogador.
-extends Node
+extends Node2D
 
 class_name Jogador
 
+@onready var peao:Sprite2D = $Peao
 # Variáveis do jogador
 @export var nome: String = "Jogador"
 @export var dinheiro: int = 1500
 
 # Posição atual do jogador no tabuleiro (índice do espaço)
 var posicao: int = 0
-
+signal movimento_concluido(jogador: Jogador)
 # Lista de propriedades que o jogador possui
 var propriedades: Array[Propriedade] = []
 
-# Referência ao nó do peão do jogador na cena (para movimento visual)
-# Esta variável precisará ser associada ao nó correto na cena do Godot.
-@export var peao: Node2D
+func  set_cor(c: Color) -> void:
+	peao.modulate = c
 
 # Move o jogador no tabuleiro
 func mover(passos: int, tabuleiro: Tabuleiro) -> void:
@@ -40,7 +40,7 @@ func mover(passos: int, tabuleiro: Tabuleiro) -> void:
 			tween.tween_property(peao, "position", destino, 0.3).set_delay(0.2)
 	
 	await tween.finished
-	$"../botaoRolarDados".disabled = false
+	movimento_concluido.emit(self)
 
 
 # Adiciona uma propriedade à lista do jogador
