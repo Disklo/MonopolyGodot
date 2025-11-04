@@ -31,6 +31,10 @@ func iniciar_jogo() -> void:
 		if child is Jogador:
 			jogadores.append(child)
 	
+	if jogadores.size() >= 2:
+		jogadores[0].set_cor(Color.BLUE)
+		jogadores[1].set_cor(Color.DARK_RED)
+	
 	if jogadores.is_empty() or tabuleiro == null:
 		print("ERRO: Jogadores ou tabuleiro não configurados na cena Jogo.")
 		return
