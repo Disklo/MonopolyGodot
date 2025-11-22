@@ -16,10 +16,92 @@ var rodada_atual: int = 1
 var jogador_atual: Jogador
 var ultimo_resultado_dados: int = 0
 @onready var botao_construir_casa: Button = $botaoConstruirCasa
+@onready var botao_rolar_dados: Button = $botaoRolarDados
+
+# UI da Prisão
+var botao_pagar_fianca: Button
+var botao_tentar_dados: Button
 
 # A função _ready é chamada quando o nó entra na árvore da cena.
 func _ready() -> void:
 	iniciar_jogo()
+	setup_jail_ui()
+	setup_debug_ui()
+
+func setup_debug_ui() -> void:
+	var y_offset = 0
+	for i in range(jogadores.size()):
+		var jogador = jogadores[i]
+		var btn = Button.new()
+		btn.text = "Prender %s" % jogador.nome
+		# Posiciona no canto superior direito, abaixo um do outro
+		btn.position = Vector2(get_viewport().get_visible_rect().size.x - 250, 50 + y_offset)
+		btn.size = Vector2(200, 40)
+		btn.pressed.connect(func(): _on_debug_prender_pressed(jogador))
+		add_child(btn)
+		y_offset += 50
+
+func _on_debug_prender_pressed(jogador: Jogador) -> void:
+	print("DEBUG: Prendendo %s" % jogador.nome)
+	jogador.posicao = 10 # Índice da Prisão
+	jogador.ir_para_prisao()
+	
+	# Move visualmente o peão para a prisão
+	var espaco_prisao = tabuleiro.obter_espaco(10)
+	if espaco_prisao != null:
+		var offset = Vector2.ZERO
+		match jogador.index:
+			0: offset = Vector2(-30, -30)
+			1: offset = Vector2(30, -30)
+			2: offset = Vector2(-30, 30)
+			3: offset = Vector2(30, 30)
+		jogador.peao.position = espaco_prisao.position + Vector2(200, 200) + offset
+	
+	# Se for o turno do jogador preso, atualiza a UI
+	if jogador == jogador_atual:
+		botao_rolar_dados.visible = false
+		botao_pagar_fianca.visible = true
+		botao_tentar_dados.visible = true
+
+func setup_jail_ui() -> void:
+	# Configura botão de Pagar Fiança
+	botao_pagar_fianca = Button.new()
+	botao_pagar_fianca.text = "Pagar Fiança (R$ 50)"
+	botao_pagar_fianca.position = Vector2(botao_rolar_dados.position.x, botao_rolar_dados.position.y + 150)
+	botao_pagar_fianca.size = Vector2(540, 118)
+	botao_pagar_fianca.add_theme_font_override("font", load("res://assets/fonts/VCR_OSD_MONO_1.001.ttf"))
+	botao_pagar_fianca.add_theme_font_size_override("font_size", 40)
+	botao_pagar_fianca.pressed.connect(_on_pagar_fianca_pressed)
+	botao_pagar_fianca.visible = false
+	add_child(botao_pagar_fianca)
+
+	# Configura botão de Tentar Dados
+	botao_tentar_dados = Button.new()
+	botao_tentar_dados.text = "Tentar Dados"
+	botao_tentar_dados.position = Vector2(botao_rolar_dados.position.x, botao_rolar_dados.position.y + 300)
+	botao_tentar_dados.size = Vector2(540, 118)
+	botao_tentar_dados.add_theme_font_override("font", load("res://assets/fonts/VCR_OSD_MONO_1.001.ttf"))
+	botao_tentar_dados.add_theme_font_size_override("font_size", 40)
+	botao_tentar_dados.pressed.connect(_on_tentar_dados_pressed)
+	botao_tentar_dados.visible = false
+	add_child(botao_tentar_dados)
+
+func _on_pagar_fianca_pressed() -> void:
+	if jogador_atual.dinheiro >= 50:
+		jogador_atual.pagar(50)
+		jogador_atual.sair_da_prisao()
+		esconder_jail_ui()
+		rolar_dados()
+	else:
+		print("Dinheiro insuficiente para pagar fiança.")
+
+func _on_tentar_dados_pressed() -> void:
+	esconder_jail_ui()
+	rolar_dados()
+
+func esconder_jail_ui() -> void:
+	botao_pagar_fianca.visible = false
+	botao_tentar_dados.visible = false
 
 # Prepara o estado inicial do jogo.
 func iniciar_jogo() -> void:
@@ -87,7 +169,20 @@ func proximo_jogador() -> void:
 	turno_atual = (turno_atual + 1) % jogadores.size()
 	jogador_atual = jogadores[turno_atual]
 	print("\n--- Próximo turno! É a vez de %s. ---" % jogador_atual.nome)
+	print("\n--- Próximo turno! É a vez de %s. ---" % jogador_atual.nome)
 	atualizar_ui_construcao()
+	
+	if jogador_atual.preso:
+		print("%s está preso. Mostrando opções de prisão." % jogador_atual.nome)
+		botao_rolar_dados.visible = false
+		botao_pagar_fianca.visible = true
+		botao_tentar_dados.visible = true
+	else:
+		botao_rolar_dados.visible = true
+		botao_pagar_fianca.visible = false
+		botao_tentar_dados.visible = false
+		botao_rolar_dados.disabled = false
+	
 	verificar_rodada()
 
 # Verifica se uma rodada terminou.
@@ -109,7 +204,7 @@ func rolar_dados() -> void:
 	$Dado2.visible = true
 	
 	# Desabilitando o botão para não haver mais cliques enquanto um turno acontece
-	$botaoRolarDados.disabled = true
+	botao_rolar_dados.disabled = true
 	
 	if jogador_atual == null:
 			print("Jogo não iniciado corretamente.")
@@ -145,8 +240,26 @@ func rolar_dados() -> void:
 	print("%s rolou os dados: %d + %d = %d" % [jogador_atual.nome, dado1_valor, dado2_valor, passos])
 	ultimo_resultado_dados = passos
 
-	# 2. Move o jogador
-	await jogador_atual.mover(passos, tabuleiro)
+	# 2. Lógica de Movimento (considerando prisão)
+	if jogador_atual.preso:
+		if dado1_valor == dado2_valor:
+			print("Dupla! %s saiu da prisão!" % jogador_atual.nome)
+			jogador_atual.sair_da_prisao()
+			await jogador_atual.mover(passos, tabuleiro)
+		else:
+			print("Não tirou dupla. Continua preso.")
+			jogador_atual.turnos_na_prisao += 1
+			if jogador_atual.turnos_na_prisao >= 3:
+				print("3 turnos na prisão. Pagando fiança forçada.")
+				jogador_atual.pagar(50)
+				jogador_atual.sair_da_prisao()
+				await jogador_atual.mover(passos, tabuleiro)
+			else:
+				# Não move, apenas espera
+				await get_tree().create_timer(1.0).timeout
+	else:
+		# Movimento normal
+		await jogador_atual.mover(passos, tabuleiro)
 
 	# 3. Obtém o espaço em que o jogador parou
 	var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)
@@ -156,7 +269,7 @@ func rolar_dados() -> void:
 			espaco_atual.ao_parar(jogador_atual)
 
 	# 5. Passa para o próximo turno e habilita UI
-	$botaoRolarDados.disabled = false
+	# A habilitação da UI é feita no proximo_jogador
 	proximo_jogador()
 
 func _on_construir_casa_apertado() -> void:
