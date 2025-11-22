@@ -3,18 +3,20 @@ extends Node2D
 
 class_name Jogador
 
-@onready var peao:Sprite2D = $Peao
+@onready var peao: Sprite2D = $Peao
 # Variáveis do jogador
 @export var nome: String = "Jogador"
 @export var dinheiro: int = 1500
 
 # Posição atual do jogador no tabuleiro (índice do espaço)
 var posicao: int = 0
+var index: int = 0 # Índice do jogador (0 a 3) para evitar sobreposição
 signal movimento_concluido(jogador: Jogador)
+signal dinheiro_alterado(novo_saldo: int)
 # Lista de propriedades que o jogador possui
 var propriedades: Array[Propriedade] = []
 
-func  set_cor(c: Color) -> void:
+func set_cor(c: Color) -> void:
 	peao.modulate = c
 
 # Move o jogador no tabuleiro
@@ -26,6 +28,14 @@ func mover(passos: int, tabuleiro: Tabuleiro) -> void:
 	if peao == null:
 		return
 	
+	# Define o offset com base no índice do jogador para evitar sobreposição
+	var offset = Vector2.ZERO
+	match index:
+		0: offset = Vector2(-30, -30)
+		1: offset = Vector2(30, -30)
+		2: offset = Vector2(-30, 30)
+		3: offset = Vector2(30, 30)
+	
 	# Criando a animação com Tween
 	var tween = create_tween()
 	tween.set_parallel(false)
@@ -35,7 +45,7 @@ func mover(passos: int, tabuleiro: Tabuleiro) -> void:
 		var espaco_atual = tabuleiro.obter_espaco(casa_atual)
 	
 		if espaco_atual != null:
-			var destino = espaco_atual.position + Vector2(200,200)
+			var destino = espaco_atual.position + Vector2(200, 200) + offset
 			# Animando o movimento do peão
 			tween.tween_property(peao, "position", destino, 0.3).set_delay(0.2)
 	
@@ -80,9 +90,11 @@ func tem_monopolio(cor_grupo: String, tabuleiro: Tabuleiro) -> bool:
 # Subtrai dinheiro do jogador
 func pagar(valor: int) -> void:
 	dinheiro -= valor
+	dinheiro_alterado.emit(dinheiro)
 	print("%s pagou %d. Saldo: %d" % [nome, valor, dinheiro])
 
 # Adiciona dinheiro ao jogador
 func receber(valor: int) -> void:
 	dinheiro += valor
+	dinheiro_alterado.emit(dinheiro)
 	print("%s recebeu %d. Saldo: %d" % [nome, valor, dinheiro])
