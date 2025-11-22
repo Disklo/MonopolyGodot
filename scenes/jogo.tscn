@@ -14,6 +14,10 @@ script = ExtResource("1_1b3iq")
 
 [node name="Jogador2" parent="." instance=ExtResource("3_k05ng")]
 
+[node name="Jogador3" parent="." instance=ExtResource("3_k05ng")]
+
+[node name="Jogador4" parent="." instance=ExtResource("3_k05ng")]
+
 [node name="Tabuleiro" parent="." instance=ExtResource("2_k05ng")]
 
 [node name="JogadorHud" parent="." instance=ExtResource("4_k05ng")]

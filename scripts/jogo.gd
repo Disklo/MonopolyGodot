@@ -26,14 +26,35 @@ func iniciar_jogo() -> void:
 	# Adicionando referências dos nós.
 	tabuleiro = get_node("Tabuleiro")
 	
+	jogadores.clear()
 	# Adiciona todos os jogadores da cena
 	for child in get_children():
 		if child is Jogador:
 			jogadores.append(child)
 	
-	if jogadores.size() >= 2:
-		jogadores[0].set_cor(Color.BLUE)
-		jogadores[1].set_cor(Color.DARK_RED)
+	var cores = [Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW]
+	var huds = [
+		get_node("JogadorHud"),
+		get_node("JogadorHud2"),
+		get_node("JogadorHud3"),
+		get_node("JogadorHud4")
+	]
+	
+	for i in range(jogadores.size()):
+		var jogador = jogadores[i]
+		jogador.index = i
+		jogador.nome = "Jogador %d" % (i + 1)
+		
+		if i < cores.size():
+			jogador.set_cor(cores[i])
+		
+		if i < huds.size():
+			var hud = huds[i]
+			if hud != null:
+				hud.setup(jogador.nome, cores[i])
+				hud.atualizar_dinheiro(jogador.dinheiro)
+				if not jogador.dinheiro_alterado.is_connected(hud.atualizar_dinheiro):
+					jogador.dinheiro_alterado.connect(hud.atualizar_dinheiro)
 	
 	if jogadores.is_empty() or tabuleiro == null:
 		print("ERRO: Jogadores ou tabuleiro não configurados na cena Jogo.")
@@ -47,7 +68,16 @@ func iniciar_jogo() -> void:
 	if ponto_partida != null:
 		for jogador in jogadores:
 			if jogador.peao != null:
-				jogador.peao.position = ponto_partida.position + Vector2(200, randi_range(100, 300))
+				# O offset já é calculado no mover, mas aqui precisamos posicionar inicialmente
+				# Vamos usar uma lógica similar ou apenas setar a posição base e deixar o mover ajustar depois?
+				# Melhor setar com offset manual aqui também para garantir
+				var offset = Vector2.ZERO
+				match jogador.index:
+					0: offset = Vector2(-30, -30)
+					1: offset = Vector2(30, -30)
+					2: offset = Vector2(-30, 30)
+					3: offset = Vector2(30, 30)
+				jogador.peao.position = ponto_partida.position + Vector2(200, 200) + offset
 	
 	print("O jogo começou! É a vez de %s." % jogador_atual.nome)
 	atualizar_ui_construcao()
