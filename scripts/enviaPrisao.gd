@@ -14,6 +14,8 @@ func ao_parar(jogador: Jogador) -> void:
 	# Define a posição do jogador para a prisão.
 	jogador.posicao = indice_prisao
 	
+	# Atualiza o estado do jogador para preso
+	jogador.ir_para_prisao()
+	
 	# Aqui, idealmente, o peão do jogador seria movido visualmente para a prisão.
-	# A lógica de "estar preso" será tratada no próprio script da Prisao.
-	# Por enquanto, apenas mudamos a posição lógica.
+	# A lógica de "estar preso" será tratada no próprio script da Prisao e no Jogo.

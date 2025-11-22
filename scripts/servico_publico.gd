@@ -1,38 +1,41 @@
 # Define um serviço público (ex: Companhia de Água, Eletricidade).
-extends Propriedade
+# AGORA NÃO É MAIS COMPRÁVEL. O jogador paga ao banco.
+extends Espaco
 
 class_name ServicoPublico
 
-# Multiplicadores para o cálculo do aluguel.
-@export var multiplicador_um_servico: int = 4
-@export var multiplicador_dois_servicos: int = 10
+# Multiplicadores para o cálculo do valor a pagar.
+@export var multiplicador: int = 4 # Valor padrão se não houver lógica de "quantidade de serviços"
 
 # Referência ao nó do jogo para obter o valor dos dados.
-# Isso precisa ser conectado na cena.
-@export var jogo: Jogo
+var jogo: Jogo
 
-# Sobrescreve a função de cobrar aluguel.
-func cobrar_aluguel(jogador: Jogador) -> void:
-	if dono == null or jogo == null:
+func _ready() -> void:
+	super._ready()
+	# Tenta encontrar o nó Jogo na raiz
+	var root = get_tree().root
+	if root.has_node("Jogo"):
+		jogo = root.get_node("Jogo")
+
+# Sobrescreve a função da classe Espaco.
+func ao_parar(jogador: Jogador) -> void:
+	super.ao_parar(jogador)
+	
+	if jogo == null:
+		print("ERRO: Referência ao Jogo não encontrada em ServicoPublico.")
 		return
 
-	# Conta quantos serviços públicos o dono possui.
-	var num_servicos = 0
-	for prop in dono.propriedades:
-		if prop is ServicoPublico:
-			num_servicos += 1
-	
-	var multiplicador = 0
-	if num_servicos == 1:
-		multiplicador = multiplicador_um_servico
-	elif num_servicos >= 2:
-		multiplicador = multiplicador_dois_servicos
-	
 	# O valor dos dados é pego da variável no script do jogo.
 	var valor_dados = jogo.ultimo_resultado_dados
-	var aluguel_a_cobrar = valor_dados * multiplicador
 	
-	print("%s possui %d serviço(s). O aluguel é %d (dados) * %d = R$%d." % [dono.nome, num_servicos, valor_dados, multiplicador, aluguel_a_cobrar])
+	# Regra simplificada: Paga 4x o valor dos dados ao banco.
+	# Se quiséssemos implementar a regra de "10x se tiver os dois",
+	# precisaríamos saber se o jogador caiu no outro serviço, mas como não tem dono,
+	# a regra geralmente é fixa ou baseada em sorte.
+	# Vamos manter 4x o valor dos dados por enquanto, pago ao banco.
 	
-	jogador.pagar(aluguel_a_cobrar)
-	dono.receber(aluguel_a_cobrar)
+	var valor_a_pagar = valor_dados * multiplicador
+	
+	print("Serviço Público! O jogador %s tirou %d nos dados. Paga %d * %d = R$%d ao banco." % [jogador.nome, valor_dados, multiplicador, valor_a_pagar])
+	
+	jogador.pagar(valor_a_pagar)
