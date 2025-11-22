@@ -1,5 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://bue0kwfwahiqo"]
 
+[ext_resource type="Script" path="res://scripts/jogador_hud.gd" id="1_hud"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jbrbl"]
 bg_color = Color(0, 0, 0, 0.596078)
 border_width_left = 5
@@ -20,6 +22,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_hud")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 0
@@ -29,8 +32,15 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_jbrbl")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
 layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="CorIndicador" type="Panel" parent="PanelContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_vertical = 4
 
 [node name="AvatarTextureRect" type="TextureRect" parent="PanelContainer/HBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer"]
@@ -38,10 +48,10 @@ layout_mode = 2
 
 [node name="NomeLabel" type="Label" parent="PanelContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 50
+theme_override_font_sizes/font_size = 40
 text = "Nome Jogador"
 
 [node name="DinheiroLabel" type="Label" parent="PanelContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 50
-text = "Dinheiro: R$ 0,00"
+theme_override_font_sizes/font_size = 30
+text = "Dinheiro: R$ 1500"
