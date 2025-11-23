@@ -63,8 +63,6 @@ nome = "Av. Amaral Peixoto"
 
 [node name="Propriedade7" parent="." instance=ExtResource("2_tvb07")]
 position = Vector2(-1569, 1564)
-comprado = true
-tipo_imovel = "duas_casas"
 indice = 9
 nome = "Rua Presidente Pedreira"
 
@@ -114,7 +112,7 @@ nome = "Rua Passo da Pátria"
 [node name="Propriedade6" parent="." instance=ExtResource("2_tvb07")]
 position = Vector2(-1916, -1559)
 indice = 19
-nome = "Rua Miguel de Frias"
+nome = "Rua Miguel de Freitas"
 
 [node name="Estacionamento" parent="." instance=ExtResource("9_a5pju")]
 position = Vector2(-1916, -1906)
@@ -136,8 +134,6 @@ nome = "Rua São Sebastião"
 
 [node name="Propriedade21" parent="." instance=ExtResource("2_tvb07")]
 position = Vector2(-528, -1906)
-comprado = true
-tipo_imovel = "uma_casa"
 indice = 24
 nome = "Rua Tiradentes"
 
