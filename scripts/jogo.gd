@@ -59,13 +59,13 @@ func _on_debug_prender_pressed(jogador: Jogador) -> void:
 		exibir_popup_prisao()
 
 func exibir_popup_prisao() -> void:
-	if action_popup == null:
-		setup_action_popup()
+	if popup_acao == null:
+		setup_popup_acao()
 	
-	action_popup.clear_buttons()
-	action_popup.set_text("Você está preso! O que deseja fazer?")
+	popup_acao.clear_buttons()
+	popup_acao.set_text("Você está preso! O que deseja fazer?")
 	
-	action_popup.add_button("Pagar Fiança (R$ 50)", func():
+	popup_acao.add_button("Pagar Fiança (R$ 50)", func():
 		if jogador_atual.dinheiro >= 50:
 			jogador_atual.pagar(50)
 			jogador_atual.sair_da_prisao()
@@ -76,25 +76,25 @@ func exibir_popup_prisao() -> void:
 			exibir_popup_mensagem("Dinheiro insuficiente para pagar a fiança.", func(): exibir_popup_prisao())
 	)
 	
-	action_popup.add_button("Tentar Dados", func():
+	popup_acao.add_button("Tentar Dados", func():
 		rolar_dados()
 	)
 	
-	action_popup.show_popup()
+	popup_acao.show_popup()
 
 func exibir_popup_mensagem(texto: String, callback: Callable = Callable()) -> void:
-	if action_popup == null:
-		setup_action_popup()
+	if popup_acao == null:
+		setup_popup_acao()
 	
-	action_popup.clear_buttons()
-	action_popup.set_text(texto)
+	popup_acao.clear_buttons()
+	popup_acao.set_text(texto)
 	
-	action_popup.add_button("OK", func():
+	popup_acao.add_button("OK", func():
 		if not callback.is_null():
 			callback.call()
 	)
 	
-	action_popup.show_popup()
+	popup_acao.show_popup()
 
 # Prepara o estado inicial do jogo.
 func iniciar_jogo() -> void:
@@ -248,7 +248,7 @@ func rolar_dados() -> void:
 			espaco_atual.ao_parar(jogador_atual)
 
 	# 5. Passa para o próximo turno e habilita UI
-	if action_popup != null and action_popup.visible:
+	if popup_acao != null and popup_acao.visible:
 		pass
 	else:
 		proximo_jogador()
@@ -281,50 +281,50 @@ func _on_debug_construir_apertado() -> void:
 		atualizar_ui_construcao()
 
 # --- Lógica do Popup de Ação ---
-var action_popup: ActionPopup
+var popup_acao: PopupAcao
 
-func setup_action_popup() -> void:
-	var popup_scene = load("res://scenes/UI/action_popup.tscn")
+func setup_popup_acao() -> void:
+	var popup_scene = load("res://scenes/UI/popup_acao.tscn")
 	if popup_scene:
-		action_popup = popup_scene.instantiate()
-		add_child(action_popup)
-		action_popup = popup_scene.instantiate()
-		add_child(action_popup)
+		popup_acao = popup_scene.instantiate()
+		add_child(popup_acao)
+		popup_acao = popup_scene.instantiate()
+		add_child(popup_acao)
 
 func exibir_popup_compra(propriedade: Propriedade) -> void:
-	if action_popup == null:
-		setup_action_popup()
+	if popup_acao == null:
+		setup_popup_acao()
 	
-	action_popup.clear_buttons()
-	action_popup.set_text("Deseja comprar %s por R$ %d?" % [propriedade.nome, propriedade.preco])
+	popup_acao.clear_buttons()
+	popup_acao.set_text("Deseja comprar %s por R$ %d?" % [propriedade.nome, propriedade.preco])
 	
-	action_popup.add_button("Sim", func():
+	popup_acao.add_button("Sim", func():
 		print("Jogo: Confirmou compra de ", propriedade.nome)
 		propriedade.comprar(jogador_atual)
 		proximo_jogador()
 	)
 	
-	action_popup.add_button("Não", func():
+	popup_acao.add_button("Não", func():
 		print("Jogador recusou a compra.")
 		proximo_jogador()
 	)
 	
-	action_popup.show_popup()
+	popup_acao.show_popup()
 
 func exibir_popup_construcao(propriedade: Propriedade) -> void:
-	if action_popup == null:
-		setup_action_popup()
+	if popup_acao == null:
+		setup_popup_acao()
 		
-	action_popup.clear_buttons()
-	action_popup.set_text("Construir casa em %s por R$ %d?" % [propriedade.nome, propriedade.custo_casa])
+	popup_acao.clear_buttons()
+	popup_acao.set_text("Construir casa em %s por R$ %d?" % [propriedade.nome, propriedade.custo_casa])
 	
-	action_popup.add_button("Sim", func():
+	popup_acao.add_button("Sim", func():
 		propriedade.construir_casa()
 		atualizar_ui_construcao()
 	)
 	
-	action_popup.add_button("Cancelar", func():
+	popup_acao.add_button("Cancelar", func():
 		print("Construção cancelada.")
 	)
 	
-	action_popup.show_popup()
+	popup_acao.show_popup()

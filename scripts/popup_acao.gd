@@ -1,6 +1,6 @@
 extends CanvasLayer
 
-class_name ActionPopup
+class_name PopupAcao
 
 @onready var message_label: Label = $Content/PanelContainer/VBoxContainer/MessageLabel
 @onready var button_container: HBoxContainer = $Content/PanelContainer/VBoxContainer/ButtonContainer
@@ -21,7 +21,7 @@ func add_button(text: String, callback: Callable) -> void:
 	btn.add_theme_font_size_override("font_size", 40)
 	btn.custom_minimum_size = Vector2(150, 60)
 	btn.pressed.connect(func():
-		print("ActionPopup: Botão pressionado: ", text)
+		print("PopupAcao: Botão pressionado: ", text)
 		callback.call()
 		hide_popup()
 	)
