@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://b8qj5x2y401w"]
 
-[ext_resource type="Script" path="res://scripts/action_popup.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/popup_acao.gd" id="1_script"]
 [ext_resource type="FontFile" uid="uid://c3kgpi1ijacaa" path="res://assets/fonts/VCR_OSD_MONO_1.001.ttf" id="2_font"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_popup"]
@@ -15,7 +15,7 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[node name="ActionPopup" type="CanvasLayer"]
+[node name="PopupAcao" type="CanvasLayer"]
 layer = 100
 script = ExtResource("1_script")
 
