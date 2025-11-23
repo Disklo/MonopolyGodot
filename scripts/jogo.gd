@@ -107,7 +107,7 @@ func iniciar_jogo() -> void:
 		if child is Jogador:
 			jogadores.append(child)
 	
-	var cores = [Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW]
+	var cores = [Color.BLUE, Color.DARK_RED, Color.DARK_GREEN, Color.DARK_GOLDENROD]
 	var huds = [
 		get_node("JogadorHud"),
 		get_node("JogadorHud2"),
