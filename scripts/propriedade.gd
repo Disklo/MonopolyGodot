@@ -68,37 +68,33 @@ func atualizar_estado_botao_construir() -> void:
 	if botao_construir == null:
 		return
 		
-	if num_casas == 4:
-		var pode_construir_hotel = true
-		var tabuleiro = get_tree().get_root().get_node("Jogo/Tabuleiro")
-		for espaco in tabuleiro.espacos:
-			if espaco is Propriedade and espaco.cor_grupo == cor_grupo and espaco != self:
-				if espaco.num_casas < 4:
-					pode_construir_hotel = false
-					break
-		
-		if not pode_construir_hotel:
-			botao_construir.modulate.a = 0.5
-		else:
-			botao_construir.modulate.a = 1.0
+	var pode_construir = true
+	var tabuleiro = get_tree().get_root().get_node("Jogo/Tabuleiro")
+	for espaco in tabuleiro.espacos:
+		if espaco is Propriedade and espaco.cor_grupo == cor_grupo and espaco != self:
+			if espaco.num_casas < num_casas:
+				pode_construir = false
+				break
+	
+	if not pode_construir:
+		botao_construir.modulate.a = 0.5
 	else:
 		botao_construir.modulate.a = 1.0
 
 func _on_botao_construir_pressed() -> void:
-	if num_casas == 4:
-		var pode_construir_hotel = true
-		var tabuleiro = get_tree().get_root().get_node("Jogo/Tabuleiro")
-		for espaco in tabuleiro.espacos:
-			if espaco is Propriedade and espaco.cor_grupo == cor_grupo and espaco != self:
-				if espaco.num_casas < 4:
-					pode_construir_hotel = false
-					break
-		
-		if not pode_construir_hotel:
-			var jogo = get_tree().get_root().get_node("Jogo")
-			if jogo.has_method("exibir_popup_mensagem"):
-				jogo.exibir_popup_mensagem("Você precisa ter 4 casas em cada propriedade do grupo de cor para construir um hotel.")
-			return
+	var pode_construir = true
+	var tabuleiro = get_tree().get_root().get_node("Jogo/Tabuleiro")
+	for espaco in tabuleiro.espacos:
+		if espaco is Propriedade and espaco.cor_grupo == cor_grupo and espaco != self:
+			if espaco.num_casas < num_casas:
+				pode_construir = false
+				break
+	
+	if not pode_construir:
+		var jogo = get_tree().get_root().get_node("Jogo")
+		if jogo.has_method("exibir_popup_mensagem"):
+			jogo.exibir_popup_mensagem("Você deve construir uniformemente. Todas as propriedades do grupo devem ter o mesmo nível antes de avançar.")
+		return
 
 	construir_casa()
 	atualizar_estado_botao_construir()
