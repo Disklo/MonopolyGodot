@@ -86,8 +86,6 @@ nome = "Rua Lopes Trovão"
 
 [node name="Propriedade3" parent="." instance=ExtResource("2_tvb07")]
 position = Vector2(-1916, 176)
-comprado = true
-tipo_imovel = "hotel"
 indice = 14
 nome = "Rua Mariz e Barros"
 

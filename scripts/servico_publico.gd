@@ -1,11 +1,7 @@
 # Define um serviço público (ex: Companhia de Água, Eletricidade).
-# AGORA NÃO É MAIS COMPRÁVEL. O jogador paga ao banco.
-extends Espaco
+extends Propriedade
 
 class_name ServicoPublico
-
-# Multiplicadores para o cálculo do valor a pagar.
-@export var multiplicador: int = 4 # Valor padrão se não houver lógica de "quantidade de serviços"
 
 # Referência ao nó do jogo para obter o valor dos dados.
 var jogo: Jogo
@@ -17,10 +13,11 @@ func _ready() -> void:
 	if root.has_node("Jogo"):
 		jogo = root.get_node("Jogo")
 
-# Sobrescreve a função da classe Espaco.
-func ao_parar(jogador: Jogador) -> void:
-	super.ao_parar(jogador)
-	
+# Sobrescreve a função de cobrar aluguel da classe Propriedade.
+func cobrar_aluguel(jogador: Jogador) -> void:
+	if dono == null:
+		return
+		
 	if jogo == null:
 		print("ERRO: Referência ao Jogo não encontrada em ServicoPublico.")
 		return
@@ -28,14 +25,29 @@ func ao_parar(jogador: Jogador) -> void:
 	# O valor dos dados é pego da variável no script do jogo.
 	var valor_dados = jogo.ultimo_resultado_dados
 	
-	# Regra simplificada: Paga 4x o valor dos dados ao banco.
-	# Se quiséssemos implementar a regra de "10x se tiver os dois",
-	# precisaríamos saber se o jogador caiu no outro serviço, mas como não tem dono,
-	# a regra geralmente é fixa ou baseada em sorte.
-	# Vamos manter 4x o valor dos dados por enquanto, pago ao banco.
+	# Conta quantos serviços o dono possui
+	var num_servicos = 0
+	for prop in dono.propriedades:
+		if prop is ServicoPublico:
+			num_servicos += 1
+	
+	# Regra: 4x se tiver 1, 10x se tiver 2
+	var multiplicador = 4
+	if num_servicos >= 2:
+		multiplicador = 10
 	
 	var valor_a_pagar = valor_dados * multiplicador
 	
-	print("Serviço Público! O jogador %s tirou %d nos dados. Paga %d * %d = R$%d ao banco." % [jogador.nome, valor_dados, multiplicador, valor_a_pagar])
+	print("Serviço Público! O jogador %s tirou %d nos dados. Dono tem %d serviço(s). Paga %d * %d = R$%d." % [jogador.nome, valor_dados, num_servicos, valor_dados, multiplicador, valor_a_pagar])
 	
-	jogador.pagar(valor_a_pagar)
+	# Chama o popup no Jogo
+	if jogo.has_method("exibir_popup_mensagem"):
+		jogo.exibir_popup_mensagem("Você caiu no %s (Propriedade de %s).\nPague R$ %d (Dados %d x %d)." % [nome, dono.nome, valor_a_pagar, valor_dados, multiplicador], func():
+			jogador.pagar(valor_a_pagar)
+			dono.receber(valor_a_pagar)
+			if jogo.has_method("proximo_jogador"):
+				jogo.proximo_jogador()
+		)
+	else:
+		jogador.pagar(valor_a_pagar)
+		dono.receber(valor_a_pagar)

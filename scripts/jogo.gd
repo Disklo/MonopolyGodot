@@ -15,17 +15,11 @@ var turno_atual: int = 0
 var rodada_atual: int = 1
 var jogador_atual: Jogador
 var ultimo_resultado_dados: int = 0
-@onready var botao_construir_casa: Button = $botaoConstruirCasa
+@onready var botao_construir_propriedades: Button = $botaoConstruirPropriedades
 @onready var botao_rolar_dados: Button = $botaoRolarDados
 
-# UI da Prisão
-var botao_pagar_fianca: Button
-var botao_tentar_dados: Button
-
-# A função _ready é chamada quando o nó entra na árvore da cena.
 func _ready() -> void:
 	iniciar_jogo()
-	setup_jail_ui()
 	setup_debug_ui()
 
 func setup_debug_ui() -> void:
@@ -60,48 +54,45 @@ func _on_debug_prender_pressed(jogador: Jogador) -> void:
 	# Se for o turno do jogador preso, atualiza a UI
 	if jogador == jogador_atual:
 		botao_rolar_dados.visible = false
-		botao_pagar_fianca.visible = true
-		botao_tentar_dados.visible = true
+		exibir_popup_prisao()
 
-func setup_jail_ui() -> void:
-	# Configura botão de Pagar Fiança
-	botao_pagar_fianca = Button.new()
-	botao_pagar_fianca.text = "Pagar Fiança (R$ 50)"
-	botao_pagar_fianca.position = Vector2(botao_rolar_dados.position.x, botao_rolar_dados.position.y + 150)
-	botao_pagar_fianca.size = Vector2(540, 118)
-	botao_pagar_fianca.add_theme_font_override("font", load("res://assets/fonts/VCR_OSD_MONO_1.001.ttf"))
-	botao_pagar_fianca.add_theme_font_size_override("font_size", 40)
-	botao_pagar_fianca.pressed.connect(_on_pagar_fianca_pressed)
-	botao_pagar_fianca.visible = false
-	add_child(botao_pagar_fianca)
-
-	# Configura botão de Tentar Dados
-	botao_tentar_dados = Button.new()
-	botao_tentar_dados.text = "Tentar Dados"
-	botao_tentar_dados.position = Vector2(botao_rolar_dados.position.x, botao_rolar_dados.position.y + 300)
-	botao_tentar_dados.size = Vector2(540, 118)
-	botao_tentar_dados.add_theme_font_override("font", load("res://assets/fonts/VCR_OSD_MONO_1.001.ttf"))
-	botao_tentar_dados.add_theme_font_size_override("font_size", 40)
-	botao_tentar_dados.pressed.connect(_on_tentar_dados_pressed)
-	botao_tentar_dados.visible = false
-	add_child(botao_tentar_dados)
-
-func _on_pagar_fianca_pressed() -> void:
-	if jogador_atual.dinheiro >= 50:
-		jogador_atual.pagar(50)
-		jogador_atual.sair_da_prisao()
-		esconder_jail_ui()
+func exibir_popup_prisao() -> void:
+	if popup_acao == null:
+		setup_popup_acao()
+	
+	popup_acao.clear_buttons()
+	popup_acao.set_text("Você está preso! O que deseja fazer?")
+	
+	popup_acao.add_button("Pagar Fiança (R$ 50)", func():
+		if jogador_atual.dinheiro >= 50:
+			jogador_atual.pagar(50)
+			jogador_atual.sair_da_prisao()
+			rolar_dados()
+		else:
+			print("Dinheiro insuficiente.")
+			# Reexibe o popup ou avisa
+			exibir_popup_mensagem("Dinheiro insuficiente para pagar a fiança.", func(): exibir_popup_prisao())
+	)
+	
+	popup_acao.add_button("Tentar Dados", func():
 		rolar_dados()
-	else:
-		print("Dinheiro insuficiente para pagar fiança.")
+	)
+	
+	popup_acao.show_popup()
 
-func _on_tentar_dados_pressed() -> void:
-	esconder_jail_ui()
-	rolar_dados()
-
-func esconder_jail_ui() -> void:
-	botao_pagar_fianca.visible = false
-	botao_tentar_dados.visible = false
+func exibir_popup_mensagem(texto: String, callback: Callable = Callable()) -> void:
+	if popup_acao == null:
+		setup_popup_acao()
+	
+	popup_acao.clear_buttons()
+	popup_acao.set_text(texto)
+	
+	popup_acao.add_button("OK", func():
+		if not callback.is_null():
+			callback.call()
+	)
+	
+	popup_acao.show_popup()
 
 # Prepara o estado inicial do jogo.
 func iniciar_jogo() -> void:
@@ -114,7 +105,7 @@ func iniciar_jogo() -> void:
 		if child is Jogador:
 			jogadores.append(child)
 	
-	var cores = [Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW]
+	var cores = [Color.BLUE, Color.DARK_RED, Color.DARK_GREEN, Color.DARK_GOLDENROD]
 	var huds = [
 		get_node("JogadorHud"),
 		get_node("JogadorHud2"),
@@ -175,12 +166,9 @@ func proximo_jogador() -> void:
 	if jogador_atual.preso:
 		print("%s está preso. Mostrando opções de prisão." % jogador_atual.nome)
 		botao_rolar_dados.visible = false
-		botao_pagar_fianca.visible = true
-		botao_tentar_dados.visible = true
+		exibir_popup_prisao()
 	else:
 		botao_rolar_dados.visible = true
-		botao_pagar_fianca.visible = false
-		botao_tentar_dados.visible = false
 		botao_rolar_dados.disabled = false
 	
 	verificar_rodada()
@@ -197,7 +185,7 @@ func _on_rolar_dados_apertado() -> void:
 
 func rolar_dados() -> void:
 	print('rolando dados...')
-	botao_construir_casa.visible = false
+	botao_construir_propriedades.visible = false
 	
 	# tornando os dados visíveis no tabuleiro
 	$Dado1.visible = true
@@ -228,13 +216,6 @@ func rolar_dados() -> void:
 		dado1.animar_para(dado1_valor, destino_dado1)
 		dado2.animar_para(dado2_valor, destino_dado2)
 		await get_tree().create_timer(2.8).timeout
-	
-	# A parte abaixo ficará comentada por enquanto	
-	#else:
-	#	if dado1:
-	#		await dado1.animar_para(dado1_valor)
-	#	if dado2:	
-	#		await dado2.animar_para(dado2_valor)
 
 	var passos = dado1_valor + dado2_valor
 	print("%s rolou os dados: %d + %d = %d" % [jogador_atual.nome, dado1_valor, dado2_valor, passos])
@@ -269,21 +250,42 @@ func rolar_dados() -> void:
 			espaco_atual.ao_parar(jogador_atual)
 
 	# 5. Passa para o próximo turno e habilita UI
-	# A habilitação da UI é feita no proximo_jogador
-	proximo_jogador()
+	if popup_acao != null and popup_acao.visible:
+		pass
+	else:
+		proximo_jogador()
 
-func _on_construir_casa_apertado() -> void:
-	var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)
-	if espaco_atual is Propriedade and espaco_atual.dono == jogador_atual:
-		espaco_atual.construir_casa()
-		atualizar_ui_construcao()
+func _on_construir_propriedades_apertado() -> void:
+	if jogador_atual == null:
+		return
+		
+	var tem_monopolio = false
+	for propriedade in jogador_atual.propriedades:
+		if jogador_atual.tem_monopolio(propriedade.cor_grupo, tabuleiro):
+			tem_monopolio = true
+			break
+	
+	if not tem_monopolio:
+		exibir_popup_mensagem("Você só pode construir um imóvel caso possua um monopólio de um grupo de cor.")
+	else:
+		for propriedade in jogador_atual.propriedades:
+			if jogador_atual.tem_monopolio(propriedade.cor_grupo, tabuleiro):
+				propriedade.toggle_botao_construir()
 
 func atualizar_ui_construcao() -> void:
-	var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)
-	if espaco_atual is Propriedade and espaco_atual.dono == jogador_atual and jogador_atual.tem_monopolio(espaco_atual.cor_grupo, tabuleiro):
-		botao_construir_casa.visible = true
+	botao_construir_propriedades.visible = true
+	
+	var tem_monopolio = false
+	if jogador_atual != null:
+		for propriedade in jogador_atual.propriedades:
+			if jogador_atual.tem_monopolio(propriedade.cor_grupo, tabuleiro):
+				tem_monopolio = true
+				break
+	
+	if tem_monopolio:
+		botao_construir_propriedades.modulate.a = 1.0
 	else:
-		botao_construir_casa.visible = false
+		botao_construir_propriedades.modulate.a = 0.5
 
 func _on_debug_construir_apertado() -> void:
 	var propriedade = tabuleiro.obter_espaco(1) # Propriedade11
@@ -299,3 +301,95 @@ func _on_debug_construir_apertado() -> void:
 		
 		propriedade.construir_casa()
 		atualizar_ui_construcao()
+
+func _on_debug_monopolio_pressed() -> void:
+	if popup_acao == null:
+		setup_popup_acao()
+	
+	popup_acao.clear_buttons()
+	popup_acao.set_text("Selecione o grupo de cor para obter monopólio:")
+	
+	var cores = ["marrom", "azul_claro", "rosa", "laranja", "vermelho", "amarelo", "verde", "azul_escuro"]
+	var nomes_cores = ["Marrom", "Azul Claro", "Rosa", "Laranja", "Vermelho", "Amarelo", "Verde", "Azul Escuro"]
+	
+	for i in range(cores.size()):
+		var cor = cores[i]
+		var nome = nomes_cores[i]
+		popup_acao.add_button(nome, func():
+			dar_monopolio(cor)
+			popup_acao.visible = false
+		)
+	
+	popup_acao.add_button("Cancelar", func():
+		popup_acao.visible = false
+	)
+	
+	popup_acao.show_popup()
+
+func dar_monopolio(cor_grupo: String) -> void:
+	print("DEBUG: Dando monopólio de %s para %s" % [cor_grupo, jogador_atual.nome])
+	for espaco in tabuleiro.espacos:
+		if espaco is Propriedade and espaco.cor_grupo == cor_grupo:
+			# Remove do dono anterior se houver
+			if espaco.dono != null and espaco.dono != jogador_atual:
+				espaco.dono.propriedades.erase(espaco)
+			
+			# Adiciona ao novo dono
+			if espaco.dono != jogador_atual:
+				espaco.dono = jogador_atual
+				jogador_atual.propriedades.append(espaco)
+				espaco.comprado = true
+				espaco.lote_comprado()
+				espaco.atualizar_indicador_dono()
+	
+	atualizar_ui_construcao()
+	exibir_popup_mensagem("Monopólio de %s concedido a %s!" % [cor_grupo, jogador_atual.nome])
+
+# --- Lógica do Popup de Ação ---
+var popup_acao: PopupAcao
+
+func setup_popup_acao() -> void:
+	var popup_scene = load("res://scenes/UI/popup_acao.tscn")
+	if popup_scene:
+		popup_acao = popup_scene.instantiate()
+		add_child(popup_acao)
+		popup_acao = popup_scene.instantiate()
+		add_child(popup_acao)
+
+func exibir_popup_compra(propriedade: Propriedade) -> void:
+	if popup_acao == null:
+		setup_popup_acao()
+	
+	popup_acao.clear_buttons()
+	popup_acao.set_text("Deseja comprar %s por R$ %d?" % [propriedade.nome, propriedade.preco])
+	
+	popup_acao.add_button("Sim", func():
+		print("Jogo: Confirmou compra de ", propriedade.nome)
+		propriedade.comprar(jogador_atual)
+		proximo_jogador()
+	)
+	
+	popup_acao.add_button("Não", func():
+		print("Jogador recusou a compra.")
+		proximo_jogador()
+	)
+	
+	popup_acao.show_popup()
+
+func exibir_popup_construcao(propriedade: Propriedade) -> void:
+	if popup_acao == null:
+		setup_popup_acao()
+		
+	popup_acao.clear_buttons()
+	popup_acao.set_text("Construir casa em %s por R$ %d?" % [propriedade.nome, propriedade.custo_casa])
+	
+	popup_acao.add_button("Sim", func():
+		propriedade.construir_casa()
+		atualizar_ui_construcao()
+	)
+	
+	popup_acao.add_button("Cancelar", func():
+		print("Construção cancelada.")
+	)
+	
+	popup_acao.show_popup()
