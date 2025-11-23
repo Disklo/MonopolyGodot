@@ -24,17 +24,41 @@ var dono: Jogador = null
 @onready var quatro_casas: Sprite2D = $"4casas"
 @onready var hotel: Sprite2D = $"1hotel"
 @onready var cor_comprada: ColorRect = $CorEspaco
-@onready var cor_a_venda: ColorRect = $CorVenda
 @onready var lotevenda: RichTextLabel = $NomeLabel2
+@onready var indicador_dono: Panel = $IndicadorDono
+
+# Cores clássicas do Monopoly
+const CORES_GRUPO = {
+	"marrom": Color("8B4513"),
+	"azul_claro": Color("87CEEB"),
+	"rosa": Color("FF69B4"),
+	"laranja": Color("FFA500"),
+	"vermelho": Color("FF0000"),
+	"amarelo": Color("FFFF00"),
+	"verde": Color("008000"),
+	"azul_escuro": Color("00008B")
+}
 
 func _ready() -> void:
 	super._ready()
 	preco_label.text = "Preço: R$" + _format_preco(preco)
 	aluguel_label.text = "Aluguel: R$" + str(aluguel_base)
-	#mostrar_aluguel()
-	if comprado == true:
+	
+	atualizar_cor()
+	
+	if comprado:
 		lote_comprado()
+	
 	mostrar_propriedade(tipo_imovel)
+
+func atualizar_cor() -> void:
+	# Define a cor do fundo baseada no grupo
+	if cor_grupo in CORES_GRUPO:
+		cor_comprada.color = CORES_GRUPO[cor_grupo]
+	else:
+		cor_comprada.color = Color.GRAY # Fallback
+	
+	cor_comprada.visible = true
 
 # Formata um número para ter o ponto como separador de milhar.
 func _format_preco(numero: int) -> String:
@@ -55,10 +79,14 @@ func ao_parar(jogador: Jogador) -> void:
 
 	if dono == null:
 		# Se não tem dono, o jogador pode comprar
-		# Aqui entrará a lógica para mostrar o menu de compra na UI
 		print("Propriedade sem dono. %s pode comprar por %d." % [jogador.nome, preco])
-		# Lógica de compra (simplificada por enquanto)
-		comprar(jogador)
+		# Chama o popup no Jogo
+		var jogo = get_tree().get_root().get_node("Jogo")
+		if jogo.has_method("exibir_popup_compra"):
+			jogo.exibir_popup_compra(self)
+		else:
+			# Fallback se algo der errado
+			comprar(jogador)
 
 	elif dono == jogador:
 		# Se o jogador já é o dono, não acontece nada
@@ -72,33 +100,65 @@ func ao_parar(jogador: Jogador) -> void:
 
 # Lógica para um jogador comprar a propriedade
 func comprar(jogador: Jogador) -> void:
+	print("Propriedade: Tentando comprar ", nome, " por ", jogador.nome)
 	if jogador.dinheiro >= preco:
 		print("%s comprou %s" % [jogador.nome, nome])
 		jogador.pagar(preco)
 		dono = jogador
 		jogador.comprar_propriedade(self)
+		lote_comprado()
+		comprado = true
+		atualizar_indicador_dono()
 	else:
 		print("%s não tem dinheiro para comprar %s" % [jogador.nome, nome])
 
+func atualizar_indicador_dono() -> void:
+	if dono != null:
+		indicador_dono.visible = true
+		var style = StyleBoxFlat.new()
+		style.bg_color = dono.peao.modulate # Usa a cor do peão do jogador
+		style.set_corner_radius_all(15) # Faz um círculo (metade do tamanho 30)
+		style.border_width_left = 1
+		style.border_width_top = 1
+		style.border_width_right = 1
+		style.border_width_bottom = 1
+		style.border_color = Color.BLACK
+		indicador_dono.add_theme_stylebox_override("panel", style)
 
-# Lógica para cobrar aluguel do jogador que parou aqui
+# Função para cobrar aluguel
 func cobrar_aluguel(jogador: Jogador) -> void:
-	var tabuleiro = get_tree().get_root().get_node("Jogo/Tabuleiro")
-	var aluguel_a_cobrar = alugueis[num_casas]
-	# Dobra o aluguel em terrenos sem construção se o jogador tiver o monopólio
-	if num_casas == 0 and dono.tem_monopolio(cor_grupo, tabuleiro):
-		aluguel_a_cobrar = aluguel_base * 2
+	# Verifica se o dono existe e não é o próprio jogador.
+	if dono != null and dono != jogador:
+		var aluguel_a_cobrar = aluguel_base
 		
-	jogador.pagar(aluguel_a_cobrar)
-	dono.receber(aluguel_a_cobrar)
+		# Se tiver casas/hotel, usa o valor do array
+		if num_casas > 0:
+			if num_casas < alugueis.size():
+				aluguel_a_cobrar = alugueis[num_casas]
+		
+		# Se o dono tiver o monopólio e não tiver casas, o aluguel é dobrado (regra clássica)
+		elif num_casas == 0 and dono.tem_monopolio(cor_grupo, get_tree().get_root().get_node("Jogo/Tabuleiro")): # get_parent() é o Tabuleiro
+			aluguel_a_cobrar *= 2
+		
+		print("%s caiu na propriedade de %s. Aluguel: R$%d" % [jogador.nome, dono.nome, aluguel_a_cobrar])
+		
+		# Chama o popup no Jogo
+		var jogo = get_tree().get_root().get_node("Jogo")
+		if jogo.has_method("exibir_popup_mensagem"):
+			jogo.exibir_popup_mensagem("Você caiu em %s (Propriedade de %s).\nPague R$ %d de aluguel." % [nome, dono.nome, aluguel_a_cobrar], func():
+				jogador.pagar(aluguel_a_cobrar)
+				dono.receber(aluguel_a_cobrar)
+			)
+		else:
+			jogador.pagar(aluguel_a_cobrar)
+			dono.receber(aluguel_a_cobrar)
 
 # Retira a visibilidade do preço e coloca a visibilidade no aluguel.
 func lote_comprado() -> void:
 	lotevenda.visible = false
 	preco_label.visible = false
 	aluguel_label.visible = true
-	cor_a_venda.visible = false
-	cor_comprada.visible = true
+	# cor_a_venda e cor_comprada já são tratadas no _ready para ficarem sempre com a cor do grupo
 
 func mostrar_aluguel() -> void:
 	preco_label.visible = false
@@ -125,13 +185,13 @@ func mostrar_propriedade(propriedade_a_mostrar: String) -> void:
 
 func construir_casa() -> void:
 	var tabuleiro = get_tree().get_root().get_node("Jogo/Tabuleiro")
+	
+	if dono == null:
+		return
+
 	if not dono.tem_monopolio(cor_grupo, tabuleiro):
 		print("Você precisa ter o monopólio para construir aqui.")
 		return
-		
-	if not comprado:
-		lote_comprado()
-		comprado = true
 		
 	if dono.dinheiro < custo_casa:
 		print("Dinheiro insuficiente para construir.")
@@ -140,14 +200,16 @@ func construir_casa() -> void:
 	if num_casas < 5:
 		dono.pagar(custo_casa)
 		num_casas += 1
-		print("Casa construída em %s. Total: %d" % [nome, num_casas])
-		# Atualiza a exibição visual
+		print("Construção realizada em %s. Total: %d" % [nome, num_casas])
+		
+		# Atualiza a exibição visual e tipo
 		match num_casas:
 			1: tipo_imovel = "uma_casa"
 			2: tipo_imovel = "duas_casas"
 			3: tipo_imovel = "tres_casas"
 			4: tipo_imovel = "quatro_casas"
 			5: tipo_imovel = "hotel"
+			
 		mostrar_propriedade(tipo_imovel)
 		aluguel_label.text = "Aluguel: R$" + str(alugueis[num_casas])
 	else:
