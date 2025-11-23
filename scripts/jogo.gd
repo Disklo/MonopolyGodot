@@ -105,7 +105,7 @@ func iniciar_jogo() -> void:
 		if child is Jogador:
 			jogadores.append(child)
 	
-	var cores = [Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW]
+	var cores = [Color.BLUE, Color.DARK_RED, Color.DARK_GREEN, Color.DARK_GOLDENROD]
 	var huds = [
 		get_node("JogadorHud"),
 		get_node("JogadorHud2"),
@@ -212,11 +212,6 @@ func rolar_dados() -> void:
 	#var destino_dado2 = Vector2(centro_x + randi_range(-100,100), centro_y + randi_range(-100,100)) # Direita
 	
 	# Animação dos dados
-	if dado1 and dado2:
-		dado1.animar_para(dado1_valor, destino_dado1)
-		dado2.animar_para(dado2_valor, destino_dado2)
-		await get_tree().create_timer(2.8).timeout
-	
 	if dado1 and dado2:
 		dado1.animar_para(dado1_valor, destino_dado1)
 		dado2.animar_para(dado2_valor, destino_dado2)

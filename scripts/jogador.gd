@@ -6,7 +6,7 @@ class_name Jogador
 @onready var peao: Sprite2D = $Peao
 # Variáveis do jogador
 @export var nome: String = "Jogador"
-@export var dinheiro: int = 15009
+@export var dinheiro: int = 1500
 
 # Posição atual do jogador no tabuleiro (índice do espaço)
 var posicao: int = 0
