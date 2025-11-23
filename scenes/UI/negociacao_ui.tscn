@@ -1,0 +1,160 @@
+[gd_scene load_steps=2 format=3 uid="uid://d0tax704y3w5"]
+
+[ext_resource type="Script" path="res://scripts/negociacao_ui.gd" id="1_script"]
+
+[node name="NegociacaoUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1200.0
+offset_top = -828.0
+offset_right = 1200.0
+offset_bottom = 828.0
+grow_horizontal = 2
+grow_vertical = 2
+clip_contents = true
+
+[node name="LabelTitulo" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 80.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 48
+text = "Negociação"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LabelSelecionarJogador" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.55
+anchor_top = 0.08
+anchor_right = 0.95
+anchor_bottom = 0.12
+theme_override_font_sizes/font_size = 40
+text = "Selecionar com quem quer negociar:"
+
+[node name="OptionJogadores" type="OptionButton" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.55
+anchor_top = 0.13
+anchor_right = 0.85
+anchor_bottom = 0.18
+theme_override_font_sizes/font_size = 40
+
+[node name="ScrollMinhas" type="ScrollContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.25
+anchor_right = 0.45
+anchor_bottom = 0.75
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/ScrollMinhas"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ScrollOutras" type="ScrollContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.55
+anchor_top = 0.25
+anchor_right = 0.95
+anchor_bottom = 0.75
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/ScrollOutras"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LabelMinhas" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.2
+anchor_right = 0.45
+anchor_bottom = 0.24
+theme_override_font_sizes/font_size = 40
+text = "Minhas Propriedades"
+
+[node name="LabelOutras" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.55
+anchor_top = 0.2
+anchor_right = 0.95
+anchor_bottom = 0.24
+theme_override_font_sizes/font_size = 40
+text = "Propriedades do Alvo"
+
+[node name="InputMeuDinheiro" type="SpinBox" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.8
+anchor_right = 0.25
+anchor_bottom = 0.86
+theme_override_font_sizes/font_size = 60
+max_value = 100000.0
+prefix = "R$"
+
+[node name="InputOutroDinheiro" type="SpinBox" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.55
+anchor_top = 0.8
+anchor_right = 0.75
+anchor_bottom = 0.86
+theme_override_font_sizes/font_size = 60
+max_value = 100000.0
+prefix = "R$"
+
+[node name="BtnPropor" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.4
+anchor_top = 0.9
+anchor_right = 0.6
+anchor_bottom = 0.98
+theme_override_font_sizes/font_size = 48
+text = "Propor Troca"
+
+[node name="BtnCancelar" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -100.0
+offset_bottom = 100.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 40
+text = "X"
+
+[node name="ResizeHandle" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -30.0
+offset_top = -30.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_default_cursor_shape = 12
+flat = true

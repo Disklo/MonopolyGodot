@@ -1,5 +1,5 @@
 # Define a classe base para todos os espaços do tabuleiro.
-extends Node
+extends Node2D
 
 class_name Espaco
 
