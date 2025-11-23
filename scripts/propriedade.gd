@@ -131,12 +131,10 @@ func cobrar_aluguel(jogador: Jogador) -> void:
 	if dono != null and dono != jogador:
 		var aluguel_a_cobrar = aluguel_base
 		
-		# Se tiver casas/hotel, usa o valor do array
-		if num_casas > 0:
-			if num_casas < alugueis.size():
-				aluguel_a_cobrar = alugueis[num_casas]
 		
-		# Se o dono tiver o monopólio e não tiver casas, o aluguel é dobrado (regra clássica)
+		if num_casas > 0 and num_casas < alugueis.size():
+			aluguel_a_cobrar = alugueis[num_casas]
+		
 		elif num_casas == 0 and dono.tem_monopolio(cor_grupo, get_tree().get_root().get_node("Jogo/Tabuleiro")): # get_parent() é o Tabuleiro
 			aluguel_a_cobrar *= 2
 		
@@ -148,6 +146,7 @@ func cobrar_aluguel(jogador: Jogador) -> void:
 			jogo.exibir_popup_mensagem("Você caiu em %s (Propriedade de %s).\nPague R$ %d de aluguel." % [nome, dono.nome, aluguel_a_cobrar], func():
 				jogador.pagar(aluguel_a_cobrar)
 				dono.receber(aluguel_a_cobrar)
+				jogo.proximo_jogador()
 			)
 		else:
 			jogador.pagar(aluguel_a_cobrar)
