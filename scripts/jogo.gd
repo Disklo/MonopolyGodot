@@ -88,8 +88,8 @@ func rolar_dados() -> void:
 	var dado2_valor = randi_range(1, 6)
 	
 	# Calcula a posição de destino dos dados obs: soma-se 300 para que eles não caem na mesma posição
-	var destino_dado1 = Vector2(randi_range(-700.0, 700.0) + 300, randi_range(400.0, 800.0) + 300)
-	var destino_dado2 = Vector2(randi_range(-700.0, 700.0) + 300, randi_range(400.0, 800.0) + 300)
+	var destino_dado1 = Vector2(randi_range(-500.0, 500.0) + 300, randi_range(1200.0, -500.0) + 300)
+	var destino_dado2 = Vector2(randi_range(-500.0, 500.0) + 300, randi_range(1200.0, -500.0) + 300)
 	
 	
 	# Animação dos dados
