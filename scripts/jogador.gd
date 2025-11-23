@@ -16,6 +16,10 @@ signal dinheiro_alterado(novo_saldo: int)
 # Lista de propriedades que o jogador possui
 var propriedades: Array[Propriedade] = []
 
+# Variáveis de estado da prisão
+var preso: bool = false
+var turnos_na_prisao: int = 0
+
 func set_cor(c: Color) -> void:
 	peao.modulate = c
 
@@ -79,3 +83,13 @@ func receber(valor: int) -> void:
 	dinheiro += valor
 	dinheiro_alterado.emit(dinheiro)
 	print("%s recebeu %d. Saldo: %d" % [nome, valor, dinheiro])
+
+func ir_para_prisao() -> void:
+	preso = true
+	turnos_na_prisao = 0
+	print("%s foi enviado para a prisão (estado atualizado)." % nome)
+
+func sair_da_prisao() -> void:
+	preso = false
+	turnos_na_prisao = 0
+	print("%s saiu da prisão." % nome)
