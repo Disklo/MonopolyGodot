@@ -43,6 +43,25 @@ func mover(passos: int, tabuleiro: Tabuleiro) -> void:
 	$"../botaoRolarDados".disabled = false
 
 
+# Move o jogador direto para uma posicção específica
+func mover_para_posicao(nova_posicao: int, tabuleiro: Tabuleiro) -> void:
+	var posicao_inicial = posicao
+	posicao = nova_posicao
+	print('%s foi movido diretamente para a posicao %d' % [nome, posicao])
+	
+	if peao == null:
+		return
+		
+	# Movendo o peão (peça do jogador) diretamente para a nova posicão
+	var espaco_destino = tabuleiro.obter_espaco(nova_posicao)
+	if espaco_destino != null:
+		var destino = espaco_destino.position + Vector2(200,200)
+		# Animação
+		var tween = create_tween()
+		tween.tween_property(peao, "position", destino, 0.5)
+		await tween.finished
+
+
 # Adiciona uma propriedade à lista do jogador
 func comprar_propriedade(propriedade: Propriedade) -> void:
 	propriedades.append(propriedade)

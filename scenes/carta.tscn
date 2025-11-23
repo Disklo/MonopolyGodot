@@ -1,3 +1,123 @@
-[gd_scene format=3 uid="uid://b8pheld4pbhse"]
+[gd_scene load_steps=10 format=3 uid="uid://b8pheld4pbhse"]
 
-[node name="Carta" type="Node2D"]
+[ext_resource type="Script" uid="uid://djl1cr3dn6amc" path="res://scripts/carta.gd" id="1_3p8e2"]
+[ext_resource type="FontFile" uid="uid://demjs340jug5q" path="res://assets/fonts/ITCKabelStdMedium.TTF" id="1_t1fvr"]
+[ext_resource type="FontFile" uid="uid://clb0vd7anfpeh" path="res://assets/fonts/ITCKabelStdBold.TTF" id="1_ywsyh"]
+[ext_resource type="FontFile" uid="uid://c3kgpi1ijacaa" path="res://assets/fonts/VCR_OSD_MONO_1.001.ttf" id="3_rx7pn"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ywsyh"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rx7pn"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3p8e2"]
+bg_color = Color(1, 1, 1, 1)
+expand_margin_left = 12.0
+expand_margin_right = 12.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cc48w"]
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+expand_margin_left = 33.0
+expand_margin_top = 33.0
+expand_margin_right = 33.0
+expand_margin_bottom = 33.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_txgwi"]
+bg_color = Color(0.0962047, 0.0962048, 0.0962047, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+expand_margin_left = 33.0
+expand_margin_top = 33.0
+expand_margin_right = 33.0
+expand_margin_bottom = 33.0
+
+[node name="Carta" type="Panel"]
+process_mode = 3
+z_index = 2
+offset_right = 2323.0
+offset_bottom = 1235.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ywsyh")
+script = ExtResource("1_3p8e2")
+
+[node name="PanelBorda" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 44.0
+offset_right = 2280.0
+offset_bottom = 1197.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_rx7pn")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelBorda"]
+layout_mode = 0
+offset_left = 362.0
+offset_top = 67.0
+offset_right = 1979.0
+offset_bottom = 1087.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelBorda/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 250
+
+[node name="TituloCarta" type="Label" parent="PanelBorda/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_ywsyh")
+theme_override_font_sizes/font_size = 100
+text = "TITULO"
+horizontal_alignment = 1
+
+[node name="DescricaoCarta" type="Label" parent="PanelBorda/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 70
+theme_override_fonts/font = ExtResource("1_t1fvr")
+theme_override_font_sizes/font_size = 80
+text = "Descrição da carta"
+horizontal_alignment = 1
+autowrap_mode = 2
+uppercase = true
+
+[node name="monopoly" type="Label" parent="PanelBorda"]
+layout_mode = 0
+offset_left = 1046.0
+offset_top = 1125.0
+offset_right = 1304.0
+offset_bottom = 1176.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_t1fvr")
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_3p8e2")
+text = "Monopoly"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="ButtonFecharCarta" type="Button" parent="."]
+layout_mode = 0
+offset_left = 809.0
+offset_top = 1353.0
+offset_right = 1600.0
+offset_bottom = 1485.0
+mouse_default_cursor_shape = 2
+theme_override_fonts/font = ExtResource("3_rx7pn")
+theme_override_font_sizes/font_size = 120
+theme_override_styles/hover = SubResource("StyleBoxFlat_cc48w")
+theme_override_styles/normal = SubResource("StyleBoxFlat_txgwi")
+text = "Continuar"
+
+[connection signal="pressed" from="ButtonFecharCarta" to="." method="fecharCarta"]

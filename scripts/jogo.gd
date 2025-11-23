@@ -6,6 +6,8 @@ class_name Jogo
 @onready var dado1: Node2D = $Dado1
 @onready var dado2: Node2D = $Dado2
 
+@onready var carta: Carta = $Carta
+
 # Referências aos nós da cena, configuráveis no editor
 @export var tabuleiro: Tabuleiro
 @export var jogadores: Array[Jogador]
@@ -85,34 +87,24 @@ func rolar_dados() -> void:
 	var dado1_valor = randi_range(1, 6)
 	var dado2_valor = randi_range(1, 6)
 	
-	# Calcula a posição de destino dos dados obs: soma-se 200 para que eles não caem na mesma posição
-	#var centro_x = Vector2(-840.0, 155.0) #get_viewport().get_visible_rect().size.x / 2
-	#var centro_y = Vector2(400.0, 145.0) #get_viewport().get_visible_rect().size.y / 2
-	var destino_dado1 = Vector2(randi_range(-500.0, 500.0) + 200, randi_range(1200.0, -500.0) + 200)
-	var destino_dado2 = Vector2(randi_range(-500.0, 500.0) + 200, randi_range(1200.0, -500.0) + 200)
+	# Calcula a posição de destino dos dados obs: soma-se 300 para que eles não caem na mesma posição
+	var destino_dado1 = Vector2(randi_range(-700.0, 700.0) + 300, randi_range(400.0, 800.0) + 300)
+	var destino_dado2 = Vector2(randi_range(-700.0, 700.0) + 300, randi_range(400.0, 800.0) + 300)
 	
-	#var destino_dado1 = Vector2(centro_x + randi_range(-100,100), centro_y + randi_range(-100,100)) # Esquerda
-	#var destino_dado2 = Vector2(centro_x + randi_range(-100,100), centro_y + randi_range(-100,100)) # Direita
 	
 	# Animação dos dados
 	if dado1 and dado2:
 		dado1.animar_para(dado1_valor, destino_dado1)
 		dado2.animar_para(dado2_valor, destino_dado2)
 		await get_tree().create_timer(2.8).timeout
-	
-	# A parte abaixo ficará comentada por enquanto	
-	#else:
-	#	if dado1:
-	#		await dado1.animar_para(dado1_valor)
-	#	if dado2:	
-	#		await dado2.animar_para(dado2_valor)
 
 	var passos = dado1_valor + dado2_valor
 	print("%s rolou os dados: %d + %d = %d" % [jogador_atual.nome, dado1_valor, dado2_valor, passos])
 	ultimo_resultado_dados = passos
 
 	# 2. Move o jogador
-	jogador_atual.mover(passos, tabuleiro)
+	await jogador_atual.mover(passos, tabuleiro)
+	await get_tree().create_timer(0.5).timeout
 
 	# 3. Obtém o espaço em que o jogador parou
 	var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)

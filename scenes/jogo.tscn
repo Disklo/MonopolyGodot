@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://clqoiownwfhq0"]
+[gd_scene load_steps=8 format=3 uid="uid://clqoiownwfhq0"]
 
 [ext_resource type="Script" uid="uid://ckbjfm7pwjqfs" path="res://scripts/jogo.gd" id="1_1b3iq"]
 [ext_resource type="PackedScene" uid="uid://twnltl4j4vkp" path="res://scenes/tabuleiro.tscn" id="2_k05ng"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bue0kwfwahiqo" path="res://scenes/UI/jogadorHUD.tscn" id="4_k05ng"]
 [ext_resource type="FontFile" uid="uid://c3kgpi1ijacaa" path="res://assets/fonts/VCR_OSD_MONO_1.001.ttf" id="5_0c0ry"]
 [ext_resource type="PackedScene" uid="uid://40tn0tcfdv2s" path="res://scenes/UI/dado.tscn" id="6_4sjka"]
+[ext_resource type="PackedScene" uid="uid://b8pheld4pbhse" path="res://scenes/carta.tscn" id="7_ogo8m"]
 
 [node name="Jogo" type="Node"]
 script = ExtResource("1_1b3iq")
@@ -71,6 +72,14 @@ visible = false
 
 [node name="Dado2" parent="." instance=ExtResource("6_4sjka")]
 visible = false
+
+[node name="Carta" parent="." instance=ExtResource("7_ogo8m")]
+visible = false
+layout_direction = 4
+offset_left = -1136.0
+offset_top = -700.0
+offset_right = 1215.0
+offset_bottom = 562.0
 
 [connection signal="pressed" from="botaoRolarDados" to="." method="_on_rolar_dados_apertado"]
 [connection signal="pressed" from="botaoConstruirCasa" to="." method="_on_construir_casa_apertado"]
