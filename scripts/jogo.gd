@@ -18,14 +18,8 @@ var ultimo_resultado_dados: int = 0
 @onready var botao_construir_casa: Button = $botaoConstruirCasa
 @onready var botao_rolar_dados: Button = $botaoRolarDados
 
-# UI da Prisão
-var botao_pagar_fianca: Button
-var botao_tentar_dados: Button
-
-# A função _ready é chamada quando o nó entra na árvore da cena.
 func _ready() -> void:
 	iniciar_jogo()
-	setup_jail_ui()
 	setup_debug_ui()
 
 func setup_debug_ui() -> void:
@@ -60,48 +54,45 @@ func _on_debug_prender_pressed(jogador: Jogador) -> void:
 	# Se for o turno do jogador preso, atualiza a UI
 	if jogador == jogador_atual:
 		botao_rolar_dados.visible = false
-		botao_pagar_fianca.visible = true
-		botao_tentar_dados.visible = true
+		exibir_popup_prisao()
 
-func setup_jail_ui() -> void:
-	# Configura botão de Pagar Fiança
-	botao_pagar_fianca = Button.new()
-	botao_pagar_fianca.text = "Pagar Fiança (R$ 50)"
-	botao_pagar_fianca.position = Vector2(botao_rolar_dados.position.x, botao_rolar_dados.position.y + 150)
-	botao_pagar_fianca.size = Vector2(540, 118)
-	botao_pagar_fianca.add_theme_font_override("font", load("res://assets/fonts/VCR_OSD_MONO_1.001.ttf"))
-	botao_pagar_fianca.add_theme_font_size_override("font_size", 40)
-	botao_pagar_fianca.pressed.connect(_on_pagar_fianca_pressed)
-	botao_pagar_fianca.visible = false
-	add_child(botao_pagar_fianca)
-
-	# Configura botão de Tentar Dados
-	botao_tentar_dados = Button.new()
-	botao_tentar_dados.text = "Tentar Dados"
-	botao_tentar_dados.position = Vector2(botao_rolar_dados.position.x, botao_rolar_dados.position.y + 300)
-	botao_tentar_dados.size = Vector2(540, 118)
-	botao_tentar_dados.add_theme_font_override("font", load("res://assets/fonts/VCR_OSD_MONO_1.001.ttf"))
-	botao_tentar_dados.add_theme_font_size_override("font_size", 40)
-	botao_tentar_dados.pressed.connect(_on_tentar_dados_pressed)
-	botao_tentar_dados.visible = false
-	add_child(botao_tentar_dados)
-
-func _on_pagar_fianca_pressed() -> void:
-	if jogador_atual.dinheiro >= 50:
-		jogador_atual.pagar(50)
-		jogador_atual.sair_da_prisao()
-		esconder_jail_ui()
+func exibir_popup_prisao() -> void:
+	if action_popup == null:
+		setup_action_popup()
+	
+	action_popup.clear_buttons()
+	action_popup.set_text("Você está preso! O que deseja fazer?")
+	
+	action_popup.add_button("Pagar Fiança (R$ 50)", func():
+		if jogador_atual.dinheiro >= 50:
+			jogador_atual.pagar(50)
+			jogador_atual.sair_da_prisao()
+			rolar_dados()
+		else:
+			print("Dinheiro insuficiente.")
+			# Reexibe o popup ou avisa
+			exibir_popup_mensagem("Dinheiro insuficiente para pagar a fiança.", func(): exibir_popup_prisao())
+	)
+	
+	action_popup.add_button("Tentar Dados", func():
 		rolar_dados()
-	else:
-		print("Dinheiro insuficiente para pagar fiança.")
+	)
+	
+	action_popup.show_popup()
 
-func _on_tentar_dados_pressed() -> void:
-	esconder_jail_ui()
-	rolar_dados()
-
-func esconder_jail_ui() -> void:
-	botao_pagar_fianca.visible = false
-	botao_tentar_dados.visible = false
+func exibir_popup_mensagem(texto: String, callback: Callable = Callable()) -> void:
+	if action_popup == null:
+		setup_action_popup()
+	
+	action_popup.clear_buttons()
+	action_popup.set_text(texto)
+	
+	action_popup.add_button("OK", func():
+		if not callback.is_null():
+			callback.call()
+	)
+	
+	action_popup.show_popup()
 
 # Prepara o estado inicial do jogo.
 func iniciar_jogo() -> void:
@@ -175,12 +166,9 @@ func proximo_jogador() -> void:
 	if jogador_atual.preso:
 		print("%s está preso. Mostrando opções de prisão." % jogador_atual.nome)
 		botao_rolar_dados.visible = false
-		botao_pagar_fianca.visible = true
-		botao_tentar_dados.visible = true
+		exibir_popup_prisao()
 	else:
 		botao_rolar_dados.visible = true
-		botao_pagar_fianca.visible = false
-		botao_tentar_dados.visible = false
 		botao_rolar_dados.disabled = false
 	
 	verificar_rodada()
@@ -229,12 +217,10 @@ func rolar_dados() -> void:
 		dado2.animar_para(dado2_valor, destino_dado2)
 		await get_tree().create_timer(2.8).timeout
 	
-	# A parte abaixo ficará comentada por enquanto	
-	#else:
-	#	if dado1:
-	#		await dado1.animar_para(dado1_valor)
-	#	if dado2:	
-	#		await dado2.animar_para(dado2_valor)
+	if dado1 and dado2:
+		dado1.animar_para(dado1_valor, destino_dado1)
+		dado2.animar_para(dado2_valor, destino_dado2)
+		await get_tree().create_timer(2.8).timeout
 
 	var passos = dado1_valor + dado2_valor
 	print("%s rolou os dados: %d + %d = %d" % [jogador_atual.nome, dado1_valor, dado2_valor, passos])
@@ -269,14 +255,15 @@ func rolar_dados() -> void:
 			espaco_atual.ao_parar(jogador_atual)
 
 	# 5. Passa para o próximo turno e habilita UI
-	# A habilitação da UI é feita no proximo_jogador
-	proximo_jogador()
+	if action_popup != null and action_popup.visible:
+		pass
+	else:
+		proximo_jogador()
 
 func _on_construir_casa_apertado() -> void:
 	var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)
 	if espaco_atual is Propriedade and espaco_atual.dono == jogador_atual:
-		espaco_atual.construir_casa()
-		atualizar_ui_construcao()
+		exibir_popup_construcao(espaco_atual)
 
 func atualizar_ui_construcao() -> void:
 	var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)
@@ -299,3 +286,52 @@ func _on_debug_construir_apertado() -> void:
 		
 		propriedade.construir_casa()
 		atualizar_ui_construcao()
+
+# --- Lógica do Popup de Ação ---
+var action_popup: ActionPopup
+
+func setup_action_popup() -> void:
+	var popup_scene = load("res://scenes/UI/action_popup.tscn")
+	if popup_scene:
+		action_popup = popup_scene.instantiate()
+		add_child(action_popup)
+		action_popup = popup_scene.instantiate()
+		add_child(action_popup)
+
+func exibir_popup_compra(propriedade: Propriedade) -> void:
+	if action_popup == null:
+		setup_action_popup()
+	
+	action_popup.clear_buttons()
+	action_popup.set_text("Deseja comprar %s por R$ %d?" % [propriedade.nome, propriedade.preco])
+	
+	action_popup.add_button("Sim", func():
+		print("Jogo: Confirmou compra de ", propriedade.nome)
+		propriedade.comprar(jogador_atual)
+		proximo_jogador()
+	)
+	
+	action_popup.add_button("Não", func():
+		print("Jogador recusou a compra.")
+		proximo_jogador()
+	)
+	
+	action_popup.show_popup()
+
+func exibir_popup_construcao(propriedade: Propriedade) -> void:
+	if action_popup == null:
+		setup_action_popup()
+		
+	action_popup.clear_buttons()
+	action_popup.set_text("Construir casa em %s por R$ %d?" % [propriedade.nome, propriedade.custo_casa])
+	
+	action_popup.add_button("Sim", func():
+		propriedade.construir_casa()
+		atualizar_ui_construcao()
+	)
+	
+	action_popup.add_button("Cancelar", func():
+		print("Construção cancelada.")
+	)
+	
+	action_popup.show_popup()
