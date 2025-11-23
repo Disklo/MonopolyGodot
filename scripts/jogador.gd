@@ -19,8 +19,11 @@ var propriedades: Array[Propriedade] = []
 # Variáveis de estado da prisão
 var preso: bool = false
 var turnos_na_prisao: int = 0
+var falido: bool = false
+var cor: Color = Color.WHITE
 
 func set_cor(c: Color) -> void:
+	cor = c
 	peao.modulate = c
 
 # Move o jogador no tabuleiro
@@ -73,10 +76,14 @@ func tem_monopolio(cor_grupo: String, tabuleiro: Tabuleiro) -> bool:
 	return contagem_jogador == contagem_tabuleiro
 
 # Subtrai dinheiro do jogador
-func pagar(valor: int) -> void:
+func pagar(valor: int) -> bool:
+	if dinheiro < valor:
+		print("%s não tem dinheiro suficiente para pagar %d. Saldo: %d" % [nome, valor, dinheiro])
+		return false
 	dinheiro -= valor
 	dinheiro_alterado.emit(dinheiro)
 	print("%s pagou %d. Saldo: %d" % [nome, valor, dinheiro])
+	return true
 
 # Adiciona dinheiro ao jogador
 func receber(valor: int) -> void:

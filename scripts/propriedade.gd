@@ -10,8 +10,9 @@ class_name Propriedade
 @export var tipo_imovel: String = ""
 @export var cor_grupo: String = ""
 @export var custo_casa: int = 50
-@export var alugueis: Array[int] = [10, 50, 150, 450, 625, 750] # 0-4 casas, hotel
+@export var alugueis: Array[int] = [10, 50, 150, 450, 625, 750]
 @export var num_casas: int = 0 # 5 para hotel
+@export var hipotecada: bool = false
 
 # O jogador que é o dono dessa propriedade. Fica nulo se não tiver dono.
 var dono: Jogador = null
@@ -177,13 +178,22 @@ func atualizar_indicador_dono() -> void:
 func cobrar_aluguel(jogador: Jogador) -> void:
 	# Verifica se o dono existe e não é o próprio jogador.
 	if dono != null and dono != jogador:
+		if hipotecada:
+			print("Propriedade hipotecada. Nenhum aluguel cobrado.")
+			var jogo = get_tree().get_root().get_node("Jogo")
+			if jogo.has_method("exibir_popup_mensagem"):
+				jogo.exibir_popup_mensagem("Você caiu em %s, mas ela está hipotecada. Não pague aluguel." % nome, func():
+					jogo.proximo_jogador()
+				)
+			return
+
 		var aluguel_a_cobrar = aluguel_base
 		
 		
 		if num_casas > 0 and num_casas < alugueis.size():
 			aluguel_a_cobrar = alugueis[num_casas]
 		
-		elif num_casas == 0 and dono.tem_monopolio(cor_grupo, get_tree().get_root().get_node("Jogo/Tabuleiro")): # get_parent() é o Tabuleiro
+		elif num_casas == 0 and dono.tem_monopolio(cor_grupo, get_tree().get_root().get_node("Jogo/Tabuleiro")):
 			aluguel_a_cobrar *= 2
 		
 		print("%s caiu na propriedade de %s. Aluguel: R$%d" % [jogador.nome, dono.nome, aluguel_a_cobrar])
@@ -192,20 +202,31 @@ func cobrar_aluguel(jogador: Jogador) -> void:
 		var jogo = get_tree().get_root().get_node("Jogo")
 		if jogo.has_method("exibir_popup_mensagem"):
 			jogo.exibir_popup_mensagem("Você caiu em %s (Propriedade de %s).\nPague R$ %d de aluguel." % [nome, dono.nome, aluguel_a_cobrar], func():
-				jogador.pagar(aluguel_a_cobrar)
-				dono.receber(aluguel_a_cobrar)
-				jogo.proximo_jogador()
+				if not jogador.pagar(aluguel_a_cobrar):
+					jogo.exibir_popup_mensagem("Dinheiro insuficiente! Gerencie suas propriedades ou declare falência.", func():
+						jogo.abrir_gerenciador_propriedades()
+						if jogador.dinheiro < aluguel_a_cobrar:
+							jogo.declarar_falencia(jogador, dono)
+						else:
+							jogador.pagar(aluguel_a_cobrar)
+							dono.receber(aluguel_a_cobrar)
+							jogo.proximo_jogador()
+					)
+				else:
+					dono.receber(aluguel_a_cobrar)
+					jogo.proximo_jogador()
 			)
 		else:
-			jogador.pagar(aluguel_a_cobrar)
-			dono.receber(aluguel_a_cobrar)
+			if not jogador.pagar(aluguel_a_cobrar):
+				print("Falência (sem UI)")
+			else:
+				dono.receber(aluguel_a_cobrar)
 
 # Retira a visibilidade do preço e coloca a visibilidade no aluguel.
 func lote_comprado() -> void:
 	lotevenda.visible = false
 	preco_label.visible = false
 	aluguel_label.visible = true
-	# cor_a_venda e cor_comprada já são tratadas no _ready para ficarem sempre com a cor do grupo
 
 func mostrar_aluguel() -> void:
 	preco_label.visible = false
@@ -238,18 +259,49 @@ func construir_casa() -> void:
 
 	if not dono.tem_monopolio(cor_grupo, tabuleiro):
 		print("Você precisa ter o monopólio para construir aqui.")
+		var jogo = get_tree().get_root().get_node("Jogo")
+		if jogo.has_method("exibir_popup_mensagem"):
+			jogo.exibir_popup_mensagem("Você só pode construir um imóvel caso possua um monopólio de um grupo de cor.")
 		return
 		
 	if dono.dinheiro < custo_casa:
 		print("Dinheiro insuficiente para construir.")
+		var jogo = get_tree().get_root().get_node("Jogo")
+		if jogo.has_method("exibir_popup_mensagem"):
+			jogo.exibir_popup_mensagem("Você não tem dinheiro suficiente para construir nesta propriedade.")
 		return
 
 	if num_casas < 5:
+		var jogo = get_tree().get_root().get_node("Jogo")
+		if num_casas < 4:
+			if jogo.total_casas_banco <= 0:
+				print("Banco sem casas disponíveis.")
+				jogo.exibir_popup_mensagem("O banco não tem mais casas disponíveis.")
+				return
+		else:
+			if jogo.total_hoteis_banco <= 0:
+				print("Banco sem hotéis disponíveis.")
+				jogo.exibir_popup_mensagem("O banco não tem mais hotéis disponíveis.")
+				return
+
+		for espaco in tabuleiro.espacos:
+			if espaco is Propriedade and espaco.cor_grupo == cor_grupo and espaco != self:
+				if espaco.num_casas < num_casas:
+					print("Deve construir uniformemente.")
+					jogo.exibir_popup_mensagem("Você deve construir uniformemente. Todas as propriedades do grupo devem ter o mesmo nível antes de avançar.")
+					return
+
 		dono.pagar(custo_casa)
 		num_casas += 1
+		
+		if num_casas <= 4:
+			jogo.total_casas_banco -= 1
+		else:
+			jogo.total_casas_banco += 4
+			jogo.total_hoteis_banco -= 1
+			
 		print("Construção realizada em %s. Total: %d" % [nome, num_casas])
 		
-		# Atualiza a exibição visual e tipo
 		match num_casas:
 			1: tipo_imovel = "uma_casa"
 			2: tipo_imovel = "duas_casas"
@@ -261,3 +313,101 @@ func construir_casa() -> void:
 		aluguel_label.text = "Aluguel: R$" + str(alugueis[num_casas])
 	else:
 		print("Máximo de construções atingido.")
+
+func vender_casa() -> void:
+	if num_casas == 0:
+		print("Não há casas para vender.")
+		return
+		
+	var tabuleiro = get_tree().get_root().get_node("Jogo/Tabuleiro")
+	var jogo = get_tree().get_root().get_node("Jogo")
+	
+	for espaco in tabuleiro.espacos:
+		if espaco is Propriedade and espaco.cor_grupo == cor_grupo and espaco != self:
+			if espaco.num_casas > num_casas:
+				print("Deve vender uniformemente. Venda das propriedades com mais casas primeiro.")
+				jogo.exibir_popup_mensagem("Você deve vender uniformemente. Venda as construções das propriedades com mais casas primeiro.")
+				return
+
+	var valor_venda = custo_casa / 2
+	dono.receber(valor_venda)
+	
+	if num_casas == 5:
+		if jogo.total_casas_banco < 4:
+			print("Banco não tem 4 casas para devolver. Deve vender tudo de uma vez?")
+			jogo.exibir_popup_mensagem("Banco sem casas para converter o hotel.")
+			return
+			
+		jogo.total_hoteis_banco += 1
+		jogo.total_casas_banco -= 4
+		num_casas = 4
+	else:
+		num_casas -= 1
+		jogo.total_casas_banco += 1
+		
+	print("Venda realizada em %s. Total: %d" % [nome, num_casas])
+	
+	match num_casas:
+		0: tipo_imovel = ""
+		1: tipo_imovel = "uma_casa"
+		2: tipo_imovel = "duas_casas"
+		3: tipo_imovel = "tres_casas"
+		4: tipo_imovel = "quatro_casas"
+		
+	mostrar_propriedade(tipo_imovel)
+	if num_casas > 0:
+		aluguel_label.text = "Aluguel: R$" + str(alugueis[num_casas])
+	else:
+		aluguel_label.text = "Aluguel: R$" + str(aluguel_base)
+
+func pode_hipotecar() -> bool:
+	if dono == null:
+		return false
+	if hipotecada:
+		return false
+	if num_casas > 0:
+		return false
+	# Verifica se alguma propriedade do grupo tem casas
+	var tabuleiro = get_tree().get_root().get_node("Jogo/Tabuleiro")
+	for espaco in tabuleiro.espacos:
+		if espaco is Propriedade and espaco.cor_grupo == cor_grupo:
+			if espaco.num_casas > 0:
+				return false
+	return true
+
+func hipotecar() -> void:
+	if not pode_hipotecar():
+		print("Não é possível hipotecar esta propriedade.")
+		return
+	
+	hipotecada = true
+	dono.receber(int(preco / 2.0))
+	print("%s hipotecou %s e recebeu R$ %d" % [dono.nome, nome, int(preco / 2.0)])
+	atualizar_visual_hipoteca()
+
+func pode_deshipotecar() -> bool:
+	if not hipotecada:
+		return false
+	if dono.dinheiro < calcular_valor_deshipoteca():
+		return false
+	return true
+
+func calcular_valor_deshipoteca() -> int:
+	return int((preco / 2.0) * 1.1)
+
+func deshipotecar() -> void:
+	if not pode_deshipotecar():
+		print("Não é possível des-hipotecar.")
+		return
+		
+	var custo = calcular_valor_deshipoteca()
+	dono.pagar(custo)
+	hipotecada = false
+	print("%s des-hipotecou %s pagando R$ %d" % [dono.nome, nome, custo])
+	atualizar_visual_hipoteca()
+
+func atualizar_visual_hipoteca() -> void:
+	if hipotecada:
+		self.modulate = Color(0.5, 0.5, 0.5)
+	else:
+		self.modulate = Color(1, 1, 1)

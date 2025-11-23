@@ -15,12 +15,92 @@ var turno_atual: int = 0
 var rodada_atual: int = 1
 var jogador_atual: Jogador
 var ultimo_resultado_dados: int = 0
+
+# Limites do Banco
+var total_casas_banco: int = 32
+var total_hoteis_banco: int = 12
+
 @onready var botao_construir_propriedades: Button = $botaoConstruirPropriedades
 @onready var botao_rolar_dados: Button = $botaoRolarDados
 
 func _ready() -> void:
-	iniciar_jogo()
 	setup_debug_ui()
+	setup_ui_extras()
+	iniciar_jogo()
+	
+	# Remove o botão antigo
+	if botao_construir_propriedades:
+		botao_construir_propriedades.visible = false
+		botao_construir_propriedades.queue_free()
+
+var label_turno: RichTextLabel
+
+func setup_ui_extras() -> void:
+	var font = load("res://assets/fonts/VCR_OSD_MONO_1.001.ttf")
+	
+	# Label Turno
+	label_turno = RichTextLabel.new()
+	label_turno.bbcode_enabled = true
+	label_turno.position = Vector2(-300, -250)
+	label_turno.size = Vector2(600, 50)
+	if font:
+		label_turno.add_theme_font_override("normal_font", font)
+		label_turno.add_theme_font_size_override("normal_font_size", 40)
+	add_child(label_turno)
+	
+	# Botão Gerenciar Propriedades
+	var btn_gerenciar = Button.new()
+	btn_gerenciar.text = "GERENCIAR\nPROPRIEDADES"
+	btn_gerenciar.position = Vector2(-150, -150)
+	btn_gerenciar.size = Vector2(300, 300)
+	if font:
+		btn_gerenciar.add_theme_font_override("font", font)
+		btn_gerenciar.add_theme_font_size_override("font_size", 40)
+	btn_gerenciar.pressed.connect(abrir_gerenciador_propriedades)
+	add_child(btn_gerenciar)
+
+	# Botão Negociar
+	var btn_debug_dinheiro = Button.new()
+	btn_debug_dinheiro.text = "+R$1000"
+	btn_debug_dinheiro.position = Vector2(-311, -600)
+	btn_debug_dinheiro.size = Vector2(200, 100)
+	if font:
+		btn_debug_dinheiro.add_theme_font_override("font", font)
+		btn_debug_dinheiro.add_theme_font_size_override("font_size", 40)
+	btn_debug_dinheiro.pressed.connect(func():
+		if jogador_atual:
+			jogador_atual.receber(1000)
+			print("Debug: Adicionado R$1000 para %s" % jogador_atual.nome)
+	)
+	add_child(btn_debug_dinheiro)
+
+	var btn_debug_falencia = Button.new()
+	btn_debug_falencia.text = "FALÊNCIA"
+	btn_debug_falencia.position = Vector2(-311, -480)
+	btn_debug_falencia.size = Vector2(200, 100)
+	if font:
+		btn_debug_falencia.add_theme_font_override("font", font)
+		btn_debug_falencia.add_theme_font_size_override("font_size", 40)
+	btn_debug_falencia.pressed.connect(func():
+		if jogador_atual:
+			print("Debug: Simulando falência para %s" % jogador_atual.nome)
+			declarar_falencia(jogador_atual)
+	)
+	add_child(btn_debug_falencia)
+
+	var btn_negociar = Button.new()
+	btn_negociar.text = "NEGOCIAR"
+	btn_negociar.position = Vector2(200, -150)
+	btn_negociar.size = Vector2(300, 300)
+	if font:
+		btn_negociar.add_theme_font_override("font", font)
+		btn_negociar.add_theme_font_size_override("font_size", 40)
+	btn_negociar.pressed.connect(abrir_negociacao)
+	add_child(btn_negociar)
+
+func atualizar_label_turno() -> void:
+	if label_turno and jogador_atual:
+		label_turno.text = "[center][color=black]Turno do jogador %d [color=#%s]●[/color][/color][/center]" % [jogador_atual.index + 1, jogador_atual.cor.to_html()]
 
 func setup_debug_ui() -> void:
 	var y_offset = 0
@@ -141,10 +221,8 @@ func iniciar_jogo() -> void:
 	if ponto_partida != null:
 		for jogador in jogadores:
 			if jogador.peao != null:
-				# O offset já é calculado no mover, mas aqui precisamos posicionar inicialmente
-				# Vamos usar uma lógica similar ou apenas setar a posição base e deixar o mover ajustar depois?
-				# Melhor setar com offset manual aqui também para garantir
 				var offset = Vector2.ZERO
+				jogador.peao.position = ponto_partida.position + Vector2(200, 200) + offset
 				match jogador.index:
 					0: offset = Vector2(-30, -30)
 					1: offset = Vector2(30, -30)
@@ -154,14 +232,34 @@ func iniciar_jogo() -> void:
 	
 	print("O jogo começou! É a vez de %s." % jogador_atual.nome)
 	atualizar_ui_construcao()
+	atualizar_label_turno()
 
 # Passa para o próximo jogador.
 func proximo_jogador() -> void:
 	turno_atual = (turno_atual + 1) % jogadores.size()
 	jogador_atual = jogadores[turno_atual]
+	
+	# Esconde os dados do turno anterior
+	if dado1: dado1.visible = false
+	if dado2: dado2.visible = false
+	
+	# Pula jogadores falidos
+	while jogador_atual.falido:
+		turno_atual = (turno_atual + 1) % jogadores.size()
+		jogador_atual = jogadores[turno_atual]
+		
+		# Segurança para evitar loop infinito (embora verificar_fim_jogo deva prevenir)
+		var todos_falidos = true
+		for j in jogadores:
+			if not j.falido:
+				todos_falidos = false
+				break
+		if todos_falidos:
+			break
 	print("\n--- Próximo turno! É a vez de %s. ---" % jogador_atual.nome)
 	print("\n--- Próximo turno! É a vez de %s. ---" % jogador_atual.nome)
 	atualizar_ui_construcao()
+	atualizar_label_turno()
 	
 	if jogador_atual.preso:
 		print("%s está preso. Mostrando opções de prisão." % jogador_atual.nome)
@@ -185,7 +283,7 @@ func _on_rolar_dados_apertado() -> void:
 
 func rolar_dados() -> void:
 	print('rolando dados...')
-	botao_construir_propriedades.visible = false
+	# botao_construir_propriedades.visible = false # Removido
 	
 	# tornando os dados visíveis no tabuleiro
 	$Dado1.visible = true
@@ -203,13 +301,8 @@ func rolar_dados() -> void:
 	var dado2_valor = randi_range(1, 6)
 	
 	# Calcula a posição de destino dos dados obs: soma-se 200 para que eles não caem na mesma posição
-	#var centro_x = Vector2(-840.0, 155.0) #get_viewport().get_visible_rect().size.x / 2
-	#var centro_y = Vector2(400.0, 145.0) #get_viewport().get_visible_rect().size.y / 2
 	var destino_dado1 = Vector2(randi_range(-500.0, 500.0) + 200, randi_range(1200.0, -500.0) + 200)
 	var destino_dado2 = Vector2(randi_range(-500.0, 500.0) + 200, randi_range(1200.0, -500.0) + 200)
-	
-	#var destino_dado1 = Vector2(centro_x + randi_range(-100,100), centro_y + randi_range(-100,100)) # Esquerda
-	#var destino_dado2 = Vector2(centro_x + randi_range(-100,100), centro_y + randi_range(-100,100)) # Direita
 	
 	# Animação dos dados
 	if dado1 and dado2:
@@ -221,7 +314,6 @@ func rolar_dados() -> void:
 	print("%s rolou os dados: %d + %d = %d" % [jogador_atual.nome, dado1_valor, dado2_valor, passos])
 	ultimo_resultado_dados = passos
 
-	# 2. Lógica de Movimento (considerando prisão)
 	if jogador_atual.preso:
 		if dado1_valor == dado2_valor:
 			print("Dupla! %s saiu da prisão!" % jogador_atual.nome)
@@ -236,20 +328,15 @@ func rolar_dados() -> void:
 				jogador_atual.sair_da_prisao()
 				await jogador_atual.mover(passos, tabuleiro)
 			else:
-				# Não move, apenas espera
 				await get_tree().create_timer(1.0).timeout
 	else:
-		# Movimento normal
 		await jogador_atual.mover(passos, tabuleiro)
 
-	# 3. Obtém o espaço em que o jogador parou
 	var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)
 
-	# 4. Executa a ação daquele espaço
 	if espaco_atual != null:
 			espaco_atual.ao_parar(jogador_atual)
 
-	# 5. Passa para o próximo turno e habilita UI
 	if popup_acao != null and popup_acao.visible:
 		pass
 	else:
@@ -273,19 +360,8 @@ func _on_construir_propriedades_apertado() -> void:
 				propriedade.toggle_botao_construir()
 
 func atualizar_ui_construcao() -> void:
-	botao_construir_propriedades.visible = true
-	
-	var tem_monopolio = false
-	if jogador_atual != null:
-		for propriedade in jogador_atual.propriedades:
-			if jogador_atual.tem_monopolio(propriedade.cor_grupo, tabuleiro):
-				tem_monopolio = true
-				break
-	
-	if tem_monopolio:
-		botao_construir_propriedades.modulate.a = 1.0
-	else:
-		botao_construir_propriedades.modulate.a = 0.5
+	# Botão antigo removido. Função mantida para compatibilidade.
+	pass
 
 func _on_debug_construir_apertado() -> void:
 	var propriedade = tabuleiro.obter_espaco(1) # Propriedade11
@@ -347,14 +423,65 @@ func dar_monopolio(cor_grupo: String) -> void:
 
 # --- Lógica do Popup de Ação ---
 var popup_acao: PopupAcao
+var gerenciador_propriedades: GerenciadorPropriedades
+var leilao_ui: LeilaoUI
+var negociacao_ui: NegociacaoUI
 
 func setup_popup_acao() -> void:
 	var popup_scene = load("res://scenes/UI/popup_acao.tscn")
 	if popup_scene:
 		popup_acao = popup_scene.instantiate()
 		add_child(popup_acao)
-		popup_acao = popup_scene.instantiate()
-		add_child(popup_acao)
+		
+	var manager_scene = load("res://scenes/UI/gerenciador_propriedades.tscn")
+	if manager_scene:
+		gerenciador_propriedades = manager_scene.instantiate()
+		add_child(gerenciador_propriedades)
+		gerenciador_propriedades.setup(self)
+		gerenciador_propriedades.hide()
+		
+	var leilao_scene = load("res://scenes/UI/leilao_ui.tscn")
+	if leilao_scene:
+		leilao_ui = leilao_scene.instantiate()
+		add_child(leilao_ui)
+		leilao_ui.setup(self)
+		
+	var negociacao_scene = load("res://scenes/UI/negociacao_ui.tscn")
+	if negociacao_scene:
+		negociacao_ui = negociacao_scene.instantiate()
+		add_child(negociacao_ui)
+		negociacao_ui.setup(self)
+
+func abrir_gerenciador_propriedades() -> void:
+	if gerenciador_propriedades == null:
+		setup_popup_acao() # Garante que foi carregado
+	
+	if gerenciador_propriedades:
+		gerenciador_propriedades.abrir(jogador_atual)
+
+func abrir_negociacao() -> void:
+	if negociacao_ui == null:
+		setup_popup_acao()
+		
+	if negociacao_ui:
+		negociacao_ui.abrir(jogador_atual)
+
+func exibir_popup_confirmacao(texto: String, on_sim: Callable, on_nao: Callable = Callable(), texto_sim: String = "Sim", texto_nao: String = "Não") -> void:
+	if popup_acao == null:
+		setup_popup_acao()
+	
+	popup_acao.clear_buttons()
+	popup_acao.set_text(texto)
+	
+	popup_acao.add_button(texto_sim, func():
+		if not on_sim.is_null(): on_sim.call()
+	)
+	
+	popup_acao.add_button(texto_nao, func():
+		if not on_nao.is_null(): on_nao.call()
+	)
+	
+	popup_acao.show_popup()
 
 func exibir_popup_compra(propriedade: Propriedade) -> void:
 	if popup_acao == null:
@@ -370,8 +497,15 @@ func exibir_popup_compra(propriedade: Propriedade) -> void:
 	)
 	
 	popup_acao.add_button("Não", func():
-		print("Jogador recusou a compra.")
-		proximo_jogador()
+		print("Jogador recusou a compra. Iniciando leilão.")
+		# Inicia leilão
+		if leilao_ui == null:
+			setup_popup_acao()
+		
+		if leilao_ui:
+			leilao_ui.iniciar_leilao(propriedade, jogadores)
+		else:
+			proximo_jogador() # Fallback
 	)
 	
 	popup_acao.show_popup()
@@ -393,3 +527,48 @@ func exibir_popup_construcao(propriedade: Propriedade) -> void:
 	)
 	
 	popup_acao.show_popup()
+
+func declarar_falencia(jogador: Jogador, credor: Jogador = null) -> void:
+	print("FALÊNCIA! %s declarou falência." % jogador.nome)
+	jogador.falido = true
+	
+	for prop in jogador.propriedades:
+		if credor != null:
+			prop.dono = credor
+			credor.propriedades.append(prop)
+			prop.atualizar_indicador_dono()
+			
+			if prop.hipotecada:
+				var taxa = int((prop.preco / 2.0) * 0.1)
+				credor.pagar(taxa)
+				print("%s pagou taxa de %d pela propriedade hipotecada %s" % [credor.nome, taxa, prop.nome])
+		else:
+			prop.dono = null
+			prop.comprado = false
+			prop.hipotecada = false
+			prop.num_casas = 0
+			prop.lotevenda.visible = true
+			prop.preco_label.visible = true
+			prop.aluguel_label.visible = false
+			prop.indicador_dono.visible = false
+			# Leilão imediato (TODO)
+	
+	jogador.propriedades.clear()
+	
+	# Remove jogador visualmente
+	jogador.peao.visible = false
+	
+	exibir_popup_mensagem("%s faliu e saiu do jogo!" % jogador.nome, func():
+		verificar_fim_jogo()
+		if jogador == jogador_atual:
+			proximo_jogador()
+	)
+
+func verificar_fim_jogo() -> void:
+	var jogadores_ativos = []
+	for j in jogadores:
+		if not j.falido:
+			jogadores_ativos.append(j)
+	
+	if jogadores_ativos.size() == 1:
+		exibir_popup_mensagem("FIM DE JOGO! O vencedor é %s!" % jogadores_ativos[0].nome)
