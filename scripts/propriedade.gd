@@ -26,6 +26,7 @@ var dono: Jogador = null
 @onready var cor_comprada: ColorRect = $CorEspaco
 @onready var lotevenda: RichTextLabel = $NomeLabel2
 @onready var indicador_dono: Panel = $IndicadorDono
+var botao_construir: Button = null
 
 # Cores clássicas do Monopoly
 const CORES_GRUPO = {
@@ -50,6 +51,57 @@ func _ready() -> void:
 		lote_comprado()
 	
 	mostrar_propriedade(tipo_imovel)
+	
+	botao_construir = get_node_or_null("BotaoConstruir")
+	if botao_construir:
+		botao_construir.pressed.connect(_on_botao_construir_pressed)
+
+func toggle_botao_construir() -> void:
+	if botao_construir == null:
+		return
+		
+	botao_construir.visible = !botao_construir.visible
+	if botao_construir.visible:
+		atualizar_estado_botao_construir()
+
+func atualizar_estado_botao_construir() -> void:
+	if botao_construir == null:
+		return
+		
+	if num_casas == 4:
+		var pode_construir_hotel = true
+		var tabuleiro = get_tree().get_root().get_node("Jogo/Tabuleiro")
+		for espaco in tabuleiro.espacos:
+			if espaco is Propriedade and espaco.cor_grupo == cor_grupo and espaco != self:
+				if espaco.num_casas < 4:
+					pode_construir_hotel = false
+					break
+		
+		if not pode_construir_hotel:
+			botao_construir.modulate.a = 0.5
+		else:
+			botao_construir.modulate.a = 1.0
+	else:
+		botao_construir.modulate.a = 1.0
+
+func _on_botao_construir_pressed() -> void:
+	if num_casas == 4:
+		var pode_construir_hotel = true
+		var tabuleiro = get_tree().get_root().get_node("Jogo/Tabuleiro")
+		for espaco in tabuleiro.espacos:
+			if espaco is Propriedade and espaco.cor_grupo == cor_grupo and espaco != self:
+				if espaco.num_casas < 4:
+					pode_construir_hotel = false
+					break
+		
+		if not pode_construir_hotel:
+			var jogo = get_tree().get_root().get_node("Jogo")
+			if jogo.has_method("exibir_popup_mensagem"):
+				jogo.exibir_popup_mensagem("Você precisa ter 4 casas em cada propriedade do grupo de cor para construir um hotel.")
+			return
+
+	construir_casa()
+	atualizar_estado_botao_construir()
 
 func atualizar_cor() -> void:
 	# Define a cor do fundo baseada no grupo

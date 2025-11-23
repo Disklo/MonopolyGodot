@@ -127,3 +127,13 @@ visible = false
 position = Vector2(180, 198)
 scale = Vector2(0.69, 0.69)
 texture = ExtResource("2_6iv0k")
+
+[node name="BotaoConstruir" type="Button" parent="."]
+visible = false
+offset_left = 76.0
+offset_top = 100.0
+offset_right = 276.0
+offset_bottom = 250.0
+theme_override_fonts/font = ExtResource("3_hu7pq")
+theme_override_font_sizes/font_size = 40
+text = "CONSTRUIR"

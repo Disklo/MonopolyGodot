@@ -15,7 +15,7 @@ var turno_atual: int = 0
 var rodada_atual: int = 1
 var jogador_atual: Jogador
 var ultimo_resultado_dados: int = 0
-@onready var botao_construir_casa: Button = $botaoConstruirCasa
+@onready var botao_construir_propriedades: Button = $botaoConstruirPropriedades
 @onready var botao_rolar_dados: Button = $botaoRolarDados
 
 func _ready() -> void:
@@ -185,7 +185,7 @@ func _on_rolar_dados_apertado() -> void:
 
 func rolar_dados() -> void:
 	print('rolando dados...')
-	botao_construir_casa.visible = false
+	botao_construir_propriedades.visible = false
 	
 	# tornando os dados visíveis no tabuleiro
 	$Dado1.visible = true
@@ -255,17 +255,37 @@ func rolar_dados() -> void:
 	else:
 		proximo_jogador()
 
-func _on_construir_casa_apertado() -> void:
-	var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)
-	if espaco_atual is Propriedade and espaco_atual.dono == jogador_atual:
-		exibir_popup_construcao(espaco_atual)
+func _on_construir_propriedades_apertado() -> void:
+	if jogador_atual == null:
+		return
+		
+	var tem_monopolio = false
+	for propriedade in jogador_atual.propriedades:
+		if jogador_atual.tem_monopolio(propriedade.cor_grupo, tabuleiro):
+			tem_monopolio = true
+			break
+	
+	if not tem_monopolio:
+		exibir_popup_mensagem("Você só pode construir um imóvel caso possua um monopólio de um grupo de cor.")
+	else:
+		for propriedade in jogador_atual.propriedades:
+			if jogador_atual.tem_monopolio(propriedade.cor_grupo, tabuleiro):
+				propriedade.toggle_botao_construir()
 
 func atualizar_ui_construcao() -> void:
-	var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)
-	if espaco_atual is Propriedade and espaco_atual.dono == jogador_atual and jogador_atual.tem_monopolio(espaco_atual.cor_grupo, tabuleiro):
-		botao_construir_casa.visible = true
+	botao_construir_propriedades.visible = true
+	
+	var tem_monopolio = false
+	if jogador_atual != null:
+		for propriedade in jogador_atual.propriedades:
+			if jogador_atual.tem_monopolio(propriedade.cor_grupo, tabuleiro):
+				tem_monopolio = true
+				break
+	
+	if tem_monopolio:
+		botao_construir_propriedades.modulate.a = 1.0
 	else:
-		botao_construir_casa.visible = false
+		botao_construir_propriedades.modulate.a = 0.5
 
 func _on_debug_construir_apertado() -> void:
 	var propriedade = tabuleiro.obter_espaco(1) # Propriedade11
@@ -281,6 +301,49 @@ func _on_debug_construir_apertado() -> void:
 		
 		propriedade.construir_casa()
 		atualizar_ui_construcao()
+
+func _on_debug_monopolio_pressed() -> void:
+	if popup_acao == null:
+		setup_popup_acao()
+	
+	popup_acao.clear_buttons()
+	popup_acao.set_text("Selecione o grupo de cor para obter monopólio:")
+	
+	var cores = ["marrom", "azul_claro", "rosa", "laranja", "vermelho", "amarelo", "verde", "azul_escuro"]
+	var nomes_cores = ["Marrom", "Azul Claro", "Rosa", "Laranja", "Vermelho", "Amarelo", "Verde", "Azul Escuro"]
+	
+	for i in range(cores.size()):
+		var cor = cores[i]
+		var nome = nomes_cores[i]
+		popup_acao.add_button(nome, func():
+			dar_monopolio(cor)
+			popup_acao.visible = false
+		)
+	
+	popup_acao.add_button("Cancelar", func():
+		popup_acao.visible = false
+	)
+	
+	popup_acao.show_popup()
+
+func dar_monopolio(cor_grupo: String) -> void:
+	print("DEBUG: Dando monopólio de %s para %s" % [cor_grupo, jogador_atual.nome])
+	for espaco in tabuleiro.espacos:
+		if espaco is Propriedade and espaco.cor_grupo == cor_grupo:
+			# Remove do dono anterior se houver
+			if espaco.dono != null and espaco.dono != jogador_atual:
+				espaco.dono.propriedades.erase(espaco)
+			
+			# Adiciona ao novo dono
+			if espaco.dono != jogador_atual:
+				espaco.dono = jogador_atual
+				jogador_atual.propriedades.append(espaco)
+				espaco.comprado = true
+				espaco.lote_comprado()
+				espaco.atualizar_indicador_dono()
+	
+	atualizar_ui_construcao()
+	exibir_popup_mensagem("Monopólio de %s concedido a %s!" % [cor_grupo, jogador_atual.nome])
 
 # --- Lógica do Popup de Ação ---
 var popup_acao: PopupAcao
