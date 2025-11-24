@@ -24,11 +24,15 @@ var total_hoteis_banco: int = 12
 
 @onready var botao_construir_propriedades: Button = $botaoConstruirPropriedades
 @onready var botao_rolar_dados: Button = $botaoRolarDados
+@onready var botao_debug_construir: Button = $botaoDebugConstruir
+@onready var botao_debug_monopolio: Button = $botaoDebugMonopolio
+
+var botoes_debug: Array[Button] = []
 
 func _ready() -> void:
-	setup_debug_ui()
 	setup_ui_extras()
 	iniciar_jogo()
+	configurar_interface_debug()
 	
 	# Remove o botão antigo
 	if botao_construir_propriedades:
