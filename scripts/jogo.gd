@@ -136,24 +136,46 @@ func _on_debug_prender_pressed(jogador: Jogador) -> void:
 	# Se for o turno do jogador preso, atualiza a UI
 	if jogador == jogador_atual:
 		botao_rolar_dados.visible = false
-		exibir_popup_prisao()
+		exibir_popup_prisao(jogador)
 
-func exibir_popup_prisao() -> void:
+
+func exibir_popup_prisao(jogador: Jogador) -> void:
 	if popup_acao == null:
 		setup_popup_acao()
 	
 	popup_acao.clear_buttons()
-	popup_acao.set_text("Você está preso! O que deseja fazer?")
+	popup_acao.set_text("%s, você está preso! O que deseja fazer?" % jogador.nome)
+	
+	# Adiciona o botão de usar carta apenas se o jogador tiver a carta
+	if jogador.tem_carta_sair_da_prisao():
+		popup_acao.add_button("Usar Carta 'Sair da Prisão'", func():
+			if jogador.usar_carta_sair_da_prisao():
+				jogador.sair_da_prisao()
+				popup_acao.hide_popup()
+
+				botao_rolar_dados.visible = true
+				botao_rolar_dados.disabled = false
+
+				print("Rolando dados Sair da Prisao")
+				rolar_dados()
+			else:
+				exibir_popup_mensagem("Erro: Carta não encontrada.", func():
+					exibir_popup_prisao(jogador)
+			)
+	)
 	
 	popup_acao.add_button("Pagar Fiança (R$ 50)", func():
-		if jogador_atual.dinheiro >= 50:
-			jogador_atual.pagar(50)
-			jogador_atual.sair_da_prisao()
+		if jogador.dinheiro >= 50:
+			jogador.pagar(50)
+			jogador.sair_da_prisao()
+			botao_rolar_dados.visible = true
+			botao_rolar_dados.disabled = false
+			print('rolando dados.. Fiança')
 			rolar_dados()
 		else:
 			print("Dinheiro insuficiente.")
 			# Reexibe o popup ou avisa
-			exibir_popup_mensagem("Dinheiro insuficiente para pagar a fiança.", func(): exibir_popup_prisao())
+			exibir_popup_mensagem("Dinheiro insuficiente para pagar a fiança.", func(): exibir_popup_prisao(jogador))
 	)
 	
 	popup_acao.add_button("Tentar Dados", func():
@@ -163,6 +185,7 @@ func exibir_popup_prisao() -> void:
 	popup_acao.show_popup()
 
 func exibir_popup_mensagem(texto: String, callback: Callable = Callable()) -> void:
+	print('entrando em exibir_popup_mensagem')
 	if popup_acao == null:
 		setup_popup_acao()
 	
@@ -259,14 +282,13 @@ func proximo_jogador() -> void:
 		if todos_falidos:
 			break
 	print("\n--- Próximo turno! É a vez de %s. ---" % jogador_atual.nome)
-	print("\n--- Próximo turno! É a vez de %s. ---" % jogador_atual.nome)
 	atualizar_ui_construcao()
 	atualizar_label_turno()
 	
 	if jogador_atual.preso:
 		print("%s está preso. Mostrando opções de prisão." % jogador_atual.nome)
 		botao_rolar_dados.visible = false
-		exibir_popup_prisao()
+		exibir_popup_prisao(jogador_atual)
 	else:
 		botao_rolar_dados.visible = true
 		botao_rolar_dados.disabled = false
@@ -303,8 +325,8 @@ func rolar_dados() -> void:
 	var dado2_valor = randi_range(1, 6)
 	
 	# Calcula a posição de destino dos dados obs: soma-se 300 para que eles não caem na mesma posição
-	var destino_dado1 = Vector2(randi_range(-500.0, 500.0) + 300, randi_range(1200.0, -500.0) + 300)
-	var destino_dado2 = Vector2(randi_range(-500.0, 500.0) + 300, randi_range(1200.0, -500.0) + 300)
+	var destino_dado1 = Vector2(randi_range(-630.0, 820.0) + 300, randi_range(430.0, 675.0) + 300)
+	var destino_dado2 = Vector2(randi_range(-630.0, 820.0) + 300, randi_range(430.0, 675.0) + 300)
 	
 	
 	# Animação dos dados
@@ -338,7 +360,7 @@ func rolar_dados() -> void:
 	var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)
 
 	if espaco_atual != null:
-			espaco_atual.ao_parar(jogador_atual)
+			await espaco_atual.ao_parar(jogador_atual)
 
 	if popup_acao != null and popup_acao.visible:
 		pass
@@ -486,12 +508,17 @@ func exibir_popup_confirmacao(texto: String, on_sim: Callable, on_nao: Callable 
 	
 	popup_acao.show_popup()
 
-func exibir_popup_compra(propriedade: Propriedade) -> void:
+func exibir_popup_compra(propriedade: Propriedade, jogador: Jogador = null) -> void:
 	if popup_acao == null:
 		setup_popup_acao()
 	
+	# Se não foi passado jogador, usa jogador atual
+	
+	if jogador == null:
+		jogador = jogador_atual
+	
 	popup_acao.clear_buttons()
-	popup_acao.set_text("Deseja comprar %s por R$ %d?" % [propriedade.nome, propriedade.preco])
+	popup_acao.set_text("%s Deseja comprar %s por R$ %d?" % [jogador.nome, propriedade.nome, propriedade.preco])
 	
 	popup_acao.add_button("Sim", func():
 		print("Jogo: Confirmou compra de ", propriedade.nome)
@@ -500,7 +527,7 @@ func exibir_popup_compra(propriedade: Propriedade) -> void:
 	)
 	
 	popup_acao.add_button("Não", func():
-		print("Jogador recusou a compra. Iniciando leilão.")
+		print("%s recusou a compra. Iniciando leilão." % jogador.nome)
 		# Inicia leilão
 		if leilao_ui == null:
 			setup_popup_acao()

@@ -3,6 +3,8 @@ extends Espaco
 
 class_name Sorte
 
+
+
 # Lista de possíveis ações (cartas).
 # Dicionario para a de carta de Sorte e descrever o que ela faz.
 
@@ -13,9 +15,9 @@ var cartas = [
 
 	{"descricao": "Avance até a Rua da Conceição", "tipo": "ir_para_propriedade", "posicao": 16},
 
-	{"descricao": "Avance até a companhia elétrica Enel e pague uma conta de luz atrasada.\nPague R$300", "tipo": "mover_para_companhia", "posicao": 12, "valor_a_pagar": 300},
+	{"descricao": "Avance até a companhia elétrica Enel", "tipo": "mover_para_companhia", "posicao": 12},
 
-	{"descricao": "Avance até a companhia Águas do Rio e pague uma conta de água atrasada.\nPague R$300", "tipo": "mover_para_companhia","posicao": 28, "valor_a_pagar": 300},
+	{"descricao": "Avance até a companhia Águas do Rio", "tipo": "mover_para_companhia","posicao": 28},
 
 	{"descricao": "Receba R$50 do banco.", "tipo": "receber", "valor": 50},
 
@@ -44,12 +46,13 @@ var cartas = [
 
 # Referência ao nó do jogo para obter a lista de jogadores.
 @export var jogo: Jogo
+@onready var prisao: EnviaPrisao = $"../EnviaPrisao"
 
 
 func _ready() -> void:
 	# Embaralha as cartas no início do jogo.
-	cartas.shuffle()
-
+	#cartas.shuffle()
+	pass
 func ao_parar(jogador: Jogador) -> void:
 	super.ao_parar(jogador)
 	
@@ -58,11 +61,11 @@ func ao_parar(jogador: Jogador) -> void:
 		_ready() # Re-embaralha se acabarem
 
 	# Pega a primeira carta do baralho.
-	var carta = cartas.pop_front()
+	var carta = cartas[7]#cartas.pop_front()
 	print("Sorte! A carta diz: '%s'" % carta.descricao)
 	
 	# Mostrar a carta antes de executar a ação
-	mostrar_carta(carta, jogador)
+	await mostrar_carta(carta, jogador)
 	
 	# Coloca a carta de volta no final do baralho.
 	cartas.push_back(carta)
@@ -128,12 +131,15 @@ func executar_acao(jogador: Jogador, carta: Dictionary) -> void:
 				
 				
 		"ir_para_prisao":
-			# Vá para a Prisão
-			jogador.mover_para_posicao(carta.posicao, tabuleiro)
+			# Enviando para a prisão
+			prisao.ao_parar(jogador)
+			#jogador.mover(cara.posicao, tabuleiro)
+			#jogador.mover_para_posicao(carta.posicao, tabuleiro)
+			#jogador.ir_para_prisao()
 			# Executa a ação do espaço da prisão
-			var espaco = tabuleiro.obter_espaco(carta.posicao)
-			if espaco:
-				espaco.ao_parar(jogador)
+			#var espaco = tabuleiro.obter_espaco(carta.posicao)
+			#if espaco:
+				#espaco.ao_parar(jogador)
 		"receber":
 			# Receba dinheiro
 			jogador.receber(carta.valor)

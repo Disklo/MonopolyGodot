@@ -37,12 +37,28 @@ var cartas = [
 	{
 		"descricao": "Esta carta pode ser usada para sair da prisão.\nSaia da prisão",
 		"tipo": "sair_da_prisao"
+	},
+	{
+		"descricao": "Pague uma conta de luz atrasada\nPague R$300",
+		"tipo": "pagar",
+		"valor": 300
+	},
+	{
+		"descricao": "Pague uma conta de água atrasada\nPague R$300",
+		"tipo": "pagar",
+		"valor": 300
+	},
+	{
+		"descricao": "Pague a manutenção do seu carro\nPague R$500",
+		"tipo": "pagar",
+		"valor": 500
 	}
 ]
 
 
 func _ready() -> void:
 	cartas.shuffle()
+	pass
 
 func ao_parar(jogador: Jogador) -> void:
 	super.ao_parar(jogador)
@@ -53,7 +69,7 @@ func ao_parar(jogador: Jogador) -> void:
 	var carta = cartas.pop_front()
 	print("Cofre Comunitário! A carta diz: '%s'" % carta.descricao)
 	
-	mostrar_carta(carta, jogador)
+	await mostrar_carta(carta, jogador)
 	
 	cartas.push_back(carta)
 
@@ -67,22 +83,34 @@ func mostrar_carta(carta: Dictionary, jogador: Jogador):
 		return
 	
 	var instancia_carta = jogo.carta
-	instancia_carta.configurar_carta(carta, "Cofre Comunitário")
+	
+	# Verifica se é uma carta que pode ser guardada
+	var texto_botao = "Continuar"
+	if carta.get("tipo") == "sair_da_prisao":
+		texto_botao = "Guardar carta"
+	
+	# Configura a carta com o texto do botão apropriado
+	instancia_carta.configurar_carta(carta, "Cofre Comunitário", texto_botao)
 	
 	# Mostra a carta no jogo
 	instancia_carta.mostrarCarta()
 	
-	# Conecta o sinal de fechar para executar a ação quando a carta for fechada
-	# Desconecta primeiro para evitar múltiplas conexões
-	if instancia_carta.carta_fechada.is_connected(executar_acao):
-		instancia_carta.carta_fechada.disconnect(executar_acao)
-	instancia_carta.carta_fechada.connect(func(): executar_acao(jogador, carta))
+	# Se for carta de sair da prisão, guarda ao invés de executar
+	if carta.get("tipo") == "sair_da_prisao":
+		instancia_carta.carta_fechada.connect(func(): guardar_carta_sair_da_prisao(jogador, carta))
+	else:
+		instancia_carta.carta_fechada.connect(func(): executar_acao(jogador, carta))
 	
 	# Aguarda a carta ser fechada antes de continuar
 	await instancia_carta.carta_fechada
-		
-		
-		
+
+
+# Função para guardar a carta de sair da prisão
+func guardar_carta_sair_da_prisao(jogador: Jogador, carta: Dictionary) -> void:
+	jogador.guardar_carta(carta)
+	print("%s guardou a carta 'Sair da Prisão' para uso futuro" % jogador.nome)
+
+
 func executar_acao(jogador: Jogador, carta: Dictionary) -> void:
 	var jogo = get_tree().current_scene as Jogo
 	var tabuleiro = jogo.tabuleiro if jogo else null
@@ -99,13 +127,6 @@ func executar_acao(jogador: Jogador, carta: Dictionary) -> void:
 		"pagar":
 			# Pague dinheiro
 			jogador.pagar(carta.valor)
-		
-		"sair_da_prisao":
-			# Esta carta pode ser guardada para sair da prisão
-			# Por enquanto, apenas adiciona a carta à lista do jogador
-			print("%s recebeu uma carta 'Sair da Prisão' (pode ser usada quando preso)" % jogador.nome)
-			# TODO: Implementar sistema de cartas guardadas
-			# Por enquanto, apenas informa que recebeu a carta
 		
 		"mover_e_receber":
 			# Avance para uma posição e receba dinheiro
@@ -127,6 +148,7 @@ func executar_acao(jogador: Jogador, carta: Dictionary) -> void:
 		"ir_para_prisao":
 			# Vá para a Prisão
 			jogador.mover_para_posicao(carta.posicao, tabuleiro)
+			jogador.ir_para_prisao()
 			# Executa a ação do espaço da prisão
 			var espaco = tabuleiro.obter_espaco(carta.posicao)
 			if espaco:

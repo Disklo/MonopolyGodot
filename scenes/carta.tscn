@@ -21,6 +21,17 @@ bg_color = Color(1, 1, 1, 1)
 expand_margin_left = 12.0
 expand_margin_right = 12.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_txgwi"]
+bg_color = Color(0.0962047, 0.0962048, 0.0962047, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+expand_margin_left = 33.0
+expand_margin_top = 33.0
+expand_margin_right = 33.0
+expand_margin_bottom = 33.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cc48w"]
 border_width_left = 2
 border_width_top = 2
@@ -32,18 +43,7 @@ corner_radius_bottom_right = 40
 corner_radius_bottom_left = 40
 expand_margin_left = 33.0
 expand_margin_top = 33.0
-expand_margin_right = 33.0
-expand_margin_bottom = 33.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_txgwi"]
-bg_color = Color(0.0962047, 0.0962048, 0.0962047, 1)
-corner_radius_top_left = 40
-corner_radius_top_right = 40
-corner_radius_bottom_right = 40
-corner_radius_bottom_left = 40
-expand_margin_left = 33.0
-expand_margin_top = 33.0
-expand_margin_right = 33.0
+expand_margin_right = 35.0
 expand_margin_bottom = 33.0
 
 [node name="Carta" type="Panel"]
@@ -109,15 +109,15 @@ uppercase = true
 
 [node name="ButtonFecharCarta" type="Button" parent="."]
 layout_mode = 0
-offset_left = 809.0
+offset_left = 632.0
 offset_top = 1353.0
-offset_right = 1600.0
+offset_right = 1762.0
 offset_bottom = 1485.0
 mouse_default_cursor_shape = 2
 theme_override_fonts/font = ExtResource("3_rx7pn")
 theme_override_font_sizes/font_size = 120
-theme_override_styles/hover = SubResource("StyleBoxFlat_cc48w")
 theme_override_styles/normal = SubResource("StyleBoxFlat_txgwi")
+theme_override_styles/hover = SubResource("StyleBoxFlat_cc48w")
 text = "Continuar"
 
 [connection signal="pressed" from="ButtonFecharCarta" to="." method="fecharCarta"]

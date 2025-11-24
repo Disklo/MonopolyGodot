@@ -13,8 +13,12 @@ var posicao: int = 0
 var index: int = 0 # Índice do jogador (0 a 3) para evitar sobreposição
 signal movimento_concluido(jogador: Jogador)
 signal dinheiro_alterado(novo_saldo: int)
+
 # Lista de propriedades que o jogador possui
 var propriedades: Array[Propriedade] = []
+
+# Lista de cartas guardadas (ex: "Sair da Prisão")
+var cartas_guardadas: Array[Dictionary] = []
 
 # Variáveis de estado da prisão
 var preso: bool = false
@@ -69,10 +73,18 @@ func mover_para_posicao(nova_posicao: int, tabuleiro: Tabuleiro) -> void:
 	if peao == null:
 		return
 		
+	# Define o offset com base no índice do jogador para evitar sobreposição
+	var offset = Vector2.ZERO
+	match index:
+		0: offset = Vector2(-30, -30)
+		1: offset = Vector2(30, -30)
+		2: offset = Vector2(-30, 30)
+		3: offset = Vector2(30, 30)
+		
 	# Movendo o peão (peça do jogador) diretamente para a nova posicão
 	var espaco_destino = tabuleiro.obter_espaco(nova_posicao)
 	if espaco_destino != null:
-		var destino = espaco_destino.position + Vector2(200,200)
+		var destino = espaco_destino.position + Vector2(200,200) + offset
 		# Animação
 		var tween = create_tween()
 		tween.tween_property(peao, "position", destino, 0.5)
@@ -119,3 +131,25 @@ func sair_da_prisao() -> void:
 	preso = false
 	turnos_na_prisao = 0
 	print("%s saiu da prisão." % nome)
+	print("Estado preso: %s" % preso)  # Debug para verificar
+	
+# Guarda uma carta para uso futuro. Ex: Saia da Prisão
+func guardar_carta(carta: Dictionary) -> void:
+	cartas_guardadas.append(carta)
+	print("%s guardou a carta: %s" % [nome, carta.get("descricao", "")])
+
+# Usa uma carta guardada (remove da lista)
+func usar_carta_sair_da_prisao() -> bool:
+	for i in range(cartas_guardadas.size()):
+		if cartas_guardadas[i].get("tipo") == "sair_da_prisao":
+			cartas_guardadas.remove_at(i)
+			print("%s usou a carta 'Sair da Prisão'" % nome)
+			return true
+	return false
+	
+# Verifica se o jogador tem uma carta de "Sair da Prisão"
+func tem_carta_sair_da_prisao() -> bool:
+	for carta in cartas_guardadas:
+		if carta.get("tipo") == "sair_da_prisao":
+			return true
+	return false

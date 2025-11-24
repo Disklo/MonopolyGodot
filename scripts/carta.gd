@@ -5,14 +5,16 @@ class_name Carta
 # Referência ao labels da carta
 @onready var titulo_carta: Label = $PanelBorda/MarginContainer/VBoxContainer/TituloCarta
 @onready var descricao_carta: Label = $PanelBorda/MarginContainer/VBoxContainer/DescricaoCarta
-@onready var regra_carta: Label = $PanelBorda/MarginContainer/VBoxContainer/RegraCarta
+@onready var botao_fechar: Button = $ButtonFecharCarta
 
 signal carta_fechada
 
 # Função para preencher a carta com os dados da carta do dicionário
-func configurar_carta(dados_carta: Dictionary, tipo_baralho: String = "Sorte") -> void:
+func configurar_carta(dados_carta: Dictionary, tipo_baralho: String = "Sorte", texto_botao: String = "Continuar") -> void:
 	titulo_carta.text = tipo_baralho
 	descricao_carta.text = dados_carta.get("descricao","")
+	# Define o texto do botão
+	botao_fechar.text = texto_botao
 	
 # Função para mostrar a carta (torná-la visível)
 func mostrarCarta() -> void:
