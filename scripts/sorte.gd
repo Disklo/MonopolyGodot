@@ -51,8 +51,8 @@ var cartas = [
 
 func _ready() -> void:
 	# Embaralha as cartas no início do jogo.
-	#cartas.shuffle()
-	pass
+	cartas.shuffle()
+	
 func ao_parar(jogador: Jogador) -> void:
 	super.ao_parar(jogador)
 	
@@ -61,7 +61,7 @@ func ao_parar(jogador: Jogador) -> void:
 		_ready() # Re-embaralha se acabarem
 
 	# Pega a primeira carta do baralho.
-	var carta = cartas[7]#cartas.pop_front()
+	var carta = cartas.pop_front()
 	print("Sorte! A carta diz: '%s'" % carta.descricao)
 	
 	# Mostrar a carta antes de executar a ação
