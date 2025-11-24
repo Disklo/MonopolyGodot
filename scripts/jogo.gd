@@ -97,6 +97,40 @@ func setup_ui_extras() -> void:
 	add_child(btn_debug_falencia)
 	botoes_debug.append(btn_debug_falencia)
 	btn_debug_falencia.visible = ConfiguracaoJogo.modo_debug
+	
+	# Botão Debug Sorte
+	var btn_debug_sorte = Button.new()
+	btn_debug_sorte.text = "SORTE"
+	btn_debug_sorte.position = Vector2(-311, -360)
+	btn_debug_sorte.size = Vector2(200, 100)
+	if font:
+		btn_debug_sorte.add_theme_font_override("font", font)
+		btn_debug_sorte.add_theme_font_size_override("font_size", 40)
+	btn_debug_sorte.pressed.connect(func():
+		if jogador_atual:
+			print("Debug: Testando carta de Sorte para %s" % jogador_atual.nome)
+			_ao_pressionar_debug_sorte()
+	)
+	add_child(btn_debug_sorte)
+	botoes_debug.append(btn_debug_sorte)
+	btn_debug_sorte.visible = ConfiguracaoJogo.modo_debug
+	
+	# Botão Debug Cofre
+	var btn_debug_cofre = Button.new()
+	btn_debug_cofre.text = "COFRE"
+	btn_debug_cofre.position = Vector2(-311, -240)
+	btn_debug_cofre.size = Vector2(200, 100)
+	if font:
+		btn_debug_cofre.add_theme_font_override("font", font)
+		btn_debug_cofre.add_theme_font_size_override("font_size", 40)
+	btn_debug_cofre.pressed.connect(func():
+		if jogador_atual:
+			print("Debug: Testando carta de Cofre Comunitário para %s" % jogador_atual.nome)
+			_ao_pressionar_debug_cofre()
+	)
+	add_child(btn_debug_cofre)
+	botoes_debug.append(btn_debug_cofre)
+	btn_debug_cofre.visible = ConfiguracaoJogo.modo_debug
 
 	var btn_negociar = Button.new()
 	btn_negociar.text = "NEGOCIAR"
@@ -468,6 +502,7 @@ var popup_acao: PopupAcao
 var gerenciador_propriedades: GerenciadorPropriedades
 var leilao_ui: LeilaoUI
 var negociacao_ui: NegociacaoUI
+var seletor_cartas: SeletorCartas
 
 func setup_popup_acao() -> void:
 	var popup_scene = load("res://scenes/UI/popup_acao.tscn")
@@ -493,6 +528,12 @@ func setup_popup_acao() -> void:
 		negociacao_ui = negociacao_scene.instantiate()
 		add_child(negociacao_ui)
 		negociacao_ui.setup(self)
+		
+	var seletor_scene = load("res://scenes/UI/seletor_cartas.tscn")
+	if seletor_scene:
+		seletor_cartas = seletor_scene.instantiate()
+		add_child(seletor_cartas)
+		seletor_cartas.hide()
 
 func abrir_gerenciador_propriedades() -> void:
 	if gerenciador_propriedades == null:
@@ -619,3 +660,59 @@ func verificar_fim_jogo() -> void:
 	
 	if jogadores_ativos.size() == 1:
 		exibir_popup_mensagem("FIM DE JOGO! O vencedor é %s!" % jogadores_ativos[0].nome)
+
+func _ao_pressionar_debug_sorte() -> void:
+	if not jogador_atual or not tabuleiro:
+		print("DEBUG: Jogador atual ou tabuleiro não encontrado")
+		return
+	
+	# Procura o espaço de Sorte no tabuleiro
+	var espaco_sorte: Sorte = null
+	for espaco in tabuleiro.espacos:
+		if espaco is Sorte:
+			espaco_sorte = espaco
+			break
+	
+	if not espaco_sorte:
+		print("DEBUG: Espaço de Sorte não encontrado no tabuleiro")
+		return
+	
+	# Configurar seletor de cartas
+	if seletor_cartas == null:
+		setup_popup_acao()
+	
+	seletor_cartas.abrir(
+		"Selecione a carta de Sorte:",
+		espaco_sorte.cartas,
+		func(carta_selecionada: Dictionary):
+			print("DEBUG: Carta de Sorte selecionada: %s" % carta_selecionada.descricao)
+			await espaco_sorte.mostrar_carta(carta_selecionada, jogador_atual)
+	)
+
+func _ao_pressionar_debug_cofre() -> void:
+	if not jogador_atual or not tabuleiro:
+		print("DEBUG: Jogador atual ou tabuleiro não encontrado")
+		return
+	
+	# Procura o espaço de Cofre Comunitário no tabuleiro
+	var espaco_cofre: CofreComunitario = null
+	for espaco in tabuleiro.espacos:
+		if espaco is CofreComunitario:
+			espaco_cofre = espaco
+			break
+	
+	if not espaco_cofre:
+		print("DEBUG: Espaço de Cofre Comunitário não encontrado no tabuleiro")
+		return
+	
+	# Configurar seletor de cartas
+	if seletor_cartas == null:
+		setup_popup_acao()
+	
+	seletor_cartas.abrir(
+		"Selecione a carta de Cofre Comunitário:",
+		espaco_cofre.cartas,
+		func(carta_selecionada: Dictionary):
+			print("DEBUG: Carta de Cofre selecionada: %s" % carta_selecionada.descricao)
+			await espaco_cofre.mostrar_carta(carta_selecionada, jogador_atual)
+	)

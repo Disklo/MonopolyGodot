@@ -4,7 +4,6 @@ extends Espaco
 class_name Sorte
 
 
-
 # Lista de possíveis ações (cartas).
 # Dicionario para a de carta de Sorte e descrever o que ela faz.
 
@@ -17,7 +16,7 @@ var cartas = [
 
 	{"descricao": "Avance até a companhia elétrica Enel", "tipo": "mover_para_companhia", "posicao": 12},
 
-	{"descricao": "Avance até a companhia Águas do Rio", "tipo": "mover_para_companhia","posicao": 28},
+	{"descricao": "Avance até a companhia Águas do Rio", "tipo": "mover_para_companhia", "posicao": 28},
 
 	{"descricao": "Receba R$50 do banco.", "tipo": "receber", "valor": 50},
 

@@ -46,78 +46,113 @@ expand_margin_top = 33.0
 expand_margin_right = 35.0
 expand_margin_bottom = 33.0
 
-[node name="Carta" type="Panel"]
+[node name="Carta" type="CanvasLayer"]
 process_mode = 3
-z_index = 2
-offset_right = 2323.0
-offset_bottom = 1235.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_ywsyh")
+layer = 2
 script = ExtResource("1_3p8e2")
 
-[node name="PanelBorda" type="Panel" parent="."]
-layout_mode = 0
-offset_left = 40.0
-offset_top = 44.0
-offset_right = 2280.0
-offset_bottom = 1197.0
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -200.0
+offset_right = 300.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ywsyh")
+
+[node name="PanelBorda" type="Panel" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rx7pn")
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelBorda"]
-layout_mode = 0
-offset_left = 362.0
-offset_top = 67.0
-offset_right = 1979.0
-offset_bottom = 1087.0
+[node name="MarginContainer" type="MarginContainer" parent="Panel/PanelBorda"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 15.0
+offset_right = -20.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelBorda/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/PanelBorda/MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 250
+theme_override_constants/separation = 20
 
-[node name="TituloCarta" type="Label" parent="PanelBorda/MarginContainer/VBoxContainer"]
+[node name="TituloCarta" type="Label" parent="Panel/PanelBorda/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("1_ywsyh")
-theme_override_font_sizes/font_size = 100
+theme_override_font_sizes/font_size = 32
 text = "TITULO"
 horizontal_alignment = 1
 
-[node name="DescricaoCarta" type="Label" parent="PanelBorda/MarginContainer/VBoxContainer"]
+[node name="DescricaoCarta" type="Label" parent="Panel/PanelBorda/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_constants/line_spacing = 70
+theme_override_constants/line_spacing = 5
 theme_override_fonts/font = ExtResource("1_t1fvr")
-theme_override_font_sizes/font_size = 80
+theme_override_font_sizes/font_size = 22
 text = "Descrição da carta"
 horizontal_alignment = 1
 autowrap_mode = 2
 uppercase = true
 
-[node name="monopoly" type="Label" parent="PanelBorda"]
-layout_mode = 0
-offset_left = 1046.0
-offset_top = 1125.0
-offset_right = 1304.0
-offset_bottom = 1176.0
+[node name="monopoly" type="Label" parent="Panel/PanelBorda"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -60.0
+offset_top = -50.0
+offset_right = 60.0
+offset_bottom = -35.0
+grow_horizontal = 2
+grow_vertical = 0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("1_t1fvr")
-theme_override_font_sizes/font_size = 50
+theme_override_font_sizes/font_size = 14
 theme_override_styles/normal = SubResource("StyleBoxFlat_3p8e2")
 text = "Monopoly"
 horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[node name="ButtonFecharCarta" type="Button" parent="."]
-layout_mode = 0
-offset_left = 632.0
-offset_top = 1353.0
-offset_right = 1762.0
-offset_bottom = 1485.0
+[node name="ButtonFecharCarta" type="Button" parent="Panel/PanelBorda"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -40.0
+offset_right = 100.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
 mouse_default_cursor_shape = 2
 theme_override_fonts/font = ExtResource("3_rx7pn")
-theme_override_font_sizes/font_size = 120
+theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxFlat_txgwi")
 theme_override_styles/hover = SubResource("StyleBoxFlat_cc48w")
 text = "Continuar"
 
-[connection signal="pressed" from="ButtonFecharCarta" to="." method="fecharCarta"]
+[connection signal="pressed" from="Panel/PanelBorda/ButtonFecharCarta" to="." method="fecharCarta"]
