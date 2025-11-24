@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cd0bplmpyxlti" path="res://scripts/jogador_hud.gd" id="1_hud"]
 
+[ext_resource type="Script" path="res://scripts/jogador_hud.gd" id="1_hud"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jbrbl"]
 bg_color = Color(0, 0, 0, 0.596078)
 border_width_left = 5
