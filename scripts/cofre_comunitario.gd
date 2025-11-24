@@ -35,7 +35,7 @@ var cartas = [
 		"valor": 100
 	},
 	{
-		"descricao": "Esta carta pode ser usada para sair da prisão.\nSaia da prisão",
+		"descricao": "Saia da prisão gratuitamente",
 		"tipo": "sair_da_prisao"
 	},
 	{
@@ -52,6 +52,41 @@ var cartas = [
 		"descricao": "Pague a manutenção do seu carro\nPague R$500",
 		"tipo": "pagar",
 		"valor": 500
+	},
+	{
+		"descricao": "Feliz natal! -- Receba R$50 de cada jogador",
+		"tipo": "receber_de_todos",
+		"valor": 50
+	},
+	{
+		"descricao": "Reembolso do Imposto de Renda -- Receba R$20",
+		"tipo": "receber",
+		"valor": 20
+	},
+	{
+		"descricao": "É Seu Aniversário -- Receba R$10 de cada jogador",
+		"tipo": "receber_de_todos",
+		"valor": 10
+	},
+	{
+		"descricao": "Seguro de Vida Vencido -- Receba R$100",
+		"tipo": "receber",
+		"valor": 100
+	},
+	{
+		"descricao": "Receba R$25 em Taxas de Consultoria",
+		"tipo": "receber",
+		"valor": 25
+	},
+	{
+		"descricao": "Você Herda R$100",
+		"tipo": "receber",
+		"valor": 100
+	},
+	{
+		"descricao": "Fundo de Férias/Fundo de Natal Vencido -- Receba R$100",
+		"tipo": "receber",
+		"valor": 100
 	}
 ]
 
@@ -97,7 +132,7 @@ func mostrar_carta(carta: Dictionary, jogador: Jogador):
 	
 	# Se for carta de sair da prisão, guarda ao invés de executar
 	if carta.get("tipo") == "sair_da_prisao":
-		instancia_carta.carta_fechada.connect(func(): guardar_carta_sair_da_prisao(jogador, carta))
+		instancia_carta.carta_fechada.connect(func(): guardar_carta_sair_da_prisao(jogador, carta), CONNECT_ONE_SHOT)
 	else:
 		instancia_carta.carta_fechada.connect(func(): executar_acao(jogador, carta))
 	
@@ -161,6 +196,13 @@ func executar_acao(jogador: Jogador, carta: Dictionary) -> void:
 					if outro_jogador != jogador:
 						jogador.pagar(carta.valor)
 						outro_jogador.receber(carta.valor)
+		"receber_de_todos":
+			# Pague a cada jogador
+			if jogo:
+				for outro_jogador in jogo.jogadores:
+					if outro_jogador != jogador:
+						outro_jogador.pagar(carta.valor)
+						jogador.receber(carta.valor)
 		
 		"reparos":
 			# Pague por cada casa e hotel

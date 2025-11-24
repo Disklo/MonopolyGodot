@@ -140,11 +140,17 @@ func guardar_carta(carta: Dictionary) -> void:
 
 # Usa uma carta guardada (remove da lista)
 func usar_carta_sair_da_prisao() -> bool:
-	for i in range(cartas_guardadas.size()):
-		if cartas_guardadas[i].get("tipo") == "sair_da_prisao":
-			cartas_guardadas.remove_at(i)
-			print("%s usou a carta 'Sair da Prisão'" % nome)
-			return true
+	var to_remove = null
+	for carta in cartas_guardadas:
+		if carta.get("tipo") == "sair_da_prisao":
+			to_remove = carta
+			break
+	
+	if to_remove:
+		cartas_guardadas.erase(to_remove)
+		print("%s usou a carta 'Sair da Prisão'" % nome)
+		return true
+
 	return false
 	
 # Verifica se o jogador tem uma carta de "Sair da Prisão"

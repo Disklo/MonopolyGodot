@@ -199,21 +199,7 @@ func exibir_popup_prisao(jogador: Jogador) -> void:
 	
 	# Adiciona o botão de usar carta apenas se o jogador tiver a carta
 	if jogador.tem_carta_sair_da_prisao():
-		popup_acao.add_button("Usar Carta 'Sair da Prisão'", func():
-			if jogador.usar_carta_sair_da_prisao():
-				jogador.sair_da_prisao()
-				popup_acao.hide_popup()
-
-				botao_rolar_dados.visible = true
-				botao_rolar_dados.disabled = false
-
-				print("Rolando dados Sair da Prisao")
-				rolar_dados()
-			else:
-				exibir_popup_mensagem("Erro: Carta não encontrada.", func():
-					exibir_popup_prisao(jogador)
-			)
-	)
+		popup_acao.add_button("Usar Carta 'Sair da Prisão'", Callable(self, "_usar_carta_prisao").bind(jogador))
 	
 	popup_acao.add_button("Pagar Fiança (R$ 50)", func():
 		if jogador.dinheiro >= 50:
@@ -234,6 +220,21 @@ func exibir_popup_prisao(jogador: Jogador) -> void:
 	)
 	
 	popup_acao.show_popup()
+
+func _usar_carta_prisao(jogador: Jogador):
+	if jogador.usar_carta_sair_da_prisao():
+		jogador.sair_da_prisao()
+		popup_acao.hide_popup()
+
+		botao_rolar_dados.visible = true
+		botao_rolar_dados.disabled = false
+
+		print("Rolando dados Sair da Prisao")
+		rolar_dados()
+	else:
+		exibir_popup_mensagem("Erro: Carta não encontrada.", func():
+			exibir_popup_prisao(jogador)
+		)
 
 func exibir_popup_mensagem(texto: String, callback: Callable = Callable()) -> void:
 	print('entrando em exibir_popup_mensagem')
@@ -390,11 +391,14 @@ func rolar_dados() -> void:
 	print("%s rolou os dados: %d + %d = %d" % [jogador_atual.nome, dado1_valor, dado2_valor, passos])
 	ultimo_resultado_dados = passos
 
+	var should_process_space_action = false
+
 	if jogador_atual.preso:
 		if dado1_valor == dado2_valor:
 			print("Dupla! %s saiu da prisão!" % jogador_atual.nome)
 			jogador_atual.sair_da_prisao()
 			await jogador_atual.mover(passos, tabuleiro)
+			should_process_space_action = true
 		else:
 			print("Não tirou dupla. Continua preso.")
 			jogador_atual.turnos_na_prisao += 1
@@ -403,14 +407,18 @@ func rolar_dados() -> void:
 				jogador_atual.pagar(50)
 				jogador_atual.sair_da_prisao()
 				await jogador_atual.mover(passos, tabuleiro)
+				should_process_space_action = true
 			else:
 				await get_tree().create_timer(1.0).timeout
+				proximo_jogador()
+				return
 	else:
 		await jogador_atual.mover(passos, tabuleiro)
+		should_process_space_action = true
 
-	var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)
-
-	if espaco_atual != null:
+	if should_process_space_action:
+		var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)
+		if espaco_atual != null:
 			await espaco_atual.ao_parar(jogador_atual)
 
 	if popup_acao != null and popup_acao.visible:
