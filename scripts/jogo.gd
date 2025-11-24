@@ -6,6 +6,8 @@ class_name Jogo
 @onready var dado1: Node2D = $Dado1
 @onready var dado2: Node2D = $Dado2
 
+@onready var carta: Carta = $Carta
+
 # Referências aos nós da cena, configuráveis no editor
 @export var tabuleiro: Tabuleiro
 @export var jogadores: Array[Jogador]
@@ -28,7 +30,7 @@ var total_hoteis_banco: int = 12
 var botoes_debug: Array[Button] = []
 
 func _ready() -> void:
-	configurar_interface_extra()
+	setup_ui_extras()
 	iniciar_jogo()
 	configurar_interface_debug()
 	
@@ -39,7 +41,7 @@ func _ready() -> void:
 
 var label_turno: RichTextLabel
 
-func configurar_interface_extra() -> void:
+func setup_ui_extras() -> void:
 	var font = load("res://assets/fonts/VCR_OSD_MONO_1.001.ttf")
 	
 	# Label Turno
@@ -95,6 +97,40 @@ func configurar_interface_extra() -> void:
 	add_child(btn_debug_falencia)
 	botoes_debug.append(btn_debug_falencia)
 	btn_debug_falencia.visible = ConfiguracaoJogo.modo_debug
+	
+	# Botão Debug Sorte
+	var btn_debug_sorte = Button.new()
+	btn_debug_sorte.text = "SORTE"
+	btn_debug_sorte.position = Vector2(-311, -360)
+	btn_debug_sorte.size = Vector2(200, 100)
+	if font:
+		btn_debug_sorte.add_theme_font_override("font", font)
+		btn_debug_sorte.add_theme_font_size_override("font_size", 40)
+	btn_debug_sorte.pressed.connect(func():
+		if jogador_atual:
+			print("Debug: Testando carta de Sorte para %s" % jogador_atual.nome)
+			_ao_pressionar_debug_sorte()
+	)
+	add_child(btn_debug_sorte)
+	botoes_debug.append(btn_debug_sorte)
+	btn_debug_sorte.visible = ConfiguracaoJogo.modo_debug
+	
+	# Botão Debug Cofre
+	var btn_debug_cofre = Button.new()
+	btn_debug_cofre.text = "COFRE"
+	btn_debug_cofre.position = Vector2(-311, -240)
+	btn_debug_cofre.size = Vector2(200, 100)
+	if font:
+		btn_debug_cofre.add_theme_font_override("font", font)
+		btn_debug_cofre.add_theme_font_size_override("font_size", 40)
+	btn_debug_cofre.pressed.connect(func():
+		if jogador_atual:
+			print("Debug: Testando carta de Cofre Comunitário para %s" % jogador_atual.nome)
+			_ao_pressionar_debug_cofre()
+	)
+	add_child(btn_debug_cofre)
+	botoes_debug.append(btn_debug_cofre)
+	btn_debug_cofre.visible = ConfiguracaoJogo.modo_debug
 
 	var btn_negociar = Button.new()
 	btn_negociar.text = "NEGOCIAR"
@@ -151,24 +187,46 @@ func _ao_pressionar_debug_prender(jogador: Jogador) -> void:
 	# Se for o turno do jogador preso, atualiza a UI
 	if jogador == jogador_atual:
 		botao_rolar_dados.visible = false
-		exibir_popup_prisao()
+		exibir_popup_prisao(jogador)
 
-func exibir_popup_prisao() -> void:
+
+func exibir_popup_prisao(jogador: Jogador) -> void:
 	if popup_acao == null:
 		setup_popup_acao()
 	
 	popup_acao.clear_buttons()
-	popup_acao.set_text("Você está preso! O que deseja fazer?")
+	popup_acao.set_text("%s, você está preso! O que deseja fazer?" % jogador.nome)
+	
+	# Adiciona o botão de usar carta apenas se o jogador tiver a carta
+	if jogador.tem_carta_sair_da_prisao():
+		popup_acao.add_button("Usar Carta 'Sair da Prisão'", func():
+			if jogador.usar_carta_sair_da_prisao():
+				jogador.sair_da_prisao()
+				popup_acao.hide_popup()
+
+				botao_rolar_dados.visible = true
+				botao_rolar_dados.disabled = false
+
+				print("Rolando dados Sair da Prisao")
+				rolar_dados()
+			else:
+				exibir_popup_mensagem("Erro: Carta não encontrada.", func():
+					exibir_popup_prisao(jogador)
+			)
+	)
 	
 	popup_acao.add_button("Pagar Fiança (R$ 50)", func():
-		if jogador_atual.dinheiro >= 50:
-			jogador_atual.pagar(50)
-			jogador_atual.sair_da_prisao()
+		if jogador.dinheiro >= 50:
+			jogador.pagar(50)
+			jogador.sair_da_prisao()
+			botao_rolar_dados.visible = true
+			botao_rolar_dados.disabled = false
+			print('rolando dados.. Fiança')
 			rolar_dados()
 		else:
 			print("Dinheiro insuficiente.")
 			# Reexibe o popup ou avisa
-			exibir_popup_mensagem("Dinheiro insuficiente para pagar a fiança.", func(): exibir_popup_prisao())
+			exibir_popup_mensagem("Dinheiro insuficiente para pagar a fiança.", func(): exibir_popup_prisao(jogador))
 	)
 	
 	popup_acao.add_button("Tentar Dados", func():
@@ -178,6 +236,7 @@ func exibir_popup_prisao() -> void:
 	popup_acao.show_popup()
 
 func exibir_popup_mensagem(texto: String, callback: Callable = Callable()) -> void:
+	print('entrando em exibir_popup_mensagem')
 	if popup_acao == null:
 		setup_popup_acao()
 	
@@ -274,14 +333,13 @@ func proximo_jogador() -> void:
 		if todos_falidos:
 			break
 	print("\n--- Próximo turno! É a vez de %s. ---" % jogador_atual.nome)
-	print("\n--- Próximo turno! É a vez de %s. ---" % jogador_atual.nome)
 	atualizar_ui_construcao()
 	atualizar_label_turno()
 	
 	if jogador_atual.preso:
 		print("%s está preso. Mostrando opções de prisão." % jogador_atual.nome)
 		botao_rolar_dados.visible = false
-		exibir_popup_prisao()
+		exibir_popup_prisao(jogador_atual)
 	else:
 		botao_rolar_dados.visible = true
 		botao_rolar_dados.disabled = false
@@ -317,9 +375,10 @@ func rolar_dados() -> void:
 	var dado1_valor = randi_range(1, 6)
 	var dado2_valor = randi_range(1, 6)
 	
-	# Calcula a posição de destino dos dados obs: soma-se 200 para que eles não caem na mesma posição
-	var destino_dado1 = Vector2(randi_range(-500.0, 500.0) + 200, randi_range(1200.0, -500.0) + 200)
-	var destino_dado2 = Vector2(randi_range(-500.0, 500.0) + 200, randi_range(1200.0, -500.0) + 200)
+	# Calcula a posição de destino dos dados obs: soma-se 300 para que eles não caem na mesma posição
+	var destino_dado1 = Vector2(randi_range(-630.0, 820.0) + 300, randi_range(430.0, 675.0) + 300)
+	var destino_dado2 = Vector2(randi_range(-630.0, 820.0) + 300, randi_range(430.0, 675.0) + 300)
+	
 	
 	# Animação dos dados
 	if dado1 and dado2:
@@ -352,7 +411,7 @@ func rolar_dados() -> void:
 	var espaco_atual = tabuleiro.obter_espaco(jogador_atual.posicao)
 
 	if espaco_atual != null:
-			espaco_atual.ao_parar(jogador_atual)
+			await espaco_atual.ao_parar(jogador_atual)
 
 	if popup_acao != null and popup_acao.visible:
 		pass
@@ -443,6 +502,7 @@ var popup_acao: PopupAcao
 var gerenciador_propriedades: GerenciadorPropriedades
 var leilao_ui: LeilaoUI
 var negociacao_ui: NegociacaoUI
+var seletor_cartas: SeletorCartas
 
 func setup_popup_acao() -> void:
 	var popup_scene = load("res://scenes/UI/popup_acao.tscn")
@@ -468,6 +528,12 @@ func setup_popup_acao() -> void:
 		negociacao_ui = negociacao_scene.instantiate()
 		add_child(negociacao_ui)
 		negociacao_ui.setup(self)
+		
+	var seletor_scene = load("res://scenes/UI/seletor_cartas.tscn")
+	if seletor_scene:
+		seletor_cartas = seletor_scene.instantiate()
+		add_child(seletor_cartas)
+		seletor_cartas.hide()
 
 func abrir_gerenciador_propriedades() -> void:
 	if gerenciador_propriedades == null:
@@ -500,12 +566,17 @@ func exibir_popup_confirmacao(texto: String, on_sim: Callable, on_nao: Callable 
 	
 	popup_acao.show_popup()
 
-func exibir_popup_compra(propriedade: Propriedade) -> void:
+func exibir_popup_compra(propriedade: Propriedade, jogador: Jogador = null) -> void:
 	if popup_acao == null:
 		setup_popup_acao()
 	
+	# Se não foi passado jogador, usa jogador atual
+	
+	if jogador == null:
+		jogador = jogador_atual
+	
 	popup_acao.clear_buttons()
-	popup_acao.set_text("Deseja comprar %s por R$ %d?" % [propriedade.nome, propriedade.preco])
+	popup_acao.set_text("%s Deseja comprar %s por R$ %d?" % [jogador.nome, propriedade.nome, propriedade.preco])
 	
 	popup_acao.add_button("Sim", func():
 		print("Jogo: Confirmou compra de ", propriedade.nome)
@@ -514,7 +585,7 @@ func exibir_popup_compra(propriedade: Propriedade) -> void:
 	)
 	
 	popup_acao.add_button("Não", func():
-		print("Jogador recusou a compra. Iniciando leilão.")
+		print("%s recusou a compra. Iniciando leilão." % jogador.nome)
 		# Inicia leilão
 		if leilao_ui == null:
 			setup_popup_acao()
@@ -589,3 +660,59 @@ func verificar_fim_jogo() -> void:
 	
 	if jogadores_ativos.size() == 1:
 		exibir_popup_mensagem("FIM DE JOGO! O vencedor é %s!" % jogadores_ativos[0].nome)
+
+func _ao_pressionar_debug_sorte() -> void:
+	if not jogador_atual or not tabuleiro:
+		print("DEBUG: Jogador atual ou tabuleiro não encontrado")
+		return
+	
+	# Procura o espaço de Sorte no tabuleiro
+	var espaco_sorte: Sorte = null
+	for espaco in tabuleiro.espacos:
+		if espaco is Sorte:
+			espaco_sorte = espaco
+			break
+	
+	if not espaco_sorte:
+		print("DEBUG: Espaço de Sorte não encontrado no tabuleiro")
+		return
+	
+	# Configurar seletor de cartas
+	if seletor_cartas == null:
+		setup_popup_acao()
+	
+	seletor_cartas.abrir(
+		"Selecione a carta de Sorte:",
+		espaco_sorte.cartas,
+		func(carta_selecionada: Dictionary):
+			print("DEBUG: Carta de Sorte selecionada: %s" % carta_selecionada.descricao)
+			await espaco_sorte.mostrar_carta(carta_selecionada, jogador_atual)
+	)
+
+func _ao_pressionar_debug_cofre() -> void:
+	if not jogador_atual or not tabuleiro:
+		print("DEBUG: Jogador atual ou tabuleiro não encontrado")
+		return
+	
+	# Procura o espaço de Cofre Comunitário no tabuleiro
+	var espaco_cofre: CofreComunitario = null
+	for espaco in tabuleiro.espacos:
+		if espaco is CofreComunitario:
+			espaco_cofre = espaco
+			break
+	
+	if not espaco_cofre:
+		print("DEBUG: Espaço de Cofre Comunitário não encontrado no tabuleiro")
+		return
+	
+	# Configurar seletor de cartas
+	if seletor_cartas == null:
+		setup_popup_acao()
+	
+	seletor_cartas.abrir(
+		"Selecione a carta de Cofre Comunitário:",
+		espaco_cofre.cartas,
+		func(carta_selecionada: Dictionary):
+			print("DEBUG: Carta de Cofre selecionada: %s" % carta_selecionada.descricao)
+			await espaco_cofre.mostrar_carta(carta_selecionada, jogador_atual)
+	)

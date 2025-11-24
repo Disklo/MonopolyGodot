@@ -55,7 +55,7 @@ text = "Action Description"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="ButtonContainer" type="HBoxContainer" parent="Content/PanelContainer/VBoxContainer"]
+[node name="ButtonContainer" type="VBoxContainer" parent="Content/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 40
 alignment = 1

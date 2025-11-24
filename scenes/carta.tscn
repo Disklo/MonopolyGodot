@@ -1,3 +1,158 @@
-[gd_scene format=3 uid="uid://b8pheld4pbhse"]
+[gd_scene load_steps=10 format=3 uid="uid://b8pheld4pbhse"]
 
-[node name="Carta" type="Node2D"]
+[ext_resource type="Script" uid="uid://djl1cr3dn6amc" path="res://scripts/carta.gd" id="1_3p8e2"]
+[ext_resource type="FontFile" uid="uid://demjs340jug5q" path="res://assets/fonts/ITCKabelStdMedium.TTF" id="1_t1fvr"]
+[ext_resource type="FontFile" uid="uid://clb0vd7anfpeh" path="res://assets/fonts/ITCKabelStdBold.TTF" id="1_ywsyh"]
+[ext_resource type="FontFile" uid="uid://c3kgpi1ijacaa" path="res://assets/fonts/VCR_OSD_MONO_1.001.ttf" id="3_rx7pn"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ywsyh"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rx7pn"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3p8e2"]
+bg_color = Color(1, 1, 1, 1)
+expand_margin_left = 12.0
+expand_margin_right = 12.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_txgwi"]
+bg_color = Color(0.0962047, 0.0962048, 0.0962047, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+expand_margin_left = 33.0
+expand_margin_top = 33.0
+expand_margin_right = 33.0
+expand_margin_bottom = 33.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cc48w"]
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+expand_margin_left = 33.0
+expand_margin_top = 33.0
+expand_margin_right = 35.0
+expand_margin_bottom = 33.0
+
+[node name="Carta" type="CanvasLayer"]
+process_mode = 3
+layer = 2
+script = ExtResource("1_3p8e2")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -200.0
+offset_right = 300.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ywsyh")
+
+[node name="PanelBorda" type="Panel" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rx7pn")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/PanelBorda"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 15.0
+offset_right = -20.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/PanelBorda/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TituloCarta" type="Label" parent="Panel/PanelBorda/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_ywsyh")
+theme_override_font_sizes/font_size = 32
+text = "TITULO"
+horizontal_alignment = 1
+
+[node name="DescricaoCarta" type="Label" parent="Panel/PanelBorda/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 5
+theme_override_fonts/font = ExtResource("1_t1fvr")
+theme_override_font_sizes/font_size = 22
+text = "Descrição da carta"
+horizontal_alignment = 1
+autowrap_mode = 2
+uppercase = true
+
+[node name="monopoly" type="Label" parent="Panel/PanelBorda"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -60.0
+offset_top = -50.0
+offset_right = 60.0
+offset_bottom = -35.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_t1fvr")
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_3p8e2")
+text = "Monopoly"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="ButtonFecharCarta" type="Button" parent="Panel/PanelBorda"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -40.0
+offset_right = 100.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_default_cursor_shape = 2
+theme_override_fonts/font = ExtResource("3_rx7pn")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_txgwi")
+theme_override_styles/hover = SubResource("StyleBoxFlat_cc48w")
+text = "Continuar"
+
+[connection signal="pressed" from="Panel/PanelBorda/ButtonFecharCarta" to="." method="fecharCarta"]
