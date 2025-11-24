@@ -22,11 +22,15 @@ var total_hoteis_banco: int = 12
 
 @onready var botao_construir_propriedades: Button = $botaoConstruirPropriedades
 @onready var botao_rolar_dados: Button = $botaoRolarDados
+@onready var botao_debug_construir: Button = $botaoDebugConstruir
+@onready var botao_debug_monopolio: Button = $botaoDebugMonopolio
+
+var botoes_debug: Array[Button] = []
 
 func _ready() -> void:
-	setup_debug_ui()
-	setup_ui_extras()
+	configurar_interface_extra()
 	iniciar_jogo()
+	configurar_interface_debug()
 	
 	# Remove o botão antigo
 	if botao_construir_propriedades:
@@ -35,7 +39,7 @@ func _ready() -> void:
 
 var label_turno: RichTextLabel
 
-func setup_ui_extras() -> void:
+func configurar_interface_extra() -> void:
 	var font = load("res://assets/fonts/VCR_OSD_MONO_1.001.ttf")
 	
 	# Label Turno
@@ -73,6 +77,8 @@ func setup_ui_extras() -> void:
 			print("Debug: Adicionado R$1000 para %s" % jogador_atual.nome)
 	)
 	add_child(btn_debug_dinheiro)
+	botoes_debug.append(btn_debug_dinheiro)
+	btn_debug_dinheiro.visible = ConfiguracaoJogo.modo_debug
 
 	var btn_debug_falencia = Button.new()
 	btn_debug_falencia.text = "FALÊNCIA"
@@ -87,6 +93,8 @@ func setup_ui_extras() -> void:
 			declarar_falencia(jogador_atual)
 	)
 	add_child(btn_debug_falencia)
+	botoes_debug.append(btn_debug_falencia)
+	btn_debug_falencia.visible = ConfiguracaoJogo.modo_debug
 
 	var btn_negociar = Button.new()
 	btn_negociar.text = "NEGOCIAR"
@@ -102,7 +110,14 @@ func atualizar_label_turno() -> void:
 	if label_turno and jogador_atual:
 		label_turno.text = "[center][color=black]Turno do jogador %d [color=#%s]●[/color][/color][/center]" % [jogador_atual.index + 1, jogador_atual.cor.to_html()]
 
-func setup_debug_ui() -> void:
+func configurar_interface_debug() -> void:
+	if botao_debug_construir:
+		botoes_debug.append(botao_debug_construir)
+		botao_debug_construir.visible = ConfiguracaoJogo.modo_debug
+	if botao_debug_monopolio:
+		botoes_debug.append(botao_debug_monopolio)
+		botao_debug_monopolio.visible = ConfiguracaoJogo.modo_debug
+
 	var y_offset = 0
 	for i in range(jogadores.size()):
 		var jogador = jogadores[i]
@@ -111,11 +126,13 @@ func setup_debug_ui() -> void:
 		# Posiciona no canto superior direito, abaixo um do outro
 		btn.position = Vector2(get_viewport().get_visible_rect().size.x - 250, 50 + y_offset)
 		btn.size = Vector2(200, 40)
-		btn.pressed.connect(func(): _on_debug_prender_pressed(jogador))
+		btn.pressed.connect(func(): _ao_pressionar_debug_prender(jogador))
 		add_child(btn)
+		botoes_debug.append(btn)
+		btn.visible = ConfiguracaoJogo.modo_debug
 		y_offset += 50
 
-func _on_debug_prender_pressed(jogador: Jogador) -> void:
+func _ao_pressionar_debug_prender(jogador: Jogador) -> void:
 	print("DEBUG: Prendendo %s" % jogador.nome)
 	jogador.posicao = 10 # Índice da Prisão
 	jogador.ir_para_prisao()
@@ -363,7 +380,7 @@ func atualizar_ui_construcao() -> void:
 	# Botão antigo removido. Função mantida para compatibilidade.
 	pass
 
-func _on_debug_construir_apertado() -> void:
+func _ao_pressionar_debug_construir() -> void:
 	var propriedade = tabuleiro.obter_espaco(1) # Propriedade11
 	if propriedade is Propriedade:
 		if propriedade.dono == null:
@@ -378,7 +395,7 @@ func _on_debug_construir_apertado() -> void:
 		propriedade.construir_casa()
 		atualizar_ui_construcao()
 
-func _on_debug_monopolio_pressed() -> void:
+func _ao_pressionar_debug_monopolio() -> void:
 	if popup_acao == null:
 		setup_popup_acao()
 	

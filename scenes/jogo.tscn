@@ -94,5 +94,5 @@ visible = false
 
 [connection signal="pressed" from="botaoRolarDados" to="." method="_on_rolar_dados_apertado"]
 [connection signal="pressed" from="botaoConstruirPropriedades" to="." method="_on_construir_propriedades_apertado"]
-[connection signal="pressed" from="botaoDebugConstruir" to="." method="_on_debug_construir_apertado"]
-[connection signal="pressed" from="botaoDebugMonopolio" to="." method="_on_debug_monopolio_pressed"]
+[connection signal="pressed" from="botaoDebugConstruir" to="." method="_ao_pressionar_debug_construir"]
+[connection signal="pressed" from="botaoDebugMonopolio" to="." method="_ao_pressionar_debug_monopolio"]
