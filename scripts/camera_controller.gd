@@ -32,6 +32,17 @@ func _process(delta):
 	position.x = clamp(position.x, camera_limit_left, camera_limit_right)
 	position.y = clamp(position.y, camera_limit_top, camera_limit_bottom)
 
+	# Controlar zoom com teclado
+	var zoom_change = Vector2()
+	if Input.is_key_pressed(KEY_EQUAL): # Zoom Out
+		zoom_change += Vector2(zoom_speed, zoom_speed)
+	if Input.is_key_pressed(KEY_MINUS): # Zoom In
+		zoom_change -= Vector2(zoom_speed, zoom_speed)
+	
+	zoom += zoom_change * delta * 20
+	zoom.x = clamp(zoom.x, min_zoom, max_zoom)
+	zoom.y = clamp(zoom.y, min_zoom, max_zoom)
+
 func _input(event):
 	# Controlar o zoom com a roda do mouse
 	if event is InputEventMouseButton:
