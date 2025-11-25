@@ -26,6 +26,8 @@ var total_hoteis_banco: int = 12
 @onready var botao_rolar_dados: Button = $botaoRolarDados
 @onready var botao_debug_construir: Button = $botaoDebugConstruir
 @onready var botao_debug_monopolio: Button = $botaoDebugMonopolio
+@onready var botao_debug_Menu: Button = $botaoDebugMenu
+
 
 var botoes_debug: Array[Button] = []
 
@@ -153,6 +155,9 @@ func configurar_interface_debug() -> void:
 	if botao_debug_monopolio:
 		botoes_debug.append(botao_debug_monopolio)
 		botao_debug_monopolio.visible = ConfiguracaoJogo.modo_debug
+	if botao_debug_Menu:
+		botoes_debug.append(botao_debug_Menu)
+		botao_debug_Menu.visible = ConfiguracaoJogo.modo_debug
 
 	var y_offset = 0
 	for i in range(jogadores.size()):
@@ -285,6 +290,8 @@ func _ao_pressionar_debug_prender(jogador: Jogador) -> void:
 		botao_rolar_dados.visible = false
 		exibir_popup_prisao(jogador)
 
+func _on_debug_voltar_menu_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/menu_principal.tscn")
 
 func exibir_popup_prisao(jogador: Jogador) -> void:
 	if popup_acao == null:
@@ -920,3 +927,5 @@ func _ao_pressionar_debug_cofre() -> void:
 			print("DEBUG: Carta de Cofre selecionada: %s" % carta_selecionada.descricao)
 			await espaco_cofre.mostrar_carta(carta_selecionada, jogador_atual)
 	)
+func _on_botao_debug_menu_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/menu_principal.tscn")

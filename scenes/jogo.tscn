@@ -58,11 +58,11 @@ MOVER-SE"
 autowrap_mode = 2
 
 [node name="botaoConstruirPropriedades" type="Button" parent="."]
+modulate = Color(1, 1, 1, 0.5)
 offset_left = 200.0
 offset_top = -150.0
 offset_right = 500.0
 offset_bottom = 150.0
-modulate = Color(1, 1, 1, 0.5)
 theme_override_fonts/font = ExtResource("5_0c0ry")
 theme_override_font_sizes/font_size = 40
 text = "CONSTRUIR
@@ -70,9 +70,9 @@ PROPRIEDADES"
 autowrap_mode = 2
 
 [node name="botaoDebugConstruir" type="Button" parent="."]
-offset_left = -311.0
+offset_left = -314.0
 offset_top = -1000.0
-offset_right = 312.0
+offset_right = 309.0
 offset_bottom = -882.0
 theme_override_fonts/font = ExtResource("5_0c0ry")
 theme_override_font_sizes/font_size = 70
@@ -87,6 +87,14 @@ theme_override_fonts/font = ExtResource("5_0c0ry")
 theme_override_font_sizes/font_size = 70
 text = "DEBUG MONOPÓLIO"
 
+[node name="botaoDebugMenu" type="Button" parent="."]
+custom_minimum_size = Vector2(100, 100)
+offset_left = 903.0
+offset_top = 508.0
+offset_right = 1101.0
+offset_bottom = 608.0
+text = "Voltar ao Menu Principal"
+
 [node name="Dado1" parent="." instance=ExtResource("6_4sjka")]
 visible = false
 
@@ -95,13 +103,9 @@ visible = false
 
 [node name="Carta" parent="." instance=ExtResource("7_ogo8m")]
 visible = false
-layout_direction = 4
-offset_left = -1136.0
-offset_top = -700.0
-offset_right = 1215.0
-offset_bottom = 562.0
 
 [connection signal="pressed" from="botaoRolarDados" to="." method="_on_rolar_dados_apertado"]
 [connection signal="pressed" from="botaoConstruirPropriedades" to="." method="_on_construir_propriedades_apertado"]
 [connection signal="pressed" from="botaoDebugConstruir" to="." method="_ao_pressionar_debug_construir"]
 [connection signal="pressed" from="botaoDebugMonopolio" to="." method="_ao_pressionar_debug_monopolio"]
+[connection signal="pressed" from="botaoDebugMenu" to="." method="_on_botao_debug_menu_pressed"]
