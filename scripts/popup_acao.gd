@@ -47,3 +47,21 @@ func show_popup() -> void:
 
 func hide_popup() -> void:
 	visible = false
+
+func auto_select_random_option(delay: float = 1.0) -> void:
+	await get_tree().create_timer(delay).timeout
+	
+	if not visible:
+		return
+		
+	var all_buttons = []
+	for row in button_container.get_children():
+		if row is HBoxContainer:
+			for btn in row.get_children():
+				if btn is Button:
+					all_buttons.append(btn)
+	
+	if all_buttons.size() > 0:
+		var random_btn = all_buttons.pick_random()
+		print("AI: Selecionou automaticamente: ", random_btn.text)
+		random_btn.pressed.emit()

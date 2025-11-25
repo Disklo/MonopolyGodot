@@ -2,7 +2,7 @@ extends Control
 
 #Função que vai chamar a cena Jogo quando o botão "Iniciar Jogo" for pressionado
 func _on_botao_iniciar_jogo_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/jogo.tscn")
+	get_tree().change_scene_to_file("res://scenes/UI/selecao_jogadores.tscn")
 
 #Quando o botão de Opções for pressionado, essa função será chamada
 func _on_botao_opcoes_pressed() -> void:
@@ -34,6 +34,7 @@ func _on_botao_opcoes_pressed() -> void:
 	vbox.add_child(btn_fechar)
 	
 	add_child(popup)
+	popup.close_requested.connect(func(): popup.queue_free())
 	popup.popup_centered()
 
 

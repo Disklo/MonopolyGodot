@@ -8,6 +8,13 @@ class_name Jogador
 @export var nome: String = "Jogador"
 @export var dinheiro: int = 1500
 
+enum Tipo {HUMANO, COMPUTADOR}
+var tipo: Tipo = Tipo.HUMANO
+
+var is_bot: bool:
+	get:
+		return tipo == Tipo.COMPUTADOR
+
 # Posição atual do jogador no tabuleiro (índice do espaço)
 var posicao: int = 0
 var index: int = 0 # Índice do jogador (0 a 3) para evitar sobreposição
@@ -84,7 +91,7 @@ func mover_para_posicao(nova_posicao: int, tabuleiro: Tabuleiro) -> void:
 	# Movendo o peão (peça do jogador) diretamente para a nova posicão
 	var espaco_destino = tabuleiro.obter_espaco(nova_posicao)
 	if espaco_destino != null:
-		var destino = espaco_destino.position + Vector2(200,200) + offset
+		var destino = espaco_destino.position + Vector2(200, 200) + offset
 		# Animação
 		var tween = create_tween()
 		tween.tween_property(peao, "position", destino, 0.5)
@@ -131,7 +138,7 @@ func sair_da_prisao() -> void:
 	preso = false
 	turnos_na_prisao = 0
 	print("%s saiu da prisão." % nome)
-	print("Estado preso: %s" % preso)  # Debug para verificar
+	print("Estado preso: %s" % preso) # Debug para verificar
 	
 # Guarda uma carta para uso futuro. Ex: Saia da Prisão
 func guardar_carta(carta: Dictionary) -> void:

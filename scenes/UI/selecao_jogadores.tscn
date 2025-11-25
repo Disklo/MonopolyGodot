@@ -1,0 +1,84 @@
+[gd_scene load_steps=2 format=3 uid="uid://b8q6y5x4w3v2u"]
+
+[ext_resource type="Script" path="res://scripts/selecao_jogadores.gd" id="1_u4v2w"]
+
+[node name="SelecaoJogadores" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_u4v2w")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2, 0.2, 0.2, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -200.0
+offset_right = 200.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Selecione o número de
+jogadores humanos:"
+horizontal_alignment = 1
+
+[node name="Btn0Humanos" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "0 Humanos (Demo)"
+
+[node name="Btn1Humano" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "1 Humano"
+
+[node name="Btn2Humanos" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "2 Humanos"
+
+[node name="Btn3Humanos" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "3 Humanos"
+
+[node name="Btn4Humanos" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "4 Humanos"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="BtnVoltar" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Voltar"
+
+[connection signal="pressed" from="VBoxContainer/Btn0Humanos" to="." method="_on_btn_0_humanos_pressed"]
+[connection signal="pressed" from="VBoxContainer/Btn1Humano" to="." method="_on_btn_1_humano_pressed"]
+[connection signal="pressed" from="VBoxContainer/Btn2Humanos" to="." method="_on_btn_2_humanos_pressed"]
+[connection signal="pressed" from="VBoxContainer/Btn3Humanos" to="." method="_on_btn_3_humanos_pressed"]
+[connection signal="pressed" from="VBoxContainer/Btn4Humanos" to="." method="_on_btn_4_humanos_pressed"]
+[connection signal="pressed" from="VBoxContainer/BtnVoltar" to="." method="_on_btn_voltar_pressed"]
