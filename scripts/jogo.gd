@@ -817,6 +817,9 @@ func declarar_falencia(jogador: Jogador, credor: Jogador = null) -> void:
 	print("FALÊNCIA! %s declarou falência." % jogador.nome)
 	jogador.falido = true
 	
+	jogador.dinheiro = 0
+	jogador.dinheiro_alterado.emit(jogador.dinheiro)
+	
 	for prop in jogador.propriedades:
 		if credor != null:
 			prop.dono = credor
