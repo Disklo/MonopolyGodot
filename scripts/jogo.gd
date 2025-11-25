@@ -446,7 +446,6 @@ func proximo_jogador() -> void:
 		turno_atual = (turno_atual + 1) % jogadores.size()
 		jogador_atual = jogadores[turno_atual]
 		
-		# Segurança para evitar loop infinito (embora verificar_fim_jogo deva prevenir)
 		var todos_falidos = true
 		for j in jogadores:
 			if not j.falido:
@@ -851,13 +850,16 @@ func declarar_falencia(jogador: Jogador, credor: Jogador = null) -> void:
 	)
 
 func verificar_fim_jogo() -> void:
-	var jogadores_ativos = []
+	var jogadores_ativos: Array [Jogador] = []
 	for j in jogadores:
 		if not j.falido:
 			jogadores_ativos.append(j)
 	
 	if jogadores_ativos.size() == 1:
-		exibir_popup_mensagem("FIM DE JOGO! O vencedor é %s!" % jogadores_ativos[0].nome)
+		var vencedor : Jogador = jogadores_ativos[0]
+		exibir_popup_mensagem(
+			"🏆 FIM DE JOGO!\n\nParabéns, %s!\nVocê venceu o jogo!" % vencedor.nome
+			)
 
 func _ao_pressionar_debug_sorte() -> void:
 	if not jogador_atual or not tabuleiro:
