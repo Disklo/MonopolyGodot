@@ -40,7 +40,9 @@ func set_cor(c: Color) -> void:
 # Move o jogador no tabuleiro
 func mover(passos: int, tabuleiro: Tabuleiro) -> void:
 	var posicao_inicial = posicao
-	posicao = (posicao + passos) % 40 # 40 é o número padrão de espaços no Monopoly
+	posicao = (posicao + passos) % 40
+	if posicao < 0:
+		posicao += 40
 	print("%s moveu para a posição %d" % [nome, posicao])
 	
 	if peao == null:
@@ -58,8 +60,13 @@ func mover(passos: int, tabuleiro: Tabuleiro) -> void:
 	var tween = create_tween()
 	tween.set_parallel(false)
 	
-	for i in range(1, passos + 1):
+	var range_passos = range(1, passos + 1) if passos > 0 else range(-1, passos - 1, -1)
+	
+	for i in range_passos:
 		var casa_atual = (posicao_inicial + i) % 40
+		if casa_atual < 0:
+			casa_atual += 40
+			
 		var espaco_atual = tabuleiro.obter_espaco(casa_atual)
 	
 		if espaco_atual != null:
