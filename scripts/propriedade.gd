@@ -202,16 +202,15 @@ func cobrar_aluguel(jogador: Jogador) -> void:
 		var jogo = get_tree().get_root().get_node("Jogo")
 		if jogo.has_method("exibir_popup_mensagem"):
 			jogo.exibir_popup_mensagem("Você caiu em %s (Propriedade de %s).\nPague R$ %d de aluguel." % [nome, dono.nome, aluguel_a_cobrar], func():
+				# Verifica falência antes de tentar pagar
+				if jogo.has_method("verificar_falencia_obrigatoria"):
+					if jogo.verificar_falencia_obrigatoria(jogador, aluguel_a_cobrar):
+						return # Faliu, não faz mais nada
+				
 				if not jogador.pagar(aluguel_a_cobrar):
-					jogo.exibir_popup_mensagem("Dinheiro insuficiente! Gerencie suas propriedades ou declare falência.", func():
-						jogo.abrir_gerenciador_propriedades()
-						if jogador.dinheiro < aluguel_a_cobrar:
-							jogo.declarar_falencia(jogador, dono)
-						else:
-							jogador.pagar(aluguel_a_cobrar)
-							dono.receber(aluguel_a_cobrar)
-							jogo.proximo_jogador()
-					)
+					# Fallback caso a verificação falhe ou não exista (mas deveria ter pego no if acima)
+					print("ERRO CRÍTICO: Jogador não faliu mas não conseguiu pagar.")
+					jogo.declarar_falencia(jogador, dono)
 				else:
 					dono.receber(aluguel_a_cobrar)
 					jogo.proximo_jogador()

@@ -31,8 +31,8 @@ func add_button(text: String, callback: Callable) -> void:
 	btn.custom_minimum_size = Vector2(150, 60)
 	btn.pressed.connect(func():
 		print("PopupAcao: Botão pressionado: ", text)
-		callback.call()
 		hide_popup()
+		callback.call()
 	)
 	current_row.add_child(btn)
 

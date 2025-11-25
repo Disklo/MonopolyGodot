@@ -226,11 +226,19 @@ func executar_acao(jogador: Jogador, carta: Dictionary) -> void:
 			jogador.receber(carta.valor)
 		"pagar":
 			# Pague dinheiro
+			if jogo.has_method("verificar_falencia_obrigatoria"):
+				if jogo.verificar_falencia_obrigatoria(jogador, carta.valor):
+					return
 			jogador.pagar(carta.valor)
 			
 		"pagar_todos":
 			# Pague a cada jogador
 			if jogo:
+				var total_a_pagar = (jogo.jogadores.size() - 1) * carta.valor
+				if jogo.has_method("verificar_falencia_obrigatoria"):
+					if jogo.verificar_falencia_obrigatoria(jogador, total_a_pagar):
+						return
+
 				for outro_jogador in jogo.jogadores:
 					if outro_jogador != jogador:
 						jogador.pagar(carta.valor)
@@ -253,6 +261,9 @@ func executar_acao(jogador: Jogador, carta: Dictionary) -> void:
 			var total_pagar = (total_casas * valor_casa) + (total_hoteis * valor_hotel)
 			
 			if total_pagar > 0:
+				if jogo.has_method("verificar_falencia_obrigatoria"):
+					if jogo.verificar_falencia_obrigatoria(jogador, total_pagar):
+						return
 				jogador.pagar(total_pagar)
 				print("Reparos: %d casas x R$%d + %d hotéis x R$%d = R$%d" % [total_casas, valor_casa, total_hoteis, valor_hotel, total_pagar])
 			else:
