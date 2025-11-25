@@ -41,20 +41,46 @@ func _ready() -> void:
 		botao_construir_propriedades.visible = false
 		botao_construir_propriedades.queue_free()
 
-var label_turno: RichTextLabel
+var container_turno: HBoxContainer
+var label_texto_turno: Label
+var indicador_turno: Panel
+
 
 func setup_ui_extras() -> void:
 	var font = load("res://assets/fonts/VCR_OSD_MONO_1.001.ttf")
 	
 	# Label Turno
-	label_turno = RichTextLabel.new()
-	label_turno.bbcode_enabled = true
-	label_turno.position = Vector2(-300, -250)
-	label_turno.size = Vector2(600, 50)
+	# Container Turno
+	container_turno = HBoxContainer.new()
+	container_turno.position = Vector2(-300, -250)
+	container_turno.size = Vector2(600, 50)
+	container_turno.alignment = BoxContainer.ALIGNMENT_CENTER
+	container_turno.add_theme_constant_override("separation", 10)
+	add_child(container_turno)
+
+	# Label Texto Turno
+	label_texto_turno = Label.new()
 	if font:
-		label_turno.add_theme_font_override("normal_font", font)
-		label_turno.add_theme_font_size_override("normal_font_size", 40)
-	add_child(label_turno)
+		label_texto_turno.add_theme_font_override("font", font)
+		label_texto_turno.add_theme_font_size_override("font_size", 40)
+	label_texto_turno.add_theme_color_override("font_color", Color.BLACK)
+	container_turno.add_child(label_texto_turno)
+
+	# Indicador Turno (Círculo)
+	indicador_turno = Panel.new()
+	indicador_turno.custom_minimum_size = Vector2(40, 40)
+	indicador_turno.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	indicador_turno.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	var style_indicador = StyleBoxFlat.new()
+	style_indicador.set_corner_radius_all(20) # Raio de 20 para diâmetro de 40
+	style_indicador.bg_color = Color.WHITE # Cor inicial, será alterada
+	style_indicador.border_width_left = 2
+	style_indicador.border_width_top = 2
+	style_indicador.border_width_right = 2
+	style_indicador.border_width_bottom = 2
+	style_indicador.border_color = Color.BLACK
+	indicador_turno.add_theme_stylebox_override("panel", style_indicador)
+	container_turno.add_child(indicador_turno)
 	
 	# Botão Gerenciar Propriedades
 	var btn_gerenciar = Button.new()
@@ -145,8 +171,12 @@ func setup_ui_extras() -> void:
 	add_child(btn_negociar)
 
 func atualizar_label_turno() -> void:
-	if label_turno and jogador_atual:
-		label_turno.text = "[center][color=black]Turno do jogador %d [color=#%s]●[/color][/color][/center]" % [jogador_atual.index + 1, jogador_atual.cor.to_html()]
+	if label_texto_turno and indicador_turno and jogador_atual:
+		label_texto_turno.text = "Turno do jogador %d" % (jogador_atual.index + 1)
+		
+		var style = indicador_turno.get_theme_stylebox("panel")
+		if style is StyleBoxFlat:
+			style.bg_color = jogador_atual.cor
 
 func configurar_interface_debug() -> void:
 	if botao_debug_construir:
