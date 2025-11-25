@@ -17,13 +17,13 @@ func _ready():
 func _process(delta):
 	# Mover a câmera com as teclas de seta
 	var velocity = Vector2()
-	if Input.is_action_pressed("ui_right"):
+	if Input.is_action_pressed("ui_right") or Input.is_key_pressed(KEY_D):
 		velocity.x += 1
-	if Input.is_action_pressed("ui_left"):
+	if Input.is_action_pressed("ui_left") or Input.is_key_pressed(KEY_A):
 		velocity.x -= 1
-	if Input.is_action_pressed("ui_down"):
+	if Input.is_action_pressed("ui_down") or Input.is_key_pressed(KEY_S):
 		velocity.y += 1
-	if Input.is_action_pressed("ui_up"):
+	if Input.is_action_pressed("ui_up") or Input.is_key_pressed(KEY_W):
 		velocity.y -= 1
 	
 	position += velocity.normalized() * move_speed * delta
