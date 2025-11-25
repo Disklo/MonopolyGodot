@@ -1,6 +1,19 @@
 extends Control
 
 #Função que vai chamar a cena Jogo quando o botão "Iniciar Jogo" for pressionado
+func _ready():
+	var label = Label.new()
+	label.text = "Controles:\nWASD / Setas: Mover Câmera\n- / = : Zoom\nScroll do Mouse: Zoom"
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	add_child(label)
+	
+	# Posicionar no canto superior direito
+	label.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	label.offset_left = -400
+	label.offset_top = 20
+	label.offset_right = -20
+	label.offset_bottom = 150
+
 func _on_botao_iniciar_jogo_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/UI/selecao_jogadores.tscn")
 
