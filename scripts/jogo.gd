@@ -220,6 +220,9 @@ func exibir_popup_prisao(jogador: Jogador) -> void:
 	)
 	
 	popup_acao.show_popup()
+	
+	if jogador_atual and jogador_atual.is_bot:
+		popup_acao.auto_select_random_option()
 
 func _usar_carta_prisao(jogador: Jogador):
 	if jogador.usar_carta_sair_da_prisao():
@@ -250,6 +253,9 @@ func exibir_popup_mensagem(texto: String, callback: Callable = Callable()) -> vo
 	)
 	
 	popup_acao.show_popup()
+	
+	if jogador_atual and jogador_atual.is_bot:
+		popup_acao.auto_select_random_option()
 
 # Prepara o estado inicial do jogo.
 func iniciar_jogo() -> void:
@@ -273,7 +279,14 @@ func iniciar_jogo() -> void:
 	for i in range(jogadores.size()):
 		var jogador = jogadores[i]
 		jogador.index = i
-		jogador.nome = "Jogador %d" % (i + 1)
+		
+		# Configura tipo do jogador (Humano ou Computador)
+		if i < ConfiguracaoJogo.numero_jogadores_humanos:
+			jogador.tipo = Jogador.Tipo.HUMANO
+			jogador.nome = "Jogador %d" % (i + 1)
+		else:
+			jogador.tipo = Jogador.Tipo.COMPUTADOR
+			jogador.nome = "Computador %d" % (i + 1)
 		
 		if i < cores.size():
 			jogador.set_cor(cores[i])
@@ -285,6 +298,10 @@ func iniciar_jogo() -> void:
 				hud.atualizar_dinheiro(jogador.dinheiro)
 				if not jogador.dinheiro_alterado.is_connected(hud.atualizar_dinheiro):
 					jogador.dinheiro_alterado.connect(hud.atualizar_dinheiro)
+					
+	print("Configuração de jogadores:")
+	for j in jogadores:
+		print("- %s (%s)" % [j.nome, "Humano" if j.tipo == Jogador.Tipo.HUMANO else "Computador"])
 	
 	if jogadores.is_empty() or tabuleiro == null:
 		print("ERRO: Jogadores ou tabuleiro não configurados na cena Jogo.")
@@ -310,6 +327,11 @@ func iniciar_jogo() -> void:
 	print("O jogo começou! É a vez de %s." % jogador_atual.nome)
 	atualizar_ui_construcao()
 	atualizar_label_turno()
+	
+	if jogador_atual.is_bot:
+		print("Bot %s vai jogar (primeiro turno)..." % jogador_atual.nome)
+		botao_rolar_dados.disabled = true
+		call_deferred("_iniciar_turno_bot")
 
 # Passa para o próximo jogador.
 func proximo_jogador() -> void:
@@ -345,7 +367,27 @@ func proximo_jogador() -> void:
 		botao_rolar_dados.visible = true
 		botao_rolar_dados.disabled = false
 	
-	verificar_rodada()
+	atualizar_ui_construcao()
+	atualizar_label_turno()
+
+	if jogador_atual.is_bot:
+		print("Bot %s vai jogar..." % jogador_atual.nome)
+		botao_rolar_dados.disabled = true
+		call_deferred("_iniciar_turno_bot")
+
+func _iniciar_turno_bot() -> void:
+	var bot_do_turno = jogador_atual
+	await get_tree().create_timer(2.0).timeout
+	
+	if jogador_atual != bot_do_turno:
+		return # O turno mudou enquanto esperava
+		
+	if jogador_atual.preso:
+		# Bot preso: tenta sair (lógica simplificada: rola dados)
+		# TODO: Melhorar lógica de prisão para bots (usar carta, pagar, etc)
+		rolar_dados()
+	else:
+		rolar_dados()
 
 # Verifica se uma rodada terminou.
 func verificar_rodada() -> void:
@@ -485,6 +527,15 @@ func _ao_pressionar_debug_monopolio() -> void:
 	)
 	
 	popup_acao.show_popup()
+	
+	if jogador_atual and jogador_atual.is_bot:
+		popup_acao.auto_select_random_option()
+	
+	if jogador_atual and jogador_atual.is_bot:
+		popup_acao.auto_select_random_option()
+	
+	if jogador_atual and jogador_atual.is_bot:
+		popup_acao.auto_select_random_option()
 
 func dar_monopolio(cor_grupo: String) -> void:
 	print("DEBUG: Dando monopólio de %s para %s" % [cor_grupo, jogador_atual.nome])
@@ -573,6 +624,9 @@ func exibir_popup_confirmacao(texto: String, on_sim: Callable, on_nao: Callable 
 	)
 	
 	popup_acao.show_popup()
+	
+	if jogador_atual and jogador_atual.is_bot:
+		popup_acao.auto_select_random_option()
 
 func exibir_popup_compra(propriedade: Propriedade, jogador: Jogador = null) -> void:
 	if popup_acao == null:
@@ -605,6 +659,9 @@ func exibir_popup_compra(propriedade: Propriedade, jogador: Jogador = null) -> v
 	)
 	
 	popup_acao.show_popup()
+	
+	if jogador_atual and jogador_atual.is_bot:
+		popup_acao.auto_select_random_option()
 
 func exibir_popup_construcao(propriedade: Propriedade) -> void:
 	if popup_acao == null:
@@ -623,6 +680,9 @@ func exibir_popup_construcao(propriedade: Propriedade) -> void:
 	)
 	
 	popup_acao.show_popup()
+	
+	if jogador_atual and jogador_atual.is_bot:
+		popup_acao.auto_select_random_option()
 
 func declarar_falencia(jogador: Jogador, credor: Jogador = null) -> void:
 	print("FALÊNCIA! %s declarou falência." % jogador.nome)

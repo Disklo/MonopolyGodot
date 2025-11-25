@@ -137,7 +137,11 @@ func mostrar_carta(carta: Dictionary, jogador: Jogador):
 		instancia_carta.carta_fechada.connect(func(): executar_acao(jogador, carta))
 	
 	# Aguarda a carta ser fechada antes de continuar
-	await instancia_carta.carta_fechada
+	if jogador.is_bot:
+		await get_tree().create_timer(1.5).timeout
+		instancia_carta.fecharCarta()
+	else:
+		await instancia_carta.carta_fechada
 
 
 # Função para guardar a carta de sair da prisão
