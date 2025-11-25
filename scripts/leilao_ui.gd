@@ -29,6 +29,29 @@ func iniciar_leilao(prop: Propriedade, jogadores: Array[Jogador]) -> void:
 	
 	# Cria botões para cada jogador dar lance
 	atualizar_botoes()
+	
+	# Inicia lógica da IA
+	call_deferred("_processar_lance_ia")
+
+func _processar_lance_ia() -> void:
+	await get_tree().create_timer(1.0).timeout
+	
+	if not visible: return
+	
+	var bots_validos = []
+	for j in jogadores_participantes:
+		if j.is_bot and not j.falido:
+			bots_validos.append(j)
+	
+	if bots_validos.size() > 0:
+		var bot_escolhido = bots_validos.pick_random()
+		dar_lance(bot_escolhido)
+		
+		# Se não houver humanos, encerra automaticamente
+		if ConfiguracaoJogo.numero_jogadores_humanos == 0:
+			await get_tree().create_timer(1.0).timeout
+			if visible:
+				encerrar_leilao()
 
 func atualizar_ui() -> void:
 	label_lance.text = "Lance Atual: R$ %d" % lance_atual
