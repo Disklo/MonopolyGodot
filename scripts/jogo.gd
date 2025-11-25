@@ -345,7 +345,7 @@ func _usar_carta_prisao(jogador: Jogador):
 			exibir_popup_prisao(jogador)
 		)
 
-func exibir_popup_mensagem(texto: String, callback: Callable = Callable()) -> void:
+func exibir_popup_mensagem(texto: String, callback: Callable = Callable(), auto_confirm_bot: bool = true) -> void:
 	print('entrando em exibir_popup_mensagem')
 	if popup_acao == null:
 		setup_popup_acao()
@@ -360,7 +360,7 @@ func exibir_popup_mensagem(texto: String, callback: Callable = Callable()) -> vo
 	
 	popup_acao.show_popup()
 	
-	if jogador_atual and jogador_atual.is_bot:
+	if jogador_atual and jogador_atual.is_bot and auto_confirm_bot:
 		popup_acao.auto_select_random_option()
 
 # Prepara o estado inicial do jogo.
@@ -854,23 +854,26 @@ func declarar_falencia(jogador: Jogador, credor: Jogador = null) -> void:
 	jogador.peao.visible = false
 	
 	exibir_popup_mensagem("%s faliu e saiu do jogo!" % jogador.nome, func():
-		verificar_fim_jogo()
-		if jogador == jogador_atual:
-			proximo_jogador()
+		if not verificar_fim_jogo():
+			if jogador == jogador_atual:
+				proximo_jogador()
 	)
 
-func verificar_fim_jogo() -> void:
-	var jogadores_ativos: Array [Jogador] = []
+func verificar_fim_jogo() -> bool:
+	var jogadores_ativos: Array[Jogador] = []
 	for j in jogadores:
 		if not j.falido:
 			jogadores_ativos.append(j)
 	
 	if jogadores_ativos.size() == 1:
-		var vencedor : Jogador = jogadores_ativos[0]
+		var vencedor: Jogador = jogadores_ativos[0]
 		exibir_popup_mensagem(
-			"🏆 FIM DE JOGO!\n\nParabéns, %s!\nVocê venceu o jogo!" % vencedor.nome, 
-			func(): get_tree().change_scene_to_file("res://scenes/menu_principal.tscn")
+			"🏆 FIM DE JOGO!\n\nParabéns, %s!\nVocê venceu o jogo!" % vencedor.nome,
+			func(): get_tree().change_scene_to_file("res://scenes/menu_principal.tscn"),
+			false # auto_confirm_bot = false
 			)
+		return true
+	return false
 
 func _ao_pressionar_debug_sorte() -> void:
 	if not jogador_atual or not tabuleiro:
