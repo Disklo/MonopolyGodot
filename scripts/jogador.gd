@@ -121,20 +121,26 @@ func tem_monopolio(cor_grupo: String, tabuleiro: Tabuleiro) -> bool:
 	return contagem_jogador == contagem_tabuleiro
 
 # Subtrai dinheiro do jogador
-func pagar(valor: int) -> bool:
+func pagar(valor: int, jogo_ref: Jogo = null) -> bool:
 	if dinheiro < valor:
 		print("%s não tem dinheiro suficiente para pagar %d. Saldo: %d" % [nome, valor, dinheiro])
 		return false
 	dinheiro -= valor
 	dinheiro_alterado.emit(dinheiro)
 	print("%s pagou %d. Saldo: %d" % [nome, valor, dinheiro])
+	
+	if jogo_ref != null:
+		verificar_falencia(jogo_ref)
 	return true
 
 # Adiciona dinheiro ao jogador
-func receber(valor: int) -> void:
+func receber(valor: int, jogo_ref: Jogo = null) -> void:
 	dinheiro += valor
 	dinheiro_alterado.emit(dinheiro)
 	print("%s recebeu %d. Saldo: %d" % [nome, valor, dinheiro])
+	
+	if jogo_ref != null:
+		verificar_falencia(jogo_ref)
 
 func ir_para_prisao() -> void:
 	preso = true
@@ -173,3 +179,7 @@ func tem_carta_sair_da_prisao() -> bool:
 		if carta.get("tipo") == "sair_da_prisao":
 			return true
 	return false
+
+func verificar_falencia(jogo_ref: Node) -> void:
+	if dinheiro <= 0 and not falido:
+		jogo_ref.declarar_falencia(self)

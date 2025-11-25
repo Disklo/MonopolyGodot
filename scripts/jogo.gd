@@ -858,7 +858,8 @@ func verificar_fim_jogo() -> void:
 	if jogadores_ativos.size() == 1:
 		var vencedor : Jogador = jogadores_ativos[0]
 		exibir_popup_mensagem(
-			"🏆 FIM DE JOGO!\n\nParabéns, %s!\nVocê venceu o jogo!" % vencedor.nome
+			"🏆 FIM DE JOGO!\n\nParabéns, %s!\nVocê venceu o jogo!" % vencedor.nome, 
+			func(): get_tree().change_scene_to_file("res://scenes/menu_principal.tscn")
 			)
 
 func _ao_pressionar_debug_sorte() -> void:
