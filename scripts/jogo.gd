@@ -168,6 +168,102 @@ func configurar_interface_debug() -> void:
 		btn.visible = ConfiguracaoJogo.modo_debug
 		y_offset += 50
 
+	# Botões de Debug de Falência
+	var btn_falencia_aluguel = Button.new()
+	btn_falencia_aluguel.text = "Debug: Falência Aluguel"
+	btn_falencia_aluguel.position = Vector2(get_viewport().get_visible_rect().size.x - 250, 50 + y_offset)
+	btn_falencia_aluguel.size = Vector2(200, 40)
+	btn_falencia_aluguel.pressed.connect(func():
+		if jogador_atual:
+			print("DEBUG: Simulando Falência por Aluguel")
+			jogador_atual.dinheiro = 0
+			jogador_atual.dinheiro_alterado.emit(0)
+			# Move para uma propriedade cara (ex: última do tabuleiro)
+			# Precisa garantir que tenha dono diferente.
+			# Vamos pegar a propriedade 39 (Mayfair/Azul Escuro) e dar para outro jogador
+			var prop = tabuleiro.obter_espaco(39)
+			if prop is Propriedade:
+				var outro_jogador = jogadores[(jogador_atual.index + 1) % jogadores.size()]
+				prop.dono = outro_jogador
+				outro_jogador.propriedades.append(prop)
+				prop.num_casas = 5 # Hotel para garantir falência
+				prop.aluguel_base = 2000 # Força valor alto
+				jogador_atual.mover_para_posicao(39, tabuleiro)
+				prop.ao_parar(jogador_atual)
+	)
+	add_child(btn_falencia_aluguel)
+	botoes_debug.append(btn_falencia_aluguel)
+	btn_falencia_aluguel.visible = ConfiguracaoJogo.modo_debug
+	y_offset += 50
+
+	var btn_falencia_imposto = Button.new()
+	btn_falencia_imposto.text = "Debug: Falência Imposto"
+	btn_falencia_imposto.position = Vector2(get_viewport().get_visible_rect().size.x - 250, 50 + y_offset)
+	btn_falencia_imposto.size = Vector2(200, 40)
+	btn_falencia_imposto.pressed.connect(func():
+		if jogador_atual:
+			print("DEBUG: Simulando Falência por Imposto")
+			jogador_atual.dinheiro = 0
+			jogador_atual.dinheiro_alterado.emit(0)
+			# Move para Imposto de Renda (pos 4)
+			jogador_atual.mover_para_posicao(4, tabuleiro)
+			var imposto = tabuleiro.obter_espaco(4)
+			if imposto:
+				imposto.ao_parar(jogador_atual)
+	)
+	add_child(btn_falencia_imposto)
+	botoes_debug.append(btn_falencia_imposto)
+	btn_falencia_imposto.visible = ConfiguracaoJogo.modo_debug
+	y_offset += 50
+
+	# Novos Botões de Debug
+	var btn_debug_dinheiro_0 = Button.new()
+	btn_debug_dinheiro_0.text = "Debug: $0"
+	btn_debug_dinheiro_0.position = Vector2(get_viewport().get_visible_rect().size.x - 250, 50 + y_offset)
+	btn_debug_dinheiro_0.size = Vector2(200, 40)
+	btn_debug_dinheiro_0.pressed.connect(func():
+		if jogador_atual:
+			print("DEBUG: Definindo dinheiro para 0")
+			jogador_atual.dinheiro = 0
+			jogador_atual.dinheiro_alterado.emit(0)
+	)
+	add_child(btn_debug_dinheiro_0)
+	botoes_debug.append(btn_debug_dinheiro_0)
+	btn_debug_dinheiro_0.visible = ConfiguracaoJogo.modo_debug
+	y_offset += 50
+
+	var btn_debug_dinheiro_50 = Button.new()
+	btn_debug_dinheiro_50.text = "Debug: $50"
+	btn_debug_dinheiro_50.position = Vector2(get_viewport().get_visible_rect().size.x - 250, 50 + y_offset)
+	btn_debug_dinheiro_50.size = Vector2(200, 40)
+	btn_debug_dinheiro_50.pressed.connect(func():
+		if jogador_atual:
+			print("DEBUG: Definindo dinheiro para 50")
+			jogador_atual.dinheiro = 50
+			jogador_atual.dinheiro_alterado.emit(50)
+	)
+	add_child(btn_debug_dinheiro_50)
+	botoes_debug.append(btn_debug_dinheiro_50)
+	btn_debug_dinheiro_50.visible = ConfiguracaoJogo.modo_debug
+	y_offset += 50
+
+	var btn_debug_prisao_3x = Button.new()
+	btn_debug_prisao_3x.text = "Debug: Prisão 3x"
+	btn_debug_prisao_3x.position = Vector2(get_viewport().get_visible_rect().size.x - 250, 50 + y_offset)
+	btn_debug_prisao_3x.size = Vector2(200, 40)
+	btn_debug_prisao_3x.pressed.connect(func():
+		if jogador_atual:
+			print("DEBUG: Simulando 3ª tentativa na prisão")
+			_ao_pressionar_debug_prender(jogador_atual)
+			jogador_atual.turnos_na_prisao = 2
+			# Reabre o popup para atualizar o estado (opcional, mas bom para feedback visual)
+			exibir_popup_prisao(jogador_atual)
+	)
+	add_child(btn_debug_prisao_3x)
+	botoes_debug.append(btn_debug_prisao_3x)
+	btn_debug_prisao_3x.visible = ConfiguracaoJogo.modo_debug
+	y_offset += 50
+
 func _ao_pressionar_debug_prender(jogador: Jogador) -> void:
 	print("DEBUG: Prendendo %s" % jogador.nome)
 	jogador.posicao = 10 # Índice da Prisão
@@ -211,8 +307,11 @@ func exibir_popup_prisao(jogador: Jogador) -> void:
 			rolar_dados()
 		else:
 			print("Dinheiro insuficiente.")
-			# Reexibe o popup ou avisa
-			exibir_popup_mensagem("Dinheiro insuficiente para pagar a fiança.", func(): exibir_popup_prisao(jogador))
+			# Se não tem dinheiro, avisa e força os dados (se não for a 3ª vez, que já força pagamento)
+			# Mas aqui é a escolha voluntária.
+			exibir_popup_mensagem("Dinheiro insuficiente para pagar a fiança. Tentando sair nos dados...", func():
+				rolar_dados()
+			)
 	)
 	
 	popup_acao.add_button("Tentar Dados", func():
@@ -445,7 +544,11 @@ func rolar_dados() -> void:
 			print("Não tirou dupla. Continua preso.")
 			jogador_atual.turnos_na_prisao += 1
 			if jogador_atual.turnos_na_prisao >= 3:
-				print("3 turnos na prisão. Pagando fiança forçada.")
+				print("3 turnos na prisão. Pagamento de fiança obrigatório.")
+				
+				if verificar_falencia_obrigatoria(jogador_atual, 50):
+					return # Faliu
+				
 				jogador_atual.pagar(50)
 				jogador_atual.sair_da_prisao()
 				await jogador_atual.mover(passos, tabuleiro)
@@ -628,6 +731,13 @@ func exibir_popup_confirmacao(texto: String, on_sim: Callable, on_nao: Callable 
 	if jogador_atual and jogador_atual.is_bot:
 		popup_acao.auto_select_random_option()
 
+func verificar_falencia_obrigatoria(jogador: Jogador, valor: int) -> bool:
+	if jogador.dinheiro < valor:
+		print("FALÊNCIA AUTOMÁTICA: %s não tem R$ %d (Saldo: R$ %d)" % [jogador.nome, valor, jogador.dinheiro])
+		declarar_falencia(jogador)
+		return true
+	return false
+
 func exibir_popup_compra(propriedade: Propriedade, jogador: Jogador = null) -> void:
 	if popup_acao == null:
 		setup_popup_acao()
@@ -638,25 +748,38 @@ func exibir_popup_compra(propriedade: Propriedade, jogador: Jogador = null) -> v
 		jogador = jogador_atual
 	
 	popup_acao.clear_buttons()
-	popup_acao.set_text("%s Deseja comprar %s por R$ %d?" % [jogador.nome, propriedade.nome, propriedade.preco])
 	
-	popup_acao.add_button("Sim", func():
-		print("Jogo: Confirmou compra de ", propriedade.nome)
-		propriedade.comprar(jogador_atual)
-		proximo_jogador()
-	)
-	
-	popup_acao.add_button("Não", func():
-		print("%s recusou a compra. Iniciando leilão." % jogador.nome)
-		# Inicia leilão
-		if leilao_ui == null:
-			setup_popup_acao()
+	if jogador.dinheiro < propriedade.preco:
+		popup_acao.set_text("%s, você não tem dinheiro suficiente (R$ %d) para comprar %s (R$ %d)." % [jogador.nome, jogador.dinheiro, propriedade.nome, propriedade.preco])
+		popup_acao.add_button("OK", func():
+			print("Dinheiro insuficiente. Iniciando leilão.")
+			if leilao_ui == null:
+				setup_popup_acao()
+			if leilao_ui:
+				leilao_ui.iniciar_leilao(propriedade, jogadores)
+			else:
+				proximo_jogador()
+		)
+	else:
+		popup_acao.set_text("%s Deseja comprar %s por R$ %d?" % [jogador.nome, propriedade.nome, propriedade.preco])
 		
-		if leilao_ui:
-			leilao_ui.iniciar_leilao(propriedade, jogadores)
-		else:
-			proximo_jogador() # Fallback
-	)
+		popup_acao.add_button("Sim", func():
+			print("Jogo: Confirmou compra de ", propriedade.nome)
+			propriedade.comprar(jogador_atual)
+			proximo_jogador()
+		)
+		
+		popup_acao.add_button("Não", func():
+			print("%s recusou a compra. Iniciando leilão." % jogador.nome)
+			# Inicia leilão
+			if leilao_ui == null:
+				setup_popup_acao()
+			
+			if leilao_ui:
+				leilao_ui.iniciar_leilao(propriedade, jogadores)
+			else:
+				proximo_jogador() # Fallback
+		)
 	
 	popup_acao.show_popup()
 	
@@ -668,16 +791,23 @@ func exibir_popup_construcao(propriedade: Propriedade) -> void:
 		setup_popup_acao()
 		
 	popup_acao.clear_buttons()
-	popup_acao.set_text("Construir casa em %s por R$ %d?" % [propriedade.nome, propriedade.custo_casa])
 	
-	popup_acao.add_button("Sim", func():
-		propriedade.construir_casa()
-		atualizar_ui_construcao()
-	)
-	
-	popup_acao.add_button("Cancelar", func():
-		print("Construção cancelada.")
-	)
+	if jogador_atual.dinheiro < propriedade.custo_casa:
+		popup_acao.set_text("Você não tem dinheiro suficiente (R$ %d) para construir em %s (Custo: R$ %d)." % [jogador_atual.dinheiro, propriedade.nome, propriedade.custo_casa])
+		popup_acao.add_button("OK", func():
+			popup_acao.hide_popup()
+		)
+	else:
+		popup_acao.set_text("Construir casa em %s por R$ %d?" % [propriedade.nome, propriedade.custo_casa])
+		
+		popup_acao.add_button("Sim", func():
+			propriedade.construir_casa()
+			atualizar_ui_construcao()
+		)
+		
+		popup_acao.add_button("Cancelar", func():
+			print("Construção cancelada.")
+		)
 	
 	popup_acao.show_popup()
 	

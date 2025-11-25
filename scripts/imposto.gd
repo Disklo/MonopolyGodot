@@ -15,6 +15,10 @@ func ao_parar(jogador: Jogador) -> void:
 	var jogo = get_tree().get_root().get_node("Jogo")
 	if jogo.has_method("exibir_popup_mensagem"):
 		jogo.exibir_popup_mensagem("Você caiu no Imposto.\nPague R$ %d ao banco." % valor_imposto, func():
+			if jogo.has_method("verificar_falencia_obrigatoria"):
+				if jogo.verificar_falencia_obrigatoria(jogador, valor_imposto):
+					return
+
 			jogador.pagar(valor_imposto)
 			if jogo.has_method("proximo_jogador"):
 				jogo.proximo_jogador()
